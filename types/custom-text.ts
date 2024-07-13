@@ -13,8 +13,6 @@ export type TextStyle = {
   lineHeight: number;
   charSpacing: number;
   fontStyles: FontStyle;
-  isLocked: boolean;
-  opacity: number;
 };
 
 export type FontStyle = {

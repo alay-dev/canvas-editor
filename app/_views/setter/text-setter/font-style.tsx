@@ -1,10 +1,8 @@
 import { cn } from "@/lib/utils";
 import { TextItalic, TextUnderline, TextBold, TextCross } from "solar-icon-set";
-import { useFormContext } from "react-hook-form";
-import { useEffect } from "react";
-import { FontStyle, TextStyle } from "@/types/custom-text";
+import { FontStyle as FontStyleType } from "@/types/custom-text";
 
-const FONT_STYLES: { icon: JSX.Element; value: keyof FontStyle }[] = [
+const FONT_STYLES: { icon: JSX.Element; value: keyof FontStyleType }[] = [
   {
     icon: <TextBold />,
     value: "bold",
@@ -23,10 +21,16 @@ const FONT_STYLES: { icon: JSX.Element; value: keyof FontStyle }[] = [
   },
 ];
 
-export default function FontStylePanel() {
-  const { watch, setValue } = useFormContext<TextStyle>();
+type Props = {
+  onChangeFontStyle: (val: boolean, type: string) => void;
+  styles: FontStyleType;
+};
 
-  const fields = watch();
+export default function FontStyle({ onChangeFontStyle, styles }: Props) {
+  const onChange = (type: keyof FontStyleType) => {
+    const isEnabled = styles?.[type];
+    onChangeFontStyle(!isEnabled, type);
+  };
 
   return (
     <div
@@ -34,15 +38,10 @@ export default function FontStylePanel() {
       className="flex border border-gray-500 rounded-lg overflow-hidden mt-2 [&>*:not(:last-child)]:border-r [&>*:not(:last-child)]:border-gray-500 "
     >
       {FONT_STYLES.map((item) => {
-        const isEnabled = fields?.fontStyles?.[item.value];
+        const isEnabled = styles?.[item.value];
         return (
           <div
-            onClick={() =>
-              setValue("fontStyles", {
-                ...fields.fontStyles,
-                [item.value]: !isEnabled,
-              })
-            }
+            onClick={() => onChange(item.value)}
             key={item.value}
             className={cn(
               " flex-1 items-center justify-center flex py-2 cursor-pointer px-4 text-white",

@@ -6,12 +6,13 @@ type Props = {
   value: number;
 };
 
-export default function LetterSpacingSetter({ onChange, value }: Props) {
+export default function LineSpacing({ onChange, value }: Props) {
   return (
     <div className="flex items-center gap-2">
       <Slider
-        min={1}
-        max={400}
+        min={0.1}
+        max={10}
+        step={0.1}
         value={[value]}
         onValueChange={(val) => onChange(val?.at(0) || 1)}
       />

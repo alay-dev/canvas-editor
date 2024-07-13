@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/popover";
 import { useContext } from "react";
 import { GloablStateContext } from "@/context/global-context";
-import { useFormContext } from "react-hook-form";
+import { useForm, useFormContext } from "react-hook-form";
 import {
   AlignHorizontalSpaceAroundIcon,
   AlignVerticalSpaceAroundIcon,
@@ -24,28 +24,38 @@ import {
   ArrowUpFromLineIcon,
 } from "lucide-react";
 
+type CommonSetterInputs = {
+  isLocked: boolean;
+  opactiy: number;
+};
+
 const CommonSetter = () => {
   const { object, editor } = useContext(GloablStateContext);
-  const { setValue, watch } = useFormContext();
+  const { setValue, getValues, watch } = useForm<CommonSetterInputs>({
+    defaultValues: {
+      isLocked: object?.lockMovementX || object?.lockMovementY,
+      opactiy: object?.opacity,
+    },
+  });
 
   const fields = watch();
 
   const handleLockObject = () => {
-    object?.set("lockMovementX", !fields.isLocked);
-    object?.set("lockMovementY", !fields.isLocked);
-    object?.set("hasControls", fields.isLocked);
-
-    setValue("isLocked", !fields.isLocked);
-
+    const isLocked = fields.isLocked;
+    object?.set("lockMovementX", !isLocked);
+    object?.set("lockMovementY", !isLocked);
+    object?.set("hasControls", isLocked);
     editor?.canvas?.requestRenderAll();
     editor?.fireCustomModifiedEvent();
+
+    setValue("isLocked", !isLocked);
   };
 
   const handleChangeOpacity = (val: number) => {
     object?.set("opacity", val);
-    setValue("opacity", val);
     editor?.canvas?.requestRenderAll();
     editor?.fireCustomModifiedEvent();
+    setValue("opactiy", val);
   };
 
   const deleteActiveObject = () => {
@@ -154,7 +164,7 @@ const CommonSetter = () => {
         >
           <LockIcon
             size={16}
-            iconStyle={fields?.isLocked ? "Bold" : "Linear"}
+            iconStyle={fields.isLocked ? "Bold" : "Linear"}
             color="#BDBDBD"
           />
         </Button>
@@ -190,7 +200,7 @@ const CommonSetter = () => {
               max={1}
               step={0.01}
               onChange={(val) => handleChangeOpacity(val)}
-              value={fields.opacity}
+              value={fields.opactiy}
             />
           </PopoverContent>
         </Popover>

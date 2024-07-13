@@ -7,7 +7,7 @@ type Props = {
   value: number;
 };
 
-export default function FontSizeSetter({ onChange, value }: Props) {
+export default function FontSize({ onChange, value }: Props) {
   return (
     <div className="flex items-center gap-2">
       <Slider

@@ -1,4 +1,4 @@
-import { fabric } from "fabric";
+import * as fabric from "fabric";
 import { Border } from "./types/c-image";
 
 declare module "fabric" {
@@ -15,11 +15,11 @@ declare module "fabric" {
       getFilter(): any;
     }
 
-    interface Object extends fabric.Object {
-      id?: string;
-      __cover?: string;
-      __corner?: string;
-    }
+    // interface Object extends fabric.Object {
+    //   id?: string;
+    //   __cover?: string;
+    //   __corner?: string;
+    // }
 
     interface IRectOptions extends fabric.IRectOptions {
       id?: string;
@@ -45,5 +45,7 @@ declare module "fabric" {
     const FText: {
       new (text: string, options: any): FText;
     };
+
+    const Object: {};
   }
 }

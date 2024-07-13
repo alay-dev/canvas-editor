@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { GloablStateContext } from "@/context/global-context";
 import { SKETCH_ID } from "@/utils/constants";
 import SketchSetter from "./SketchSetter";
-import TextSetter from "./TextSetter";
+import TextSetter from "./text-setter";
 import ImageSetter from "./ImageSetter";
 import { LineSetter, ShapeSetter } from "./ShapeSetter";
 // import CommonSetter from "./CommonSetter";
