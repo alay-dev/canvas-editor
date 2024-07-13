@@ -1,5 +1,5 @@
 import { fabric } from "fabric";
-import Editor from "@/editor";
+import Editor from "@/app/_fabritor/init";
 import { createContext } from "react";
 
 export interface IGloablStateContext {
