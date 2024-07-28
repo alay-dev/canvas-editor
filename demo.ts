@@ -1,3 +1,5 @@
+import { defaultCanvasName } from "./constants/canvas";
+
 export const demoTemplate = JSON.stringify({
   version: "5.3.0",
   objects: [
@@ -36,7 +38,7 @@ export const demoTemplate = JSON.stringify({
       rx: 0,
       ry: 0,
       id: "sketch-canvas",
-      canvas_name: "New canvas",
+      canvas_name: defaultCanvasName,
       selectable: false,
       hasControls: false,
     },

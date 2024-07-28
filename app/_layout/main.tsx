@@ -4,13 +4,7 @@ import Panel from "../_views/panel";
 import Setter from "../_views/setter";
 import { Spinner } from "@/components/ui/spinner";
 
-const Main = ({
-  children,
-  isReady,
-}: {
-  children: React.ReactNode;
-  isReady: boolean;
-}) => {
+const Main = ({ children, isReady }: { children: React.ReactNode; isReady: boolean }) => {
   return (
     <section className="h-full relative">
       {!isReady && (

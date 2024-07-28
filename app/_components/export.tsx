@@ -1,16 +1,11 @@
 import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { downloadFile, base64ToBlob } from "@/utils";
 import { useContext, useRef } from "react";
 import { GloablStateContext } from "@/context/global-context";
-import LocalFileSelector from "@/app/_fabritor/components/LocalFileSelector";
 import { Export as ExportIcon } from "solar-icon-set";
 import { toast } from "sonner";
+import { defaultCanvasName } from "@/constants/canvas";
 
 const items: { key: string; label: string }[] = [
   {
@@ -61,14 +56,12 @@ export default function Export() {
   };
 
   const copyImage = async () => {
+    if (!editor) throw new Error("Canvas is not initialized");
     try {
       const png = editor?.export2Img({ format: "png" });
+
       const blob = await base64ToBlob(png);
-      await navigator.clipboard.write([
-        new ClipboardItem({
-          "image/png": blob,
-        }),
-      ]);
+      await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
       toast("Copied successfully.");
     } catch (e) {
       toast("If the copy fails, please choose to export to the local area");
@@ -76,8 +69,9 @@ export default function Export() {
   };
 
   const handleClick = (key: string) => {
+    if (!editor) throw new Error("Editor is not initialized");
     const { sketch } = editor;
-    const name = sketch.canvas_name;
+    const name = sketch?.canvas_name || defaultCanvasName;
     switch (key) {
       case "png":
         const png = editor?.export2Img({ format: "png" });
@@ -93,13 +87,7 @@ export default function Export() {
         break;
       case "json":
         const json = editor?.canvas2Json();
-        downloadFile(
-          `data:text/json;charset=utf-8,${encodeURIComponent(
-            JSON.stringify(json, null, 2)
-          )}`,
-          "json",
-          name
-        );
+        downloadFile(`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(json, null, 2))}`, "json", name);
         break;
       case "clipboard":
         copyImage();
@@ -124,11 +112,7 @@ export default function Export() {
       </Dropdown> */}
       <Popover>
         <PopoverTrigger asChild>
-          <Button
-            variant="secondary"
-            size="sm"
-            className="gap-2 w-28 border-none"
-          >
+          <Button variant="secondary" size="sm" className="gap-2 w-28 border-none">
             <ExportIcon />
             Export
           </Button>
@@ -137,11 +121,7 @@ export default function Export() {
           <ul className="my-2">
             {items?.map((item) => {
               return (
-                <li
-                  onClick={() => handleClick(item.key)}
-                  className="text-sm font-light cursor-pointer hover:bg-gray-100 py-2 px-4"
-                  key={item?.key}
-                >
+                <li onClick={() => handleClick(item.key)} className="text-sm font-light cursor-pointer hover:bg-gray-100 py-2 px-4" key={item?.key}>
                   {item.label}
                 </li>
               );
@@ -149,11 +129,7 @@ export default function Export() {
           </ul>
         </PopoverContent>
       </Popover>
-      <LocalFileSelector
-        accept="application/json"
-        ref={localFileSelectorRef}
-        onChange={handleFileChange}
-      />
+      {/* <LocalFileSelector accept="application/json" ref={localFileSelectorRef} onChange={handleFileChange} /> */}
     </div>
   );
 }

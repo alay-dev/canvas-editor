@@ -3,19 +3,19 @@
 import { useContext, useEffect } from "react";
 import { Form, Radio, Switch } from "antd";
 import { GloablStateContext } from "@/context/global-context";
-import ColorSetter from "../ColorSetter/Solid";
+import ColorSetter from "../color-setter";
 // import SliderInputNumber from "@/app/_fabritor/components/SliderInputNumber";
 import {
   BORDER_TYPES,
   getObjectBorderType,
   getStrokeDashArray,
-} from "../BorderSetter";
+} from "../border-setter";
 
 const { Item: FormItem } = Form;
 
 const LINE_BORDER_TYPES = BORDER_TYPES.slice(1);
 
-export default function LineSetter() {
+export default function Line() {
   const { object, editor } = useContext(GloablStateContext);
   const [form] = Form.useForm();
 

@@ -1,33 +1,17 @@
 import { createFImage } from "@/app/_objects/image";
-import { useContext, useState } from "react";
-import ImageSelector from "@/app/_fabritor/components/image-selector";
+import { useContext, useEffect, useState } from "react";
+import ImageSelector from "@/app/_components/image-selector";
 import { GloablStateContext } from "@/context/global-context";
 import { Input } from "@/components/ui/input";
 import { Magnifer as SearchIcon } from "solar-icon-set";
 import { PEXEL_API_KEY } from "@/config";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
-const imageSearchTags = [
-  "Background",
-  "Sky",
-  "Food",
-  "Paper",
-  "Money",
-  "Beach",
-  "Water",
-  "White background",
-  "Black background",
-  "Coffee",
-  "Nature",
-  "Car",
-  "Business",
-  "Laptop",
-  "Office",
-];
+const imageSearchTags = ["Background", "Sky", "Food", "Paper", "Money", "Beach", "Water", "White background", "Black background", "Coffee", "Nature", "Car", "Business", "Laptop", "Office"];
 
 export default function ImagePanel() {
   const { editor } = useContext(GloablStateContext);
-  const [searchTerm, setSeachTerm] = useState("");
+  const [searchTerm, setSeachTerm] = useState("Background");
   const [images, setIamges] = useState<any[]>([]);
 
   const addImage = async (url: string) => {
@@ -39,6 +23,10 @@ export default function ImagePanel() {
     });
   };
 
+  useEffect(() => {
+    fetchIamges("Background");
+  }, []);
+
   const fetchIamges = async (term: string) => {
     setSeachTerm(term);
     const data = await fetch(`https://api.pexels.com/v1/search?query=${term}`, {
@@ -48,8 +36,6 @@ export default function ImagePanel() {
     }).then((res) => res.json());
 
     setIamges(data.photos);
-
-    console.log(data.photos);
   };
 
   return (
@@ -61,41 +47,25 @@ export default function ImagePanel() {
         <div className="bg-gray-500 h-px flex-1" />
       </div>
       <div className="flex gap-1 items-center border-gray-500 border rounded-lg px-2">
-        <Input
-          placeholder="Search by tags or names"
-          className="border-none focus-visible:ring-0 focus-visible:ring-offset-0"
-          onChange={(e) => fetchIamges(e.target.value)}
-          value={searchTerm}
-        />
+        <Input placeholder="Search by tags or names" className="border-none focus-visible:ring-0 focus-visible:ring-offset-0" onChange={(e) => fetchIamges(e.target.value)} value={searchTerm} />
         <SearchIcon color="#BDBDBD" />
       </div>
-
-      <div className="flex gap-2  w-full mt-4 overflow-scroll ">
-        {imageSearchTags?.map((item) => {
-          return (
-            <div
-              key={item}
-              className="flex-shrink-0 w-max px-3 py-1 border-gray-500 border text-gray-400 font-light text-xs rounded-md cursor-pointer"
-              onClick={() => fetchIamges(item)}
-            >
-              {item}
-            </div>
-          );
-        })}
-      </div>
-
-      <ScrollArea className="h-[23rem] mt-4">
-        <div className="grid gap-4 grid-cols-2  w-full">
-          {images?.map((item) => {
+      <ScrollArea>
+        <div className="flex gap-2  w-full mt-4  pb-2">
+          {imageSearchTags?.map((item) => {
             return (
-              <img
-                key={item?.id}
-                src={item.src.original}
-                alt=""
-                className="w-36 aspect-square object-cover rounded-lg object-center"
-                onClick={() => addImage(item.src.original)}
-              />
+              <div key={item} className="flex-shrink-0 w-max px-3 py-1 border-gray-500 border text-gray-400 font-light text-xs rounded-md cursor-pointer" onClick={() => fetchIamges(item)}>
+                {item}
+              </div>
             );
+          })}
+        </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
+      <ScrollArea className="h-[28rem] mt-4">
+        <div className="grid gap-3 grid-cols-2  w-full">
+          {images?.map((item) => {
+            return <img key={item?.id} src={item.src.small} alt="" className="w-full aspect-video object-cover rounded-md object-center" onClick={() => addImage(item.src.large2x)} />;
           })}
         </div>
       </ScrollArea>

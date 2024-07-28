@@ -1,6 +1,4 @@
-import { useRef } from "react";
-
-import LocalFileSelector from "../LocalFileSelector";
+import { ChangeEvent } from "react";
 import { Gallery as ImageIcon } from "solar-icon-set";
 
 type Props = {
@@ -8,13 +6,9 @@ type Props = {
 };
 
 export default function LocalImageSelector({ onChange }: Props) {
-  const localFileSelectorRef = useRef<any>();
-
-  const handleClick = () => {
-    localFileSelectorRef.current?.start?.();
-  };
-
-  const handleFileChange = (file: Blob) => {
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event?.target?.files?.[0];
+    if (!file) return;
     if (file.type === "image/svg+xml") {
       // const url = URL.createObjectURL(file);
       // addSvg?.({ url });
@@ -30,23 +24,15 @@ export default function LocalImageSelector({ onChange }: Props) {
 
   return (
     <div className="border-dashed border-gray-500 border w-full h-max p-8 px-4 gap-3 rounded-xl flex flex-col items-center justify-center">
-      {/* <Button variant="outline" size={"sm"} onClick={handleClick}>
-        upload
-      </Button> */}
       <ImageIcon iconStyle="BoldDuotone" size={40} color="#BDBDBD" />
-      <p
-        className="text-center text-gray-400 font-light text-sm cursor-pointer"
-        onClick={handleClick}
-      >
-        Drag & drop or <span className="text-white underline">upload</span> a
-        image
+      <p className="text-center text-gray-400 font-light text-sm cursor-pointer">
+        Drag & drop or
+        <label htmlFor="upload-image">
+          <span className="text-white underline">upload</span>
+        </label>{" "}
+        a image
       </p>
-
-      <LocalFileSelector
-        accept="image/*"
-        ref={localFileSelectorRef}
-        onChange={handleFileChange}
-      />
+      <input id="upload-image" type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
     </div>
   );
 }

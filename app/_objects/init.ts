@@ -27,14 +27,4 @@ export const initObjectPrototype = () => {
   });
 
   fabric.Group.prototype.subTargetCheck = true;
-
-  fabric.Object.prototype.set({
-    transparentCorners: false,
-    borderColor: "#51B9F9",
-    cornerColor: "#FFF",
-    borderScaleFactor: 2.5,
-    cornerStyle: "circle",
-    cornerStrokeColor: "#0E98FC",
-    borderOpacityWhenMoving: 1,
-  });
 };

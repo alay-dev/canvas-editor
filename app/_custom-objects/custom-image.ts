@@ -40,9 +40,7 @@ export const createFImageClass = () => {
         "initialize",
         [this.img, this.borderRect],
         {
-          borderColor: "#FF2222",
           borderDashArray: null,
-          borderScaleFactor: 2,
           padding: 0,
           subTargetCheck: false,
           imageBorder,
@@ -165,12 +163,9 @@ export const createFImageClass = () => {
     },
   }) as any;
 
-  (fabric.FImage as any).fromObject = (
-    object: any,
-    callback: (data: any) => void
-  ) => {
+  (fabric.FImage as any).fromObject = (object: any, callback: (data: any) => void) => {
     const { objects, ...options } = object;
-    console.log(objects, object, "PPOO");
+
     const imgJson = { ...objects[0] };
     (fabric.Image as any).fromObject(imgJson, (img: fabric.Image) => {
       callback(new fabric.FImage({ image: img, ...options }, true));

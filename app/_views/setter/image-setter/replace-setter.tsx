@@ -1,11 +1,5 @@
-// @ts-nocheck
-import { FileImageOutlined } from "@ant-design/icons";
-import ImageSelector from "@/app/_fabritor/components/image-selector";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import ImageSelector from "@/app/_components/image-selector";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { useContext } from "react";
 import { GloablStateContext } from "@/context/global-context";
@@ -16,7 +10,7 @@ export default function ReplaceSetter() {
   const handleImageReplace = (base64: string | ArrayBuffer) => {
     if (base64) {
       (object as fabric.Image).setSrc(String(base64), () => {
-        editor?.canvas.requestRenderAll();
+        editor?.canvas?.requestRenderAll();
         editor?.fireCustomModifiedEvent();
       });
     }
@@ -26,10 +20,7 @@ export default function ReplaceSetter() {
     <div className=" mb-4 w-full">
       <Popover>
         <PopoverTrigger asChild className="w-full">
-          <Button
-            size={"sm"}
-            className="w-full bg-green-700 hover:bg-green-800"
-          >
+          <Button size={"sm"} className="w-full bg-green-700 hover:bg-green-800">
             Replace the picture
           </Button>
         </PopoverTrigger>

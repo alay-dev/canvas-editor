@@ -22,13 +22,7 @@ const linePositionHandler = (x, y) => {
       const localPoint = new fabric.Point(points[x], points[y]);
 
       // move will not change x1 y1 x2 y2
-      const point = fabric.util.transformPoint(
-        localPoint,
-        fabric.util.multiplyTransformMatrices(
-          fabricObject.canvas.viewportTransform,
-          fabricObject.calcTransformMatrix()
-        )
-      );
+      const point = fabric.util.transformPoint(localPoint, fabric.util.multiplyTransformMatrices(fabricObject.canvas.viewportTransform, fabricObject.calcTransformMatrix()));
       return point;
     } else {
       return new fabric.Point(0, 0);

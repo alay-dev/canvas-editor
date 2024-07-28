@@ -1,21 +1,15 @@
 import { fabric } from "fabric";
 import { uuid } from "@/utils";
-import { toast } from "sonner";
+import { Image } from "fabric/fabric-impl";
 
 export const loadImageDom = async (url: string) => {
   return new Promise((resolve, reject) => {
     fabric.util.loadImage(
       url,
       (img) => {
-        if (img) {
-          return resolve(img);
-        }
+        if (!img) return reject("Failed to load image");
 
-        toast("Failed to load the image", {
-          description: "Oops. somethign went wrong. Please check the image.",
-        });
-
-        return reject();
+        return resolve(img);
       },
       null,
       "anonymous"
@@ -26,18 +20,11 @@ export const loadImageDom = async (url: string) => {
 export const loadImage = async (imageSource: string) => {
   if (typeof imageSource === "string") {
     return new Promise<fabric.Image>((resolve, reject) => {
-      fabric.Image.fromURL(
+      fabric.FImage.fromURL(
         imageSource,
-        (img) => {
-          if (!img) {
-            toast("Failed to load the image", {
-              description:
-                "Oops. somethign went wrong. Please check the image.",
-            });
-            reject();
-            return;
-          }
-          resolve(img);
+        (img: Image) => {
+          if (!img) return reject("Failed to load image");
+          return resolve(img);
         },
         {
           crossOrigin: "anonymous",
@@ -45,28 +32,19 @@ export const loadImage = async (imageSource: string) => {
       );
     });
   }
-  return Promise.resolve(new fabric.Image(imageSource));
+  return Promise.resolve(new fabric.FImage(imageSource));
 };
 
 export const createClipRect = (object: fabric.Object, options = {}) => {
   const width = object.getScaledWidth();
   const height = object.getScaledHeight();
-  return new fabric.Rect({
-    left: -width / 2,
-    top: -height / 2,
-    width,
-    height,
-    ...options,
-  });
+  return new fabric.Rect({ left: -width / 2, top: -height / 2, width, height, ...options });
 };
 
-export const createImage = async (options: {
-  src: string;
-  canvas: fabric.Canvas;
-}) => {
+export const createImage = async (options: { src: string; canvas: fabric.Canvas }) => {
   const { src, canvas, ...rest } = options || {};
 
-  let img!: fabric.Image;
+  let img;
   try {
     img = await loadImage(src);
   } catch (e) {
@@ -75,7 +53,7 @@ export const createImage = async (options: {
 
   if (!img) return;
 
-  img.set({
+  img?.set({
     ...rest,
     paintFirst: "fill",
     id: uuid(),
@@ -89,10 +67,7 @@ export const createImage = async (options: {
   return img;
 };
 
-export const createFImage = async (options: {
-  src: string;
-  canvas: fabric.Canvas;
-}) => {
+export const createFImage = async (options: { src: string; canvas: fabric.Canvas }) => {
   const { src, canvas } = options || {};
 
   let img!: fabric.Image;

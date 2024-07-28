@@ -1,46 +1,32 @@
 //@ts-nocheck
-
 "use client";
 
 import { fabric } from "fabric";
 import { message } from "antd";
-import {
-  calcCanvasZoomLevel,
-  handleFLinePointsWhenMoving,
-} from "@/utils/helper";
+import { calcCanvasZoomLevel, handleFLinePointsWhenMoving } from "@/utils/helper";
 import initControl from "./_controller";
 
 import { initObjectPrototype } from "@/app/_objects/init";
 import { throttle } from "lodash";
 import { loadFont } from "@/utils";
-import {
-  initAligningGuidelines,
-  initCenteringGuidelines,
-} from "@/app/_guide-lines";
+import { initAligningGuidelines, initCenteringGuidelines } from "@/app/_guide-lines";
 
-import {
-  SKETCH_ID,
-  CANVAS_CUSTOM_PROPS,
-  SCHEMA_VERSION,
-} from "@/utils/constants";
+import { SKETCH_ID, CANVAS_CUSTOM_PROPS } from "@/utils/constants";
 import FabricHistory from "@/app/_extensions/history";
 import AutoSave from "@/app/_extensions/autosave";
 import { createGroup } from "./_objects/group";
 import createCustomClass from "./_custom-objects";
-import {
-  HOVER_OBJECT_CORNER,
-  HOVER_OBJECT_CONTROL,
-  CAPTURE_SUBTARGET_WHEN_DBLCLICK,
-  LOAD_JSON_IGNORE_LOAD_FONT,
-} from "@/config";
-import { toast } from "sonner";
-import dynamic from "next/dynamic";
+import { HOVER_OBJECT_CORNER, HOVER_OBJECT_CONTROL, CAPTURE_SUBTARGET_WHEN_DBLCLICK, LOAD_JSON_IGNORE_LOAD_FONT } from "@/config";
+
+interface Sketch extends fabric.Rect {
+  canvas_name: string;
+}
 
 export default class Editor {
   public canvas: fabric.Canvas | null = null;
   private _options;
   private _template;
-  public sketch: fabric.Rect | null = null;
+  public sketch: Sketch | null;
   private _resizeObserver: ResizeObserver | null = null;
   private _pan;
   public fhistory: FabricHistory | null = null;
@@ -56,6 +42,7 @@ export default class Editor {
       lastPosX: 0,
       lastPosY: 0,
     };
+    this.sketch = null;
   }
 
   public async init() {
@@ -72,8 +59,8 @@ export default class Editor {
   }
 
   private _initObject() {
-    initObjectPrototype();
     createCustomClass();
+    initObjectPrototype();
     initControl();
   }
 
@@ -114,8 +101,7 @@ export default class Editor {
       hasControls: false,
       hoverCursor: "default",
       id: SKETCH_ID,
-      canvas_name: "New canvas",
-    });
+    }) as Sketch;
 
     this.canvas?.add(sketch);
     this.canvas?.requestRenderAll();
@@ -143,7 +129,7 @@ export default class Editor {
   }
 
   private _adjustSketch2Canvas() {
-    if (!this.canvas) return;
+    if (!this.canvas) throw new Error("Canvas is not initialized");
 
     const zoomLevel = calcCanvasZoomLevel(
       {
@@ -157,20 +143,15 @@ export default class Editor {
     );
 
     const center = this.canvas?.getCenter();
-    this.canvas?.zoomToPoint(
-      new fabric.Point(center?.left || 0, center?.top || 0),
-      zoomLevel - 0.04
-    );
+    this.canvas?.zoomToPoint(new fabric.Point(center?.left || 0, center?.top || 0), zoomLevel - 0.04);
 
     // sketch
     const sketchCenter = this.sketch?.getCenterPoint();
     const viewportTransform = this.canvas?.viewportTransform;
     // @ts-ignore
-    viewportTransform[4] =
-      this.canvas.width / 2 - sketchCenter.x * viewportTransform[0];
+    viewportTransform[4] = this.canvas.width / 2 - sketchCenter.x * viewportTransform[0];
     // @ts-ignore
-    viewportTransform[5] =
-      this.canvas.height / 2 - sketchCenter.y * viewportTransform[3];
+    viewportTransform[5] = this.canvas.height / 2 - sketchCenter.y * viewportTransform[3];
     // @ts-ignore
     this.canvas.setViewportTransform(viewportTransform);
     this.canvas.requestRenderAll();
@@ -218,11 +199,7 @@ export default class Editor {
       }
 
       if (HOVER_OBJECT_CONTROL) {
-        if (
-          target &&
-          target.id !== SKETCH_ID &&
-          target !== this.canvas?.getActiveObject()
-        ) {
+        if (target && target.id !== SKETCH_ID && target !== this.canvas?.getActiveObject()) {
           // @ts-ignore
           target._renderControls(this.canvas.contextTop, {
             hasControls: false,
@@ -282,11 +259,7 @@ export default class Editor {
         this.canvas?.requestRenderAll();
       }
 
-      if (
-        target.type === "f-line" ||
-        target.type === "f-arrow" ||
-        target.type === "f-tri-arrow"
-      ) {
+      if (target.type === "f-line" || target.type === "f-arrow" || target.type === "f-tri-arrow") {
         // fabric Line doesnot change points when moving
         // but change left/top when change points ....
         handleFLinePointsWhenMoving(opt);
@@ -359,7 +332,7 @@ export default class Editor {
     if (zoom > 20) zoom = 20;
     if (zoom < 0.01) zoom = 0.01;
     const center = this.canvas?.getCenter();
-    this.canvas?.zoomToPoint({ x: center.left, y: center.top }, zoom);
+    this.canvas?.zoomToPoint({ x: center?.left, y: center?.top }, zoom);
     opt.e.preventDefault();
     opt.e.stopPropagation();
   }
@@ -367,7 +340,6 @@ export default class Editor {
   public destroy() {
     if (this.canvas) {
       this.canvas?.dispose();
-      // @ts-ignore
       this.canvas = null;
     }
     if (this.fhistory) {
@@ -383,41 +355,27 @@ export default class Editor {
     }
   }
 
-  public export2Img(options: any) {
+  public export2Img(options: { format: "png" | "jpg" | "svg" }): string {
+    if (!this.canvas || !this.sketch) throw new Error("Canvas is not initialized");
     const transform = this.canvas?.viewportTransform;
     this.canvas?.setViewportTransform([1, 0, 0, 1, 0, 0]);
     const { left, top, width, height } = this.sketch;
-    const dataURL = this.canvas?.toDataURL({
-      // multiplier: 2,
-      left,
-      top,
-      width,
-      height,
-      format: "png",
-      ...options,
-    });
-    // @ts-ignore
-    this.canvas.setViewportTransform(transform);
+    const dataURL = this.canvas?.toDataURL({ left, top, width, height, format: options.format });
+
+    if (transform) this.canvas.setViewportTransform(transform);
+
     return dataURL;
   }
 
-  public export2Svg() {
-    const { left, top, width, height } = this.sketch;
-    const svg = this.canvas?.toSVG({
-      width,
-      height,
-      viewBox: {
-        x: left,
-        y: top,
-        width,
-        height,
-      } as any,
-    });
+  public export2Svg(): string {
+    if (!this.canvas || !this.sketch) throw new Error("Canvas is not initialized");
 
-    if (!svg) {
-      toast("Failed to export some svgs");
-      return;
-    }
+    const { left, top, width, height } = this.sketch;
+    if (!left || !top || !width || !height) throw new Error("Failed to detect sketch dimensions or positions");
+    const svg = this.canvas?.toSVG({ width, height, viewBox: { x: left, y: top, width, height } });
+
+    if (!svg) throw new Error("Failed to export SVG");
+
     return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
   }
 
@@ -434,8 +392,7 @@ export default class Editor {
         json = JSON.parse(json);
       } catch (e) {
         console.log(e);
-        errorToast &&
-          message.error("Failed to load local template, please try again.");
+        errorToast && message.error("Failed to load local template, please try again.");
         return false;
       }
     }
@@ -484,6 +441,7 @@ export default class Editor {
   }
 
   public async clearCanvas() {
+    if (!this.sketch) throw new Error("Canvas is not initialized");
     const { width, height, canvas_name } = this.sketch;
 
     const originalJson = `{"version":"5.3.0","objects":[{"type":"rect","version":"5.3.0","originX":"left","originY":"top","left":0,"top":0,"width":${width},"height":${height},"fill":"#ffffff","stroke":null,"strokeWidth":1,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":true,"strokeMiterLimit":4,"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"stroke","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"rx":0,"ry":0,"id":"sketch-canvas","canvas_name":"${canvas_name}","selectable":false,"hasControls":false}],"clipPath":{"type":"rect","version":"5.3.0","originX":"left","originY":"top","left":0,"top":0,"width":${width},"height":${height},"fill":"#ffffff","stroke":null,"strokeWidth":1,"strokeDashArray":null,"strokeLineCap":"butt","strokeDashOffset":0,"strokeLineJoin":"miter","strokeUniform":true,"strokeMiterLimit":4,"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"backgroundColor":"","fillRule":"nonzero","paintFirst":"stroke","globalCompositeOperation":"source-over","skewX":0,"skewY":0,"rx":0,"ry":0,"selectable":true,"hasControls":true},"background":"#ddd"}`;

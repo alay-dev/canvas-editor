@@ -10,10 +10,8 @@ import Main from "./_layout/main";
 export default function Fabritor() {
   const canvasEl = useRef<HTMLCanvasElement>(null);
   const workspaceEl = useRef<HTMLDivElement>(null);
-  const [editor, setEditor] = useState<Editor | null>(null);
-  const [activeObject, setActiveObject] = useState<
-    fabric.Object | null | undefined
-  >(null);
+  const [editor, setEditor] = useState<Editor | undefined>(undefined);
+  const [activeObject, setActiveObject] = useState<fabric.Object | null>(null);
   const [isReady, setReady] = useState(false);
 
   const clickHandler = (opt: any) => {
@@ -22,16 +20,18 @@ export default function Fabritor() {
   };
 
   const selectionHandler = (opt: fabric.IEvent<MouseEvent>) => {
+    if (!editor?.canvas) return;
     const { selected } = opt;
     if (selected && selected.length) {
       const selection = editor?.canvas?.getActiveObject();
       setActiveObject(selection);
     } else {
-      // setActiveObject(sketch);
+      setActiveObject(editor?.sketch);
     }
   };
 
   const groupHandler = () => {
+    if (!editor?.canvas) return;
     const selection = editor?.canvas?.getActiveObject();
     setActiveObject(selection);
   };
@@ -52,7 +52,7 @@ export default function Fabritor() {
       workspaceEl: workspaceEl.current,
       sketchEventHandler: {
         groupHandler: () => {
-          setActiveObject(editor?.canvas?.getActiveObject());
+          setActiveObject(editor?.canvas?.getActiveObject() || null);
         },
       },
     });
@@ -80,25 +80,13 @@ export default function Fabritor() {
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isReady]);
 
   return (
     <main>
-      <GloablStateContext.Provider
-        value={{
-          object: activeObject,
-          setActiveObject,
-          isReady,
-          setReady,
-          editor,
-        }}
-      >
+      <GloablStateContext.Provider value={{ object: activeObject, setActiveObject, isReady, setReady, editor }}>
         <Main isReady={isReady}>
-          <div
-            id="canvas-editor"
-            ref={workspaceEl}
-            className=" w-full h-full relative"
-          >
+          <div id="canvas-editor" ref={workspaceEl} className="flex-1 h-full relative">
             <canvas ref={canvasEl} />
           </div>
         </Main>

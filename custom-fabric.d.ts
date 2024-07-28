@@ -23,7 +23,6 @@ declare module "fabric" {
 
     interface IRectOptions extends fabric.IRectOptions {
       id?: string;
-      canvas_name?: string;
     }
 
     interface FText extends fabric.Textbox {}
@@ -39,7 +38,8 @@ declare module "fabric" {
     };
 
     const FImage: {
-      new (options: any, alreayGrouped: boolean): FImage;
+      new (options: any, alreayGrouped?: boolean): FImage;
+      fromURL: Function;
     };
 
     const FText: {

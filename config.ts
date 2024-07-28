@@ -13,8 +13,8 @@ export const IMAGE_CLIPPATH_QUALITY = true;
 
 export const MAX_HISTORY_LENGTH = 100;
 
-export const PANEL_WIDTH = 360;
-export const SETTER_WIDTH = 280;
+export const PANEL_WIDTH = 320;
+export const SETTER_WIDTH = 300;
 export const TOOLBAR_WIDTH = 100;
 
 export const CAPTURE_SUBTARGET_WHEN_DBLCLICK = false;

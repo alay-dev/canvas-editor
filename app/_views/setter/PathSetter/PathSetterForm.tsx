@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import SolidColorSetter from "../ColorSetter/Solid";
+import SolidColorSetter from "../color-setter";
 
 import { useContext, useEffect } from "react";
 import { GloablStateContext } from "@/context/global-context";

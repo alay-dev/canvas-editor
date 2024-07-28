@@ -1,4 +1,4 @@
-import Editor from "@/app/_fabritor/init";
+import Editor from "@/app/init";
 import { MAX_HISTORY_LENGTH } from "@/config";
 
 // https://github.com/alimozdemir/fabric-history/blob/master/src/index.js

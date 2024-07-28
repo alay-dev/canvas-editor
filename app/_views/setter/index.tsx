@@ -1,10 +1,12 @@
+// @ts-nocheck
+
 import { useContext } from "react";
 import { GloablStateContext } from "@/context/global-context";
 import { SKETCH_ID } from "@/utils/constants";
-import SketchSetter from "./SketchSetter";
+import SketchSetter from "./sketch-setter";
 import TextSetter from "./text-setter";
-import ImageSetter from "./ImageSetter";
-import { LineSetter, ShapeSetter } from "./ShapeSetter";
+import ImageSetter from "./image-setter";
+import { LineSetter, ShapeSetter } from "./shape-setter";
 // import CommonSetter from "./CommonSetter";
 // import GroupSetter from "./GroupSetter";
 import PathSetter from "./PathSetter";
@@ -99,18 +101,15 @@ export default function Setter() {
     }
     return (
       <div className="p-2 border-b border-gray-600">
-        <h3 className="text-sm"> {getSetterTitle()}</h3>
+        <h3 className="text-gray-100  text-lg uppercase"> {getSetterTitle()}</h3>
       </div>
     );
   };
 
   return (
-    <div
-      style={{ width: SETTER_WIDTH }}
-      className=" bg-[#263238] text-white overflow-y-scroll"
-    >
+    <div style={{ width: SETTER_WIDTH }} className=" bg-[#263238] text-white overflow-y-scroll">
       {renderSetterTitle()}
-      <div className="p-4">{renderSetter()}</div>
+      <div className="px-6 py-4">{renderSetter()}</div>
     </div>
   );
 }

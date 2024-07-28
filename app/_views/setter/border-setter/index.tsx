@@ -1,8 +1,7 @@
 import { useContext, useEffect } from "react";
-import ColorSetter from "../ColorSetter/Solid";
+import ColorSetter from "../color-setter";
 import { GloablStateContext } from "@/context/global-context";
 import { FormProvider, useForm } from "react-hook-form";
-import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { Border } from "@/types/custom-image";
 import SliderInput from "@/app/_components/slider-input";

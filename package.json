@@ -21,6 +21,7 @@
     "@radix-ui/react-slider": "^1.1.2",
     "@radix-ui/react-slot": "^1.0.2",
     "antd": "^5.17.2",
+    "bufferutil": "^4.0.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "fabric": "^5.3.0",
@@ -39,6 +40,7 @@
     "sonner": "^1.4.41",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
+    "utf-8-validate": "^6.0.4",
     "uuid": "^9.0.1",
     "vaul": "^0.9.1"
   },

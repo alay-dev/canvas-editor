@@ -1,5 +1,4 @@
 import { ReactElement, useContext, useState } from "react";
-
 import TextPanel from "./text-panel";
 import ImagePanel from "./image-panel";
 import PaintPanel from "./paint-panel";
@@ -8,15 +7,7 @@ import ShapePanel from "./shape-panel";
 import { GloablStateContext } from "@/context/global-context";
 
 import { PANEL_WIDTH } from "@/config";
-import {
-  Layers as LayerIcon,
-  TextSquare as TextIcon,
-  Gallery as PictureIcon,
-  FullScreen as ShapeIcon,
-  Pen as BrushIcon,
-  CodeScan as ApplicationIcon,
-  AltArrowLeft as LeftIcon,
-} from "solar-icon-set";
+import { Layers as LayerIcon, TextSquare as TextIcon, Gallery as PictureIcon, FullScreen as ShapeIcon, Pen as BrushIcon, CodeScan as ApplicationIcon, AltArrowLeft as LeftIcon } from "solar-icon-set";
 
 import { cn } from "@/lib/utils";
 
@@ -99,14 +90,7 @@ export default function Panel() {
         <ul className="w-20  h-full pt-4  border-r  border-gray-600 space-y-2  flex-shrink-0">
           {OBJECT_TYPES.map((item) => {
             return (
-              <li
-                className={cn(
-                  "py-3 cursor-pointer text-gray-300",
-                  selected === item.value && "bg-black/30"
-                )}
-                onClick={() => handleTabChange(item.value)}
-                key={item.value}
-              >
+              <li className={cn("py-3 cursor-pointer text-gray-300", selected === item.value && "bg-black/30")} onClick={() => handleTabChange(item.value)} key={item.value}>
                 {renderLabel(item)}
               </li>
             );
@@ -114,16 +98,10 @@ export default function Panel() {
         </ul>
       </aside>
       {!isPanelHidden ? (
-        <div
-          style={{ width: PANEL_WIDTH }}
-          className="w-full bg-background relative"
-        >
+        <div style={{ width: PANEL_WIDTH }} className="w-full bg-background relative">
           <div className="absolute -right-4 top-1/2 z-40 -translate-y-1/2  cursor-pointer">
             <img src="/icons/panel-collapse.svg" alt="" className="w-5" />
-            <LeftIcon
-              className="absolute  top-1/2 -translate-y-1/2"
-              color="#fff"
-            />
+            <LeftIcon className="absolute  top-1/2 -translate-y-1/2" color="#fff" />
           </div>
 
           {renderPanel(selected)}

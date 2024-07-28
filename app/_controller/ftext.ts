@@ -15,6 +15,7 @@ export const initFTextControl = () => {
     ftextControl.bl = objectControls.bl;
     ftextControl.mt = objectControls.mt;
     ftextControl.mb = objectControls.mb;
+    ftextControl.mtr = objectControls.mtr;
 
     ftextControl.ml = new fabric.Control({
       x: -0.5,

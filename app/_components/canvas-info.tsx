@@ -2,9 +2,10 @@ import { useState, useEffect, useContext } from "react";
 import { GloablStateContext } from "@/context/global-context";
 import { Input } from "@/components/ui/input";
 import { Pen } from "solar-icon-set";
+import { defaultCanvasName } from "@/constants/canvas";
 
 export default function CanvasInfo() {
-  const [canvasName, setCanvasName] = useState("New canvas");
+  const [canvasName, setCanvasName] = useState(defaultCanvasName);
   const [isEditing, setEditing] = useState(false);
   const { editor } = useContext(GloablStateContext);
 
@@ -12,8 +13,7 @@ export default function CanvasInfo() {
     setCanvasName(name);
     if (!editor) return;
     const { sketch } = editor;
-    // @ts-ignore custom canvas name
-    sketch.set("canvas_name", name);
+    sketch?.set("canvas_name", name);
     editor.fireCustomModifiedEvent();
   };
 
@@ -25,12 +25,7 @@ export default function CanvasInfo() {
   return (
     <div className="flex items-center gap-2">
       {isEditing ? (
-        <Input
-          value={canvasName}
-          onChange={(e) => handleChange(e.target.value)}
-          className="focus-visible:ring-0 w-64"
-          onBlur={() => setEditing(false)}
-        />
+        <Input value={canvasName} onChange={(e) => handleChange(e.target.value)} className="focus-visible:ring-0 w-64" onBlur={() => setEditing(false)} />
       ) : (
         <div className="flex items-center gap-2 ">
           <p className="text-sm text-gray-300">{canvasName}</p>

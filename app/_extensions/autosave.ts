@@ -39,7 +39,6 @@ export default class AutoSave {
   private autoSaveAction() {
     if (this.saving) return;
     this.saving = true;
-    console.log("saving", "SAVING");
     try {
       if (this.canSave) {
         localStorage.setItem("canvas_json", this._getJSON());
@@ -71,7 +70,6 @@ export default class AutoSave {
         const jsonStr = localStorage.getItem("canvas_json");
         if (jsonStr) {
           const json = JSON.parse(jsonStr);
-          console.log(json, "JSON PARSE");
           await this.editor.loadFromJSON(json);
         }
       } catch (e) {

@@ -9,18 +9,9 @@ import { SketchPicker, BlockPicker, HuePicker } from "react-color";
 type Props = {
   value: string;
   onChange: (data: string) => void;
-  trigger?: any;
 };
 
-export default function SolidColorSetter({ value, onChange, trigger }: Props) {
-  const calcTriggerBg = () => {
-    // const c = new Color(value);
-    // if (c.toHexString() === "#ffffff") {
-    //   return "rgba(103,103,103,0.24)";
-    // }
-    return null;
-  };
-
+export default function Color({ value, onChange }: Props) {
   return (
     <div className="w-max text-white cursor-pointer">
       <Popover>

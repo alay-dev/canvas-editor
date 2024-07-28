@@ -1,22 +1,20 @@
-export const APP_NAME = "fabritor";
 export const APP_VERSION = "3.0.0";
 export const SCHEMA_VERSION = 3;
 
-export const LOG_PREFIX = `${APP_NAME}_log：`;
-
 export const OBJECT_DEFAULT_CONFIG = {
   // controls
-  borderColor: "#FF2222",
-  borderScaleFactor: 2,
-  cornerStrokeColor: "#2222",
-  cornerColor: "#FF2222",
   cornerSize: 12,
-  cornerStyle: "circle",
-  transparentCorners: false,
   padding: 0,
   centeredScaling: false,
   strokeUniform: true,
   paintFirst: "stroke",
+  transparentCorners: false,
+  borderColor: "#51B9F9",
+  cornerColor: "#FFF",
+  borderScaleFactor: 2.5,
+  cornerStyle: "circle",
+  cornerStrokeColor: "#0E98FC",
+  borderOpacityWhenMoving: 1,
 };
 
 export const TEXTBOX_DEFAULT_CONFIG = {

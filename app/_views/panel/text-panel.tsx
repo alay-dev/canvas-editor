@@ -20,9 +20,7 @@ const PRESET_FONT_LIST = [
     },
   },
   {
-    label: (
-      <div style={{ fontSize: 24, fontFamily: "Roboto" }}>Add a subtitle</div>
-    ),
+    label: <div style={{ fontSize: 24, fontFamily: "Roboto" }}>Add a subtitle</div>,
     key: "sub-title",
     config: {
       fontFamily: "Roboto",
@@ -66,10 +64,10 @@ const PRESET_FONT_LIST = [
   },
 ];
 
-export function PresetFontPanel(props) {
+export function PresetFontPanel(props: any) {
   const { addTextBox } = props;
 
-  const handleClick = (item) => {
+  const handleClick = (item: any) => {
     addTextBox?.(item.config);
   };
 
@@ -77,9 +75,7 @@ export function PresetFontPanel(props) {
     <div className="">
       <div className="flex gap-3 items-center justify-center">
         <div className="flex-1 h-px bg-gray-500" />
-        <h3 className="text-center my-5 text-gray-500 text-sm">
-          Default text box
-        </h3>
+        <h3 className="text-center my-5 text-gray-500 text-sm">Default text box</h3>
         <div className="flex-1 h-px bg-gray-500" />
       </div>
 

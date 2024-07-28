@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { GloablStateContext } from "@/context/global-context";
-import BorderSetter from "../BorderSetter";
-import ColorSetter from "../ColorSetter/Solid";
+import BorderSetter from "../border-setter";
+import ColorSetter from "../color-setter";
 import { FormProvider, useForm } from "react-hook-form";
 import { transformColors2Fill, transformFill2Colors } from "@/utils";
 import CommonSetter from "../CommonSetter/common-setter";
@@ -15,7 +15,7 @@ type ShapeInputs = {
   isLocked: boolean;
 };
 
-export default function ShapeSetter() {
+export default function Shape() {
   const { object, editor } = useContext(GloablStateContext);
   const methods = useForm<ShapeInputs>({
     values: {
@@ -37,6 +37,7 @@ export default function ShapeSetter() {
 
   return (
     <FormProvider {...methods}>
+      <CommonSetter />
       <div className="mb-4">
         <label className=" text-gray-300 font-light text-sm">Fill color</label>
         <ColorSetter
@@ -46,7 +47,6 @@ export default function ShapeSetter() {
       </div>
 
       <BorderSetter />
-      <CommonSetter />
     </FormProvider>
   );
 }

@@ -2,15 +2,15 @@ import Editor from "@/app/init";
 import { createContext } from "react";
 
 export interface IGloablStateContext {
-  object?: fabric.Object | null | undefined;
+  object?: fabric.Object | null;
   setActiveObject?: (o: fabric.Object | null) => void;
   isReady?: boolean;
   setReady?: (o: boolean) => void;
-  editor?: Editor | null;
+  editor?: Editor;
 }
 
 export const GloablStateContext = createContext<IGloablStateContext>({
-  editor: null,
+  editor: undefined,
   isReady: false,
-  object: null,
+  object: undefined,
 });

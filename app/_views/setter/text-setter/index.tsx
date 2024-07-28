@@ -1,8 +1,8 @@
 import { useContext, useEffect } from "react";
 import { fabric } from "fabric";
 import { GloablStateContext } from "@/context/global-context";
-import FontStyleSetter from "./font-style-setter";
-import AlignSetter from "./alignment-setter";
+import FontStyleSetter from "./font-style";
+import AlignSetter from "./alignment";
 import { transformFill2Colors } from "@/utils";
 import { FormProvider, useForm } from "react-hook-form";
 import { FontStyle, TextStyle } from "@/types/custom-text";
@@ -20,7 +20,7 @@ import {
   Select,
 } from "@/components/ui/select";
 import CommonSetter from "../CommonSetter/common-setter";
-import SolidColorSetter from "../ColorSetter/Solid";
+import SolidColorSetter from "../color-setter";
 
 export default function TextSetter() {
   const { object, editor } = useContext(GloablStateContext);
@@ -124,10 +124,11 @@ export default function TextSetter() {
 
   return (
     <FormProvider {...methods}>
+      <CommonSetter />
       <div className="mb-5">
         <label
           htmlFor="font-size"
-          className=" text-gray-300 font-light text-sm"
+          className=" text-gray-400 font-light text-sm"
         >
           Font family
         </label>
@@ -150,7 +151,7 @@ export default function TextSetter() {
       <div className="mb-5">
         <label
           htmlFor="font-size"
-          className=" text-gray-300 font-light text-sm"
+          className=" text-gray-400 font-light text-sm"
         >
           Color
         </label>
@@ -163,7 +164,7 @@ export default function TextSetter() {
       <div className="mb-5">
         <label
           htmlFor="font-size"
-          className=" text-gray-300 font-light text-sm"
+          className=" text-gray-400 font-light text-sm"
         >
           Font size
         </label>
@@ -178,7 +179,7 @@ export default function TextSetter() {
       <div className="mb-5">
         <label
           htmlFor="font-size"
-          className=" text-gray-300 font-light text-sm"
+          className=" text-gray-400 font-light text-sm"
         >
           Alignment
         </label>
@@ -191,7 +192,7 @@ export default function TextSetter() {
       <div className="mb-5">
         <label
           htmlFor="font-size"
-          className=" text-gray-300 font-light text-sm"
+          className=" text-gray-400 font-light text-sm"
         >
           Style
         </label>
@@ -203,7 +204,7 @@ export default function TextSetter() {
       <div className="mb-5">
         <label
           htmlFor="font-size"
-          className=" text-gray-300 font-light text-sm"
+          className=" text-gray-400 font-light text-sm"
         >
           Letter spacing
         </label>
@@ -217,7 +218,7 @@ export default function TextSetter() {
       <div className="mb-5">
         <label
           htmlFor="font-size"
-          className=" text-gray-300 font-light text-sm"
+          className=" text-gray-400 font-light text-sm"
         >
           Line height
         </label>
@@ -229,8 +230,6 @@ export default function TextSetter() {
           step={0.1}
         />
       </div>
-
-      <CommonSetter />
     </FormProvider>
   );
 }

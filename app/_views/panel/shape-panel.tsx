@@ -6,12 +6,12 @@ import { GloablStateContext } from "@/context/global-context";
 import { createPathFromSvg } from "@/app/_objects/path";
 import { fabric } from "fabric";
 
-const degree2Radian = (d) => {
+const degree2Radian = (d: number) => {
   return (Math.PI * d) / 180;
 };
 
 // The center is [0,0] point
-const getRightPolygonPoints = (num, radius = 100) => {
+const getRightPolygonPoints = (num: number, radius = 100) => {
   const d = 360 / num;
   const points: { x: number; y: number }[] = [];
   for (let i = 0; i < num; i++) {
@@ -193,32 +193,22 @@ export default function ShapePanel() {
             }}
             className="fabritor-panel-shape-item"
           >
-            <img
-              src={`data:image/svg+xml,${encodeURIComponent(item.svg)}`}
-              alt=""
-              style={{ width: 48, height: 48 }}
-            />
+            <img src={`data:image/svg+xml,${encodeURIComponent(item.svg)}`} alt="" style={{ width: 48, height: 48 }} />
           </div>
         ))}
       </div>
       <h2 className="text-gray-300 text-sm mt-3">Shape</h2>
       <div className="h-px bg-gray-500 " />
-      <div className="grid grid-cols-3 gap-4 items-center justify-center mt-5 place-items-center">
+      <div className="grid grid-cols-4 gap-3 items-center justify-center mt-5 place-items-center">
         {shapes.map((item) => (
           <div
             key={item.key}
             onClick={() => {
               addShape(item);
             }}
-            className="fabritor-panel-shape-item"
+            className="bg-gray-700 rounded-md w-full aspect-square flex items-center justify-center"
           >
-            <img
-              src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(
-                item.elem
-              )}`}
-              style={{ width: 64, height: 64 }}
-              alt=""
-            />
+            <img src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(item.elem)}`} style={{ width: 45, height: 45 }} alt="" />
           </div>
         ))}
       </div>

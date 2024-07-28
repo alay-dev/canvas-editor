@@ -34,10 +34,7 @@ export const createFArrowClass = () => {
       ctx.beginPath();
 
       ctx.moveTo(0, 0);
-      ctx.lineTo(
-        this.oldArrowInfo.left - delta,
-        this.oldArrowInfo.bottom + delta
-      );
+      ctx.lineTo(this.oldArrowInfo.left - delta, this.oldArrowInfo.bottom + delta);
       ctx.lineTo(this.oldArrowInfo.left - delta, this.oldArrowInfo.top - delta);
       ctx.closePath();
       ctx.fillStyle = this.stroke;
@@ -70,13 +67,7 @@ export const createFArrowClass = () => {
     },
   }) as any;
 
-  (fabric.FArrow as any).fromObject = function (
-    object: any,
-    callback: (data: any) => void
-  ) {
-    callback &&
-      callback(
-        new fabric.FArrow([object.x1, object.y1, object.x2, object.y2], object)
-      );
+  (fabric.FArrow as any).fromObject = function (object: any, callback: (data: any) => void) {
+    callback?.(new fabric.FArrow([object.x1, object.y1, object.x2, object.y2], object));
   };
 };
