@@ -97,7 +97,7 @@ export const pasteObject = async (canvas: fabric.Canvas) => {
 
     canvas.setActiveObject(cloned);
     canvas.requestRenderAll();
-    canvas.fire("fabritor:clone", { target: cloned });
+    canvas.fire("editor:clone", { target: cloned });
   }, CANVAS_CUSTOM_PROPS);
 };
 
@@ -117,7 +117,7 @@ export const removeObject = (target: fabric.Object, canvas: fabric.Canvas) => {
   }
   // handleMouseOutCorner(target);
   canvas.requestRenderAll();
-  canvas.fire("fabritor:del", { target: null });
+  canvas.fire("editor:del", { target: null });
   return true;
 };
 
@@ -130,7 +130,7 @@ export const groupSelection = (canvas: fabric.Canvas, target: any) => {
   }
   target.toGroup();
   canvas.requestRenderAll();
-  canvas.fire("fabritor:group");
+  canvas.fire("editor:group");
 };
 
 export const ungroup = (canvas: fabric.Canvas, target: any) => {
@@ -150,7 +150,7 @@ export const ungroup = (canvas: fabric.Canvas, target: any) => {
   });
   target.toActiveSelection();
   canvas.requestRenderAll();
-  canvas.fire("fabritor:ungroup");
+  canvas.fire("editor:ungroup");
 };
 
 export const changeLayerLevel = (level: string, editor: any, target: any) => {

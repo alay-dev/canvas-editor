@@ -56,7 +56,7 @@ export default class FabricHistory {
     this.canvas?.on("object:removed", this._historySaveAction.bind(this));
     this.canvas?.on("object:modified", this._historySaveAction.bind(this));
     this.canvas?.on("object:skewing", this._historySaveAction.bind(this));
-    this.canvas?.on("fabritor:object:modified", this._historySaveAction.bind(this));
+    this.canvas?.on("editor:object:modified", this._historySaveAction.bind(this));
   }
 
   public dispose() {
@@ -64,7 +64,7 @@ export default class FabricHistory {
     this.canvas?.off("object:removed", this._historySaveAction.bind(this));
     this.canvas?.off("object:modified", this._historySaveAction.bind(this));
     this.canvas?.off("object:skewing", this._historySaveAction.bind(this));
-    this.canvas?.off("fabritor:object:modified", this._historySaveAction.bind(this));
+    this.canvas?.off("editor:object:modified", this._historySaveAction.bind(this));
   }
 
   public async undo() {
@@ -78,7 +78,7 @@ export default class FabricHistory {
       await this.editor.loadFromJSON(_history);
 
       this.doing = false;
-      this.canvas?.fire("fabritor:history:undo");
+      this.canvas?.fire("editor:history:undo");
     }
   }
 
@@ -93,7 +93,7 @@ export default class FabricHistory {
       await this.editor.loadFromJSON(_history);
 
       this.doing = false;
-      this.canvas?.fire("fabritor:history:redo");
+      this.canvas?.fire("editor:history:redo");
     }
   }
 

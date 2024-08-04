@@ -1,10 +1,10 @@
-import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined } from "@ant-design/icons";
 import { cn } from "@/lib/utils";
+import { AlignCenter, AlignLeft, AlignRight } from "lucide-react";
 
 const TEXT_ALIGNMENTS = [
-  { icon: <AlignLeftOutlined />, value: "left" },
-  { icon: <AlignCenterOutlined />, value: "center" },
-  { icon: <AlignRightOutlined />, value: "right" },
+  { icon: <AlignLeft />, value: "left" },
+  { icon: <AlignCenter />, value: "center" },
+  { icon: <AlignRight />, value: "right" },
 ];
 
 type Props = {

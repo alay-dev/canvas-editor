@@ -279,7 +279,7 @@ export default class Editor {
       });
       this.canvas?.renderAll();
       this.canvas?.setActiveObject(grp);
-      this.canvas?.fire("fabritor:group", {
+      this.canvas?.fire("editor:group", {
         target: this.canvas?.getActiveObject(),
       });
 
@@ -321,7 +321,7 @@ export default class Editor {
   }
 
   public fireCustomModifiedEvent(data: any = null) {
-    this.canvas?.fire("fabritor:object:modified", data);
+    this.canvas?.fire("editor:object:modified", data);
   }
 
   private _scrollSketch(opt) {
@@ -418,7 +418,7 @@ export default class Editor {
 
           this.autoSave?.setCanSave(true);
 
-          this.canvas?.fire("fabritor:load:json", {
+          this.canvas?.fire("editor:load:json", {
             lastActiveObject: lastActiveObject,
           });
 

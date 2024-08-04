@@ -22,7 +22,7 @@ export default class AutoSave {
       this.canvas?.on("object:removed", this.autoSaveAction.bind(this));
       this.canvas?.on("object:modified", this.autoSaveAction.bind(this));
       this.canvas?.on("object:skewing", this.autoSaveAction.bind(this));
-      this.canvas?.on("fabritor:object:modified", this.autoSaveAction.bind(this));
+      this.canvas?.on("editor:object:modified", this.autoSaveAction.bind(this));
     }
   }
 
@@ -32,7 +32,7 @@ export default class AutoSave {
       this.canvas?.off("object:removed", this.autoSaveAction.bind(this));
       this.canvas?.off("object:modified", this.autoSaveAction.bind(this));
       this.canvas?.off("object:skewing", this.autoSaveAction.bind(this));
-      this.canvas?.off("fabritor:object:modified", this.autoSaveAction.bind(this));
+      this.canvas?.off("editor:object:modified", this.autoSaveAction.bind(this));
     }
   }
 

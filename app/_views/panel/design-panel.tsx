@@ -75,7 +75,7 @@ export default function Layer() {
         "object:removed": initCanvasLayers,
         "object:modified": initCanvasLayers,
         "object:skewing": initCanvasLayers,
-        "fabritor:object:modified": initCanvasLayers,
+        "editor:object:modified": initCanvasLayers,
       });
     }
 
@@ -86,7 +86,7 @@ export default function Layer() {
           "object:removed": initCanvasLayers,
           "object:modified": initCanvasLayers,
           "object:skewing": initCanvasLayers,
-          "fabritor:object:modified": initCanvasLayers,
+          "editor:object:modified": initCanvasLayers,
         });
       }
     };

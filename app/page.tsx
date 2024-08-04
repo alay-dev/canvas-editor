@@ -7,7 +7,7 @@ import { GlobalStateContext } from "@/context/global-context";
 import { Toaster } from "@/components/ui/sonner";
 import Main from "./_layout/main";
 
-export default function Fabritor() {
+export default function CanvasEditor() {
   const canvasEl = useRef<HTMLCanvasElement>(null);
   const workspaceEl = useRef<HTMLDivElement>(null);
   const [editor, setEditor] = useState<Editor | undefined>(undefined);
@@ -42,8 +42,8 @@ export default function Fabritor() {
     editor.canvas.on("selection:updated", selectionHandler);
     editor.canvas.on("selection:cleared", selectionHandler);
     editor.canvas.on("mouse:down", clickHandler);
-    editor.canvas.on("fabritor:group", groupHandler);
-    editor.canvas.on("fabritor:ungroup", groupHandler);
+    editor.canvas.on("editor:group", groupHandler);
+    editor.canvas.on("editor:ungroup", groupHandler);
   };
 
   const initEditor = async () => {
