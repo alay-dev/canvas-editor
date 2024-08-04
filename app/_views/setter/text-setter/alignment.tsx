@@ -2,9 +2,9 @@ import { cn } from "@/lib/utils";
 import { AlignCenter, AlignLeft, AlignRight } from "lucide-react";
 
 const TEXT_ALIGNMENTS = [
-  { icon: <AlignLeft />, value: "left" },
-  { icon: <AlignCenter />, value: "center" },
-  { icon: <AlignRight />, value: "right" },
+  { icon: <AlignLeft size={17} />, value: "left" },
+  { icon: <AlignCenter size={17} />, value: "center" },
+  { icon: <AlignRight size={17} />, value: "right" },
 ];
 
 type Props = {
