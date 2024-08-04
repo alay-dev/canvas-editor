@@ -2,16 +2,15 @@
 "use client";
 
 import { fabric } from "fabric";
-import { message } from "antd";
-import { calcCanvasZoomLevel, handleFLinePointsWhenMoving } from "@/utils/helper";
+import { calcCanvasZoomLevel, handleFLinePointsWhenMoving } from "@/lib/helper";
 import initControl from "./_controller";
 
 import { initObjectPrototype } from "@/app/_objects/init";
 import { throttle } from "lodash";
-import { loadFont } from "@/utils";
+import { loadFont } from "@/lib/utils";
 import { initAligningGuidelines, initCenteringGuidelines } from "@/app/_guide-lines";
 
-import { SKETCH_ID, CANVAS_CUSTOM_PROPS } from "@/utils/constants";
+import { SKETCH_ID, CANVAS_CUSTOM_PROPS } from "@/constants/canvas";
 import FabricHistory from "@/app/_extensions/history";
 import AutoSave from "@/app/_extensions/autosave";
 import { createGroup } from "./_objects/group";
@@ -392,8 +391,7 @@ export default class Editor {
         json = JSON.parse(json);
       } catch (e) {
         console.log(e);
-        errorToast && message.error("Failed to load local template, please try again.");
-        return false;
+        throw new Error("Failed to load local template, please try again.");
       }
     }
 

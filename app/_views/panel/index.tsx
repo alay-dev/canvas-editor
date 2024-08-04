@@ -4,11 +4,9 @@ import ImagePanel from "./image-panel";
 import PaintPanel from "./paint-panel";
 import DesignPanel from "./design-panel";
 import ShapePanel from "./shape-panel";
-import { GloablStateContext } from "@/context/global-context";
-
+import { GlobalStateContext } from "@/context/global-context";
 import { PANEL_WIDTH } from "@/config";
 import { Layers as LayerIcon, TextSquare as TextIcon, Gallery as PictureIcon, FullScreen as ShapeIcon, Pen as BrushIcon, CodeScan as ApplicationIcon, AltArrowLeft as LeftIcon } from "solar-icon-set";
-
 import { cn } from "@/lib/utils";
 
 const OBJECT_TYPES: { label: string; value: string; icon: ReactElement }[] = [
@@ -40,7 +38,7 @@ const OBJECT_TYPES: { label: string; value: string; icon: ReactElement }[] = [
 ];
 
 export default function Panel() {
-  const { editor } = useContext(GloablStateContext);
+  const { editor } = useContext(GlobalStateContext);
   const [selected, setSelected] = useState("text");
   const [isPanelHidden, setPanelHidden] = useState(false);
 

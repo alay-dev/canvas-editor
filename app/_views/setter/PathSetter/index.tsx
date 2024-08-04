@@ -1,15 +1,13 @@
 import { fabric } from "fabric";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import PathSetterForm from "./PathSetterForm";
-import { GloablStateContext } from "@/context/global-context";
-import { transformFill2Colors, transformColors2Fill } from "@/utils";
+import { GlobalStateContext } from "../../../../context/global-context";
 import { FormProvider, useForm } from "react-hook-form";
 import { PaintInputs } from "../../panel/paint-panel";
-import CommonSetter from "../CommonSetter/common-setter";
+import CommonSetter from "../common-setter/common-setter";
 
 export default function PathSetter() {
-  const { object, editor } = useContext(GloablStateContext);
-  const [value, setValue] = useState({});
+  const { object, editor } = useContext(GlobalStateContext);
   const methods = useForm<PaintInputs>({
     values: {
       color: object?.stroke || "#000",

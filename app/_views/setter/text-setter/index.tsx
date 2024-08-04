@@ -1,29 +1,20 @@
 import { useContext, useEffect } from "react";
 import { fabric } from "fabric";
-import { GloablStateContext } from "@/context/global-context";
+import { GlobalStateContext } from "@/context/global-context";
 import FontStyleSetter from "./font-style";
 import AlignSetter from "./alignment";
-import { transformFill2Colors } from "@/utils";
+import { transformFill2Colors } from "@/lib/utils";
 import { FormProvider, useForm } from "react-hook-form";
 import { FontStyle, TextStyle } from "@/types/custom-text";
 import { defaultFontSize } from "@/config";
 import SliderInput from "@/app/_components/slider-input";
-import {
-  FONT_PRESET_FAMILY_LIST,
-  TEXTBOX_DEFAULT_CONFIG,
-} from "@/utils/constants";
-import {
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  Select,
-} from "@/components/ui/select";
-import CommonSetter from "../CommonSetter/common-setter";
+import { FONT_PRESET_FAMILY_LIST, TEXTBOX_DEFAULT_CONFIG } from "@/constants/canvas";
+import { SelectContent, SelectItem, SelectTrigger, SelectValue, Select } from "@/components/ui/select";
+import CommonSetter from "../common-setter/common-setter";
 import SolidColorSetter from "../color-setter";
 
 export default function TextSetter() {
-  const { object, editor } = useContext(GloablStateContext);
+  const { object, editor } = useContext(GlobalStateContext);
   const customTextObject = object as fabric.FText;
   const methods = useForm<TextStyle>();
   const fields = methods.watch();
@@ -53,6 +44,7 @@ export default function TextSetter() {
   const onFontColorChange = (val: string) => {
     methods.setValue("fill.color", val);
     customTextObject.set("fill", val);
+
     editor?.canvas?.requestRenderAll();
     editor?.fireCustomModifiedEvent();
   };
@@ -102,15 +94,9 @@ export default function TextSetter() {
     if (!customTextObject) return;
 
     methods.setValue("charSpacing", customTextObject.charSpacing || 0);
-    methods.setValue(
-      "fontFamily",
-      customTextObject.fontFamily || TEXTBOX_DEFAULT_CONFIG.fontFamily
-    );
+    methods.setValue("fontFamily", customTextObject.fontFamily || TEXTBOX_DEFAULT_CONFIG.fontFamily);
     methods.setValue("fontSize", customTextObject.fontSize || defaultFontSize);
-    methods.setValue(
-      "fill",
-      transformFill2Colors(customTextObject.fill) as any
-    );
+    methods.setValue("fill", transformFill2Colors(customTextObject.fill) as any);
     methods.setValue("textAlign", customTextObject.textAlign || "");
     methods.setValue("lineHeight", customTextObject.lineHeight || 1);
     methods.setValue("fontStyles", {
@@ -126,10 +112,7 @@ export default function TextSetter() {
     <FormProvider {...methods}>
       <CommonSetter />
       <div className="mb-5">
-        <label
-          htmlFor="font-size"
-          className=" text-gray-400 font-light text-sm"
-        >
+        <label htmlFor="font-size" className=" text-gray-400 font-light text-sm">
           Font family
         </label>
         <Select value={fields.fontFamily} onValueChange={onFontFamilyChange}>
@@ -139,8 +122,10 @@ export default function TextSetter() {
           <SelectContent>
             {FONT_PRESET_FAMILY_LIST?.map((item) => {
               return (
-                <SelectItem key={item.value} value={item.value}>
-                  {item.label}
+                <SelectItem key={item} value={item}>
+                  <span style={{ fontFamily: item }} className="">
+                    {item}
+                  </span>
                 </SelectItem>
               );
             })}
@@ -149,86 +134,43 @@ export default function TextSetter() {
       </div>
 
       <div className="mb-5">
-        <label
-          htmlFor="font-size"
-          className=" text-gray-400 font-light text-sm"
-        >
+        <label htmlFor="font-size" className=" text-gray-400 font-light text-sm">
           Color
         </label>
-        <SolidColorSetter
-          value={fields.fill?.color}
-          onChange={onFontColorChange}
-        />
+        <SolidColorSetter value={fields.fill?.color} onChange={onFontColorChange} />
       </div>
 
       <div className="mb-5">
-        <label
-          htmlFor="font-size"
-          className=" text-gray-400 font-light text-sm"
-        >
+        <label htmlFor="font-size" className=" text-gray-400 font-light text-sm">
           Font size
         </label>
-        <SliderInput
-          onChange={onFontSizeChange}
-          value={fields.fontSize}
-          min={1}
-          max={400}
-        />
+        <SliderInput onChange={onFontSizeChange} value={fields.fontSize} min={1} max={400} />
       </div>
 
       <div className="mb-5">
-        <label
-          htmlFor="font-size"
-          className=" text-gray-400 font-light text-sm"
-        >
+        <label htmlFor="font-size" className=" text-gray-400 font-light text-sm">
           Alignment
         </label>
-        <AlignSetter
-          onChangeAlignment={onChangeAlignment}
-          style={fields.textAlign}
-        />
+        <AlignSetter onChangeAlignment={onChangeAlignment} style={fields.textAlign} />
       </div>
 
       <div className="mb-5">
-        <label
-          htmlFor="font-size"
-          className=" text-gray-400 font-light text-sm"
-        >
+        <label htmlFor="font-size" className=" text-gray-400 font-light text-sm">
           Style
         </label>
-        <FontStyleSetter
-          onChangeFontStyle={onChangeFontStyle}
-          styles={fields.fontStyles}
-        />
+        <FontStyleSetter onChangeFontStyle={onChangeFontStyle} styles={fields.fontStyles} />
       </div>
       <div className="mb-5">
-        <label
-          htmlFor="font-size"
-          className=" text-gray-400 font-light text-sm"
-        >
+        <label htmlFor="font-size" className=" text-gray-400 font-light text-sm">
           Letter spacing
         </label>
-        <SliderInput
-          onChange={onLetterSpacingChange}
-          value={fields.charSpacing}
-          min={1}
-          max={400}
-        />
+        <SliderInput onChange={onLetterSpacingChange} value={fields.charSpacing} min={1} max={400} />
       </div>
       <div className="mb-5">
-        <label
-          htmlFor="font-size"
-          className=" text-gray-400 font-light text-sm"
-        >
+        <label htmlFor="font-size" className=" text-gray-400 font-light text-sm">
           Line height
         </label>
-        <SliderInput
-          onChange={onLineSpacingChange}
-          value={fields.lineHeight}
-          min={0.1}
-          max={10}
-          step={0.1}
-        />
+        <SliderInput onChange={onLineSpacingChange} value={fields.lineHeight} min={0.1} max={10} step={0.1} />
       </div>
     </FormProvider>
   );

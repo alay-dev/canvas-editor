@@ -3,7 +3,7 @@
 import SolidColorSetter from "../color-setter";
 
 import { useContext, useEffect } from "react";
-import { GloablStateContext } from "@/context/global-context";
+import { GlobalStateContext } from "@/context/global-context";
 import { useFormContext } from "react-hook-form";
 import { PaintInputs } from "../../panel/paint-panel";
 import { fabric } from "fabric";
@@ -18,7 +18,7 @@ export default function PathSetterForm({ mode }: Props) {
   //   props;
 
   const { watch, setValue } = useFormContext<PaintInputs>();
-  const { editor, object } = useContext(GloablStateContext);
+  const { editor, object } = useContext(GlobalStateContext);
 
   const fields = watch();
 
@@ -54,9 +54,7 @@ export default function PathSetterForm({ mode }: Props) {
           };
 
           console.log(newShadowObject, "SHADOW");
-          editor.canvas.freeDrawingBrush.shadow = new fabric.Shadow(
-            newShadowObject
-          );
+          editor.canvas.freeDrawingBrush.shadow = new fabric.Shadow(newShadowObject);
           break;
           deafult: null;
       }
@@ -101,19 +99,11 @@ export default function PathSetterForm({ mode }: Props) {
     <div className="w-full text-gray-300">
       <div className="mb-4">
         <label className="  font-light text-sm">Color</label>
-        <SolidColorSetter
-          value={fields?.color}
-          onChange={(color) => handleValueChange("color", color)}
-        />
+        <SolidColorSetter value={fields?.color} onChange={(color) => handleValueChange("color", color)} />
       </div>
       <div className="mb-4 ">
         <label className=" font-light text-sm">Width</label>
-        <SliderInput
-          min={1}
-          max={100}
-          value={+fields?.width}
-          onChange={(val) => handleValueChange("width", val || 0)}
-        />
+        <SliderInput min={1} max={100} value={+fields?.width} onChange={(val) => handleValueChange("width", val || 0)} />
       </div>
       {/* {showFillConfig ? (
         <FormItem label="filling" name="fill">
@@ -122,29 +112,16 @@ export default function PathSetterForm({ mode }: Props) {
       ) : null} */}
       <div className="mb-4 ">
         <label className=" font-light text-sm">Shadow color</label>
-        <SolidColorSetter
-          value={fields.shadow?.color}
-          onChange={(color) => handleValueChange("shadow.color", color)}
-        />
+        <SolidColorSetter value={fields.shadow?.color} onChange={(color) => handleValueChange("shadow.color", color)} />
       </div>
       <div className="mb-4 ">
         <label className=" font-light text-sm">Shadow width</label>
-        <SliderInput
-          min={0}
-          max={50}
-          value={+fields.shadow?.width}
-          onChange={(val) => handleValueChange("shadow.width", val)}
-        />
+        <SliderInput min={0} max={50} value={+fields.shadow?.width} onChange={(val) => handleValueChange("shadow.width", val)} />
       </div>
 
       <div className="mb-4 ">
         <label className=" font-light text-sm">Shadow offset</label>
-        <SliderInput
-          min={0}
-          max={20}
-          value={+fields.shadow?.offset}
-          onChange={(val) => handleValueChange("shadow.offset", val)}
-        />
+        <SliderInput min={0} max={20} value={+fields.shadow?.offset} onChange={(val) => handleValueChange("shadow.offset", val)} />
       </div>
     </div>
   );

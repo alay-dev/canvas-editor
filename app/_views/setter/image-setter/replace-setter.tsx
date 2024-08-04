@@ -2,10 +2,10 @@ import ImageSelector from "@/app/_components/image-selector";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { useContext } from "react";
-import { GloablStateContext } from "@/context/global-context";
+import { GlobalStateContext } from "@/context/global-context";
 
 export default function ReplaceSetter() {
-  const { object, editor } = useContext(GloablStateContext);
+  const { object, editor } = useContext(GlobalStateContext);
 
   const handleImageReplace = (base64: string | ArrayBuffer) => {
     if (base64) {

@@ -1,8 +1,4 @@
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { SketchPicker, BlockPicker, HuePicker } from "react-color";
 
@@ -17,10 +13,7 @@ export default function Color({ value, onChange }: Props) {
       <Popover>
         <PopoverTrigger asChild>
           <div className="flex  w-full py-2  rounded-xl items-center gap-2">
-            <div
-              className={cn(" w-6 h-6 rounded-sm")}
-              style={{ backgroundColor: value }}
-            />
+            <div className={cn(" w-6 h-6 rounded-sm")} style={{ backgroundColor: value }} />
             <p className="uppercase font-light text-xs">{value}</p>
           </div>
         </PopoverTrigger>

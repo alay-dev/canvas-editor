@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { createTextbox } from "@/app/_objects/textbox";
 import { useContext } from "react";
-import { GloablStateContext } from "@/context/global-context";
+import { GlobalStateContext } from "@/context/global-context";
 
 const PRESET_FONT_LIST = [
   {
@@ -97,7 +97,7 @@ export function PresetFontPanel(props: any) {
 }
 
 export default function TextPanel() {
-  const { editor } = useContext(GloablStateContext);
+  const { editor } = useContext(GlobalStateContext);
 
   const handleAddText = async (options: any) => {
     await createTextbox({ ...options, canvas: editor?.canvas });

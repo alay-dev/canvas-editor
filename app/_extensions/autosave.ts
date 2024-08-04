@@ -1,11 +1,9 @@
-//@ts-nocheck
-
-import fabric from "fabric";
-import Editor from "../";
+import { fabric } from "fabric";
+import Editor from "../init";
 import { LOAD_FROM_LOCAL_WHEN_INIT, AUTO_SAVE_WHEN_CHANGE } from "@/config";
 
 export default class AutoSave {
-  private canvas: fabric.Canvas;
+  private canvas: fabric.Canvas | null;
   private editor: Editor;
   private saving: boolean;
   private canSave: boolean;
@@ -13,22 +11,28 @@ export default class AutoSave {
   constructor(editor: Editor) {
     this.canvas = editor.canvas;
     this.editor = editor;
-
     this.saving = false;
     this.canSave = true;
-
     this.init();
   }
 
   public init() {
     if (AUTO_SAVE_WHEN_CHANGE) {
-      this.canvas.on(this.initAutoSaveEvents());
+      this.canvas?.on("object:added", this.autoSaveAction.bind(this));
+      this.canvas?.on("object:removed", this.autoSaveAction.bind(this));
+      this.canvas?.on("object:modified", this.autoSaveAction.bind(this));
+      this.canvas?.on("object:skewing", this.autoSaveAction.bind(this));
+      this.canvas?.on("fabritor:object:modified", this.autoSaveAction.bind(this));
     }
   }
 
   public dispose() {
     if (AUTO_SAVE_WHEN_CHANGE) {
-      this.canvas.off(this.initAutoSaveEvents());
+      this.canvas?.off("object:added", this.autoSaveAction.bind(this));
+      this.canvas?.off("object:removed", this.autoSaveAction.bind(this));
+      this.canvas?.off("object:modified", this.autoSaveAction.bind(this));
+      this.canvas?.off("object:skewing", this.autoSaveAction.bind(this));
+      this.canvas?.off("fabritor:object:modified", this.autoSaveAction.bind(this));
     }
   }
 
@@ -52,16 +56,6 @@ export default class AutoSave {
 
   private _getJSON() {
     return JSON.stringify(this.editor.canvas2Json());
-  }
-
-  private initAutoSaveEvents() {
-    return {
-      "object:added": this.autoSaveAction.bind(this),
-      "object:removed": this.autoSaveAction.bind(this),
-      "object:modified": this.autoSaveAction.bind(this),
-      "object:skewing": this.autoSaveAction.bind(this),
-      "fabritor:object:modified": this.autoSaveAction.bind(this),
-    };
   }
 
   public async loadFromLocal() {

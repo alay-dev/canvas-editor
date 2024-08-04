@@ -1,7 +1,7 @@
 import Editor from "@/app/init";
 import { createContext } from "react";
 
-export interface IGloablStateContext {
+export interface IGlobalStateContext {
   object?: fabric.Object | null;
   setActiveObject?: (o: fabric.Object | null) => void;
   isReady?: boolean;
@@ -9,7 +9,7 @@ export interface IGloablStateContext {
   editor?: Editor;
 }
 
-export const GloablStateContext = createContext<IGloablStateContext>({
+export const GlobalStateContext = createContext<IGlobalStateContext>({
   editor: undefined,
   isReady: false,
   object: undefined,

@@ -1,7 +1,7 @@
 //@ts-nocheck
 
 import { fabric } from "fabric";
-import { OBJECT_DEFAULT_CONFIG } from "@/utils/constants";
+import { OBJECT_DEFAULT_CONFIG } from "@/constants/canvas";
 import { IMAGE_CLIPPATH_QUALITY } from "@/config";
 
 export const initObjectPrototype = () => {

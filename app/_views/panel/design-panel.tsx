@@ -1,9 +1,9 @@
-// @ts-nocheck
+//@ts-nocheck
 
 import { useEffect, useContext, useState } from "react";
-import { GloablStateContext } from "@/context/global-context";
-import { SKETCH_ID } from "@/utils/constants";
-import { uuid } from "@/utils";
+import { GlobalStateContext } from "@/context/global-context";
+import { SKETCH_ID } from "@/constants/canvas";
+import { uuid } from "@/lib/utils";
 import { demoTemplate } from "@/demo";
 import { Button } from "@/components/ui/button";
 
@@ -14,13 +14,7 @@ export type Layer = {
 };
 
 export default function Layer() {
-  const {
-    isReady,
-    setReady,
-    object: activeObject,
-    setActiveObject,
-    editor,
-  } = useContext(GloablStateContext);
+  const { isReady, setReady, editor } = useContext(GlobalStateContext);
   const [layers, setLayers] = useState<Layer[]>([]);
 
   const getCanvasLayers = (objects: fabric.Object[]) => {
@@ -30,10 +24,10 @@ export default function Layer() {
       setLayers([]);
       return;
     }
-    const activeObject = editor?.canvas.getActiveObject();
+    const activeObject = editor?.canvas?.getActiveObject();
     for (let i = length - 1; i >= 0; i--) {
       let object = objects[i];
-      if (object && object.id !== SKETCH_ID) {
+      if (object && object?.id !== SKETCH_ID) {
         if (activeObject === object) {
           object.__cover = object.toDataURL({});
         } else {
@@ -42,11 +36,7 @@ export default function Layer() {
           }
         }
 
-        _layers.push({
-          cover: object.__cover,
-          group: object.type === "group",
-          object,
-        });
+        _layers.push({ cover: object.__cover, group: object.type === "group", object });
       }
     }
     setLayers(_layers);
@@ -56,7 +46,7 @@ export default function Layer() {
     if (!editor) return;
     setReady?.(false);
     await editor.loadFromJSON(JSON.parse(demoTemplate), true);
-    editor.fhistory.reset();
+    editor?.fhistory?.reset();
     setReady?.(true);
 
     editor.fireCustomModifiedEvent();
@@ -64,9 +54,9 @@ export default function Layer() {
 
   const handleItemClick = (item: any) => {
     if (!editor) return;
-    editor.canvas.discardActiveObject();
-    editor.canvas.setActiveObject(item.object);
-    editor.canvas.requestRenderAll();
+    editor.canvas?.discardActiveObject();
+    editor.canvas?.setActiveObject(item.object);
+    editor.canvas?.requestRenderAll();
   };
 
   useEffect(() => {
@@ -108,11 +98,7 @@ export default function Layer() {
         <ul className="space-y-3">
           {layers?.map((item) => {
             return (
-              <li
-                onClick={() => handleItemClick(item)}
-                className="bg-gray-800 rounded-lg p-4 border border-gray-600 transition  hover:border-gray-400 cursor-pointer"
-                key={uuid()}
-              >
+              <li onClick={() => handleItemClick(item)} className="bg-gray-800 rounded-lg p-4 border border-gray-600 transition  hover:border-gray-400 cursor-pointer" key={uuid()}>
                 <img src={item.cover} className="h-10 " alt="" />
               </li>
             );

@@ -1,10 +1,10 @@
 import { useContext } from "react";
-import { GloablStateContext } from "@/context/global-context";
+import { GlobalStateContext } from "@/context/global-context";
 import BorderSetter from "../border-setter";
 import ColorSetter from "../color-setter";
 import { FormProvider, useForm } from "react-hook-form";
-import { transformColors2Fill, transformFill2Colors } from "@/utils";
-import CommonSetter from "../CommonSetter/common-setter";
+import { transformColors2Fill, transformFill2Colors } from "@/lib/utils";
+import CommonSetter from "../common-setter/common-setter";
 
 type ShapeInputs = {
   fill: {
@@ -16,7 +16,7 @@ type ShapeInputs = {
 };
 
 export default function Shape() {
-  const { object, editor } = useContext(GloablStateContext);
+  const { object, editor } = useContext(GlobalStateContext);
   const methods = useForm<ShapeInputs>({
     values: {
       fill: transformFill2Colors(object?.fill),
@@ -40,10 +40,7 @@ export default function Shape() {
       <CommonSetter />
       <div className="mb-4">
         <label className=" text-gray-300 font-light text-sm">Fill color</label>
-        <ColorSetter
-          onChange={(val) => handleValuesChange("fill.color", val)}
-          value={fields?.fill?.color || "#555"}
-        />
+        <ColorSetter onChange={(val) => handleValuesChange("fill.color", val)} value={fields?.fill?.color || "#555"} />
       </div>
 
       <BorderSetter />

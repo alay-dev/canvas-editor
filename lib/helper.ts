@@ -1,29 +1,20 @@
 import { fabric } from "fabric";
-import { CANVAS_CUSTOM_PROPS } from "./constants";
+import { CANVAS_CUSTOM_PROPS } from "@/constants/canvas";
 import { createTextbox } from "@/app/_objects/textbox";
-import { getSystemClipboard } from "./index";
+import { getSystemClipboard } from "@/lib/utils";
 import { createFImage } from "@/app/_objects/image";
 // import { handleMouseOutCorner } from "@/editor/controller";
 
 // @ts-ignore fabric controlsUtils
 const controlsUtils = fabric.controlsUtils;
 
-export const calcCanvasZoomLevel = (
-  containerSize: { width: number; height: number },
-  sketchSize: { width: number; height: number }
-) => {
-  if (
-    sketchSize.width < containerSize.width &&
-    sketchSize.height <= containerSize.height
-  ) {
+export const calcCanvasZoomLevel = (containerSize: { width: number; height: number }, sketchSize: { width: number; height: number }) => {
+  if (sketchSize.width < containerSize.width && sketchSize.height <= containerSize.height) {
     return 1;
   }
 
   let level = 1;
-  if (
-    containerSize.width / containerSize.height <
-    sketchSize.width / sketchSize.height
-  ) {
+  if (containerSize.width / containerSize.height < sketchSize.width / sketchSize.height) {
     level = containerSize.width / sketchSize.width;
   } else {
     level = containerSize.height / sketchSize.height;
@@ -35,10 +26,7 @@ export const calcCanvasZoomLevel = (
 
 let _clipboard: any;
 
-export const copyObject = async (
-  canvas: fabric.Canvas,
-  target: fabric.Object
-) => {
+export const copyObject = async (canvas: fabric.Canvas, target: fabric.Object) => {
   // clone what are you copying since you
   // may want copy and paste on different moment.
   // and you do not want the changes happened
@@ -86,11 +74,7 @@ export const pasteObject = async (canvas: fabric.Canvas) => {
       evented: true,
     });
 
-    if (
-      cloned.type === "f-line" ||
-      cloned.type === "f-arrow" ||
-      cloned.type === "f-tri-arrow"
-    ) {
+    if (cloned.type === "f-line" || cloned.type === "f-arrow" || cloned.type === "f-tri-arrow") {
       handleFLinePointsWhenMoving({
         target: cloned,
         transform: {
@@ -207,13 +191,7 @@ export const changeLayerLevel = (level: string, editor: any, target: any) => {
  * @param {number} y
  * @return {Fabric.Point} the normalized point
  */
-export const getLocalPoint = (
-  transform: any,
-  originX: string,
-  originY: string,
-  x: number,
-  y: number
-) => {
+export const getLocalPoint = (transform: any, originX: string, originY: string, x: number, y: number) => {
   var target = transform.target,
     control = target.controls[transform.corner],
     zoom = target.canvas.getZoom(),
@@ -240,34 +218,18 @@ function isTransformCentered(transform: any) {
   return transform.originX === "center" && transform.originY === "center";
 }
 
-const _changeHeight = (
-  eventData: any,
-  transform: any,
-  x: number,
-  y: number
-) => {
+const _changeHeight = (eventData: any, transform: any, x: number, y: number) => {
   const target = transform.target,
-    localPoint = getLocalPoint(
-      transform,
-      transform.originX,
-      transform.originY,
-      x,
-      y
-    ),
-    strokePadding =
-      target.strokeWidth / (target.strokeUniform ? target.scaleX : 1),
+    localPoint = getLocalPoint(transform, transform.originX, transform.originY, x, y),
+    strokePadding = target.strokeWidth / (target.strokeUniform ? target.scaleX : 1),
     multiplier = isTransformCentered(transform) ? 2 : 1,
     oldHeight = target.height,
-    newHeight =
-      Math.abs((localPoint.y * multiplier) / target.scaleY) - strokePadding;
+    newHeight = Math.abs((localPoint.y * multiplier) / target.scaleY) - strokePadding;
   target.set("height", Math.max(newHeight, 0));
   return oldHeight !== newHeight;
 };
 
-export const changeHeight = controlsUtils.wrapWithFireEvent(
-  "resizing",
-  controlsUtils.wrapWithFixedAnchor(_changeHeight)
-);
+export const changeHeight = controlsUtils.wrapWithFireEvent("resizing", controlsUtils.wrapWithFixedAnchor(_changeHeight));
 
 export const handleFLinePointsWhenMoving = (opt: any) => {
   const { target, transform, action } = opt;

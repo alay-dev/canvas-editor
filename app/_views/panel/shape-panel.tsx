@@ -2,7 +2,7 @@ import { drawArrowLine, drawLine } from "@/app/_objects/line";
 import createRect from "@/app/_objects/rect";
 import createShape from "@/app/_objects/shape";
 import { useContext } from "react";
-import { GloablStateContext } from "@/context/global-context";
+import { GlobalStateContext } from "@/context/global-context";
 import { createPathFromSvg } from "@/app/_objects/path";
 import { fabric } from "fabric";
 
@@ -140,7 +140,7 @@ const lines = [
 ];
 
 export default function ShapePanel() {
-  const { editor } = useContext(GloablStateContext);
+  const { editor } = useContext(GlobalStateContext);
 
   const addLine = (item: any) => {
     const { type, options = {} } = item;

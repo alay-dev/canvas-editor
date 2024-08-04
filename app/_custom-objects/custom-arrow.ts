@@ -14,12 +14,7 @@ export const createFArrowClass = () => {
       ctx.save();
 
       if (!this.oldArrowInfo) {
-        this.oldArrowInfo = {
-          left: -28,
-          top: -15,
-          bottom: 15,
-          strokeWidth: this.strokeWidth,
-        };
+        this.oldArrowInfo = { left: -28, top: -15, bottom: 15, strokeWidth: this.strokeWidth };
       }
       var xDiff = this.x2 - this.x1;
       var yDiff = this.y2 - this.y1;
@@ -40,7 +35,6 @@ export const createFArrowClass = () => {
       ctx.fillStyle = this.stroke;
       ctx.fill();
       ctx.stroke();
-
       ctx.restore();
     },
 

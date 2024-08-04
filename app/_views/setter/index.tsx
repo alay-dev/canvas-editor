@@ -1,8 +1,8 @@
 // @ts-nocheck
 
 import { useContext } from "react";
-import { GloablStateContext } from "@/context/global-context";
-import { SKETCH_ID } from "@/utils/constants";
+import { GlobalStateContext } from "@/context/global-context";
+import { SKETCH_ID } from "@/constants/canvas";
 import SketchSetter from "./sketch-setter";
 import TextSetter from "./text-setter";
 import ImageSetter from "./image-setter";
@@ -13,7 +13,7 @@ import PathSetter from "./PathSetter";
 import { SETTER_WIDTH } from "@/config";
 
 export default function Setter() {
-  const { object, isReady } = useContext(GloablStateContext);
+  const { object, isReady } = useContext(GlobalStateContext);
   const objectType = object?.get?.("type") || "";
 
   const getRenderSetter = () => {
@@ -78,12 +78,6 @@ export default function Setter() {
       case "image":
         return "Configuration";
       case "path":
-        // if (object?.sub_type) {
-        //   if (object?.sub_type === "rough") {
-        //     return "Hand painted style";
-        //   }
-        //   return "shape";
-        // }
         return "Brush";
       case "group":
         return "combination";

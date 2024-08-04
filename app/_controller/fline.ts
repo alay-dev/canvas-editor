@@ -1,21 +1,19 @@
-//@ts-nocheck
-
 import { fabric } from "fabric";
 
-const changeLineEnd = (eventData, transform, x, y) => {
+const changeLineEnd = (eventData: any, transform: any, x: number, y: number) => {
   const { target } = transform;
   target.set({ x2: x, y2: y });
   return true;
 };
 
-const changeLineStart = (eventData, transform, x, y) => {
+const changeLineStart = (eventData: any, transform: any, x: number, y: number) => {
   const { target } = transform;
   target.set({ x1: x, y1: y });
   return true;
 };
 
-const linePositionHandler = (x, y) => {
-  return (dim, finalMatrix, fabricObject) => {
+const linePositionHandler = (x: string, y: string) => {
+  return (dim: any, finalMatrix: any, fabricObject: any) => {
     if (fabricObject?.canvas) {
       // a strange bug when delete multi f-line objects...
       const points = fabricObject.calcLinePoints();

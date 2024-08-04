@@ -1,5 +1,5 @@
 import { fabric } from "fabric";
-import { uuid } from "@/utils";
+import { uuid } from "@/lib/utils";
 import { Image } from "fabric/fabric-impl";
 
 export const loadImageDom = async (url: string) => {
@@ -8,7 +8,6 @@ export const loadImageDom = async (url: string) => {
       url,
       (img) => {
         if (!img) return reject("Failed to load image");
-
         return resolve(img);
       },
       null,
@@ -20,7 +19,7 @@ export const loadImageDom = async (url: string) => {
 export const loadImage = async (imageSource: string) => {
   if (typeof imageSource === "string") {
     return new Promise<fabric.Image>((resolve, reject) => {
-      fabric.FImage.fromURL(
+      fabric.Image.fromURL(
         imageSource,
         (img: Image) => {
           if (!img) return reject("Failed to load image");
@@ -32,7 +31,7 @@ export const loadImage = async (imageSource: string) => {
       );
     });
   }
-  return Promise.resolve(new fabric.FImage(imageSource));
+  return Promise.resolve(new fabric.Image(imageSource));
 };
 
 export const createClipRect = (object: fabric.Object, options = {}) => {
@@ -53,11 +52,8 @@ export const createImage = async (options: { src: string; canvas: fabric.Canvas 
 
   if (!img) return;
 
-  img?.set({
-    ...rest,
-    paintFirst: "fill",
-    id: uuid(),
-  });
+  //@ts-ignore
+  img?.set({ ...rest, paintFirst: "fill", id: uuid() });
 
   canvas.viewportCenterObject(img);
   canvas.add(img);

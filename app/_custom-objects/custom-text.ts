@@ -1,5 +1,3 @@
-//@ts-nocheck
-
 import { fabric } from "fabric";
 const clone = fabric.util.object.clone;
 
@@ -57,22 +55,16 @@ export const createFTextClass = () => {
     },
   }) as any;
 
-  (fabric.FText as any).fromObject = function (
-    object: any,
-    callback: (data: any) => void
-  ) {
+  (fabric.FText as any).fromObject = function (object: any, callback: (data: any) => void) {
     const objectCopy = clone(object),
       path = object.path;
     delete objectCopy.path;
 
     return fabric.Object._fromObject(
-      "FText",
+      "f-text",
       objectCopy,
       function (textInstance: any) {
-        textInstance.styles = fabric.util.stylesFromArray(
-          object.styles,
-          object.text
-        );
+        textInstance.styles = (fabric.util as any).stylesFromArray(object.styles, object.text);
         if (path) {
           fabric.Object._fromObject(
             "Path",

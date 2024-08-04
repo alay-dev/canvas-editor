@@ -3,7 +3,7 @@
 import { fabric } from "fabric";
 import { useEffect, useRef, useState } from "react";
 import Editor from "@/app/init";
-import { GloablStateContext } from "@/context/global-context";
+import { GlobalStateContext } from "@/context/global-context";
 import { Toaster } from "@/components/ui/sonner";
 import Main from "./_layout/main";
 
@@ -80,17 +80,17 @@ export default function Fabritor() {
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isReady]);
+  }, []);
 
   return (
     <main>
-      <GloablStateContext.Provider value={{ object: activeObject, setActiveObject, isReady, setReady, editor }}>
+      <GlobalStateContext.Provider value={{ object: activeObject, setActiveObject, isReady, setReady, editor }}>
         <Main isReady={isReady}>
           <div id="canvas-editor" ref={workspaceEl} className="flex-1 h-full relative">
             <canvas ref={canvasEl} />
           </div>
         </Main>
-      </GloablStateContext.Provider>
+      </GlobalStateContext.Provider>
       <Toaster />
     </main>
   );

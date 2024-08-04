@@ -1,102 +1,95 @@
-// @ts-nocheck
-
 import { useContext, useEffect } from "react";
-import { Form, Radio, Switch } from "antd";
-import { GloablStateContext } from "@/context/global-context";
+import { GlobalStateContext } from "@/context/global-context";
 import ColorSetter from "../color-setter";
-// import SliderInputNumber from "@/app/_fabritor/components/SliderInputNumber";
-import {
-  BORDER_TYPES,
-  getObjectBorderType,
-  getStrokeDashArray,
-} from "../border-setter";
+import { BORDER_TYPES, getObjectBorderType } from "../border-setter";
+import { Form, useForm } from "react-hook-form";
+import SliderInput from "@/app/_components/slider-input";
 
-const { Item: FormItem } = Form;
-
-const LINE_BORDER_TYPES = BORDER_TYPES.slice(1);
+type LineInput = {
+  stroke: string;
+  type: string;
+  strokeWidth: number;
+  round: boolean;
+};
 
 export default function Line() {
-  const { object, editor } = useContext(GloablStateContext);
-  const [form] = Form.useForm();
+  const { object, editor } = useContext(GlobalStateContext);
+  // const [form] = Form.useForm({});
+  const { setValue, watch } = useForm<LineInput>({
+    values: {
+      stroke: object?.stroke || "#000",
+      type: getObjectBorderType({ stroke: object?.stroke || "#000", strokeDashArray: object?.strokeDashArray || [], strokeWidth: object?.strokeWidth || 1 }),
+      strokeWidth: object?.strokeWidth || 1,
+      round: object?.strokeLineCap === "round",
+    },
+  });
 
-  const handleValuesChange = (values) => {
-    const keys = Object.keys(values);
-    if (!keys?.length) return;
-    for (let key of keys) {
-      switch (key) {
-        case "stroke":
-          object?.set("stroke", values[key]);
-          editor?.fireCustomModifiedEvent();
-          break;
-        case "strokeWidth":
-          object?.setStrokeWidth(values[key]);
-          break;
-        case "round":
-          object?.set("strokeLineCap", values[key] ? "round" : "butt");
-          editor?.fireCustomModifiedEvent();
-          break;
-        case "type":
-          object?.set(
-            "strokeDashArray",
-            getStrokeDashArray({
-              type: values[key],
-              strokeWidth: object.strokeWidth,
-            })
-          );
-          editor?.fireCustomModifiedEvent();
-          break;
-        default:
-          break;
-      }
-    }
+  const fields = watch();
 
-    object?.setCoords();
-
+  const handleChangeStrokeColor = (val: string) => {
+    setValue("stroke", val);
+    object?.set("stroke", val);
     editor?.canvas?.requestRenderAll();
+    editor?.fireCustomModifiedEvent();
   };
 
-  useEffect(() => {
-    form.setFieldsValue({
-      stroke: object?.stroke || "#000000",
-      type: getObjectBorderType(object),
-      strokeWidth: object?.strokeWidth,
-      round: object?.strokeLineCap === "round",
-    });
-  }, [object]);
+  const handleChangeStrokeWidth = (val: number) => {
+    setValue("strokeWidth", val);
+    object?.set("strokeWidth", val);
+    editor?.canvas?.requestRenderAll();
+    editor?.fireCustomModifiedEvent();
+  };
+
+  // const handleValuesChange = (values) => {
+  //   const keys = Object.keys(values);
+  //   if (!keys?.length) return;
+  //   for (let key of keys) {
+  //     switch (key) {
+  //       case "stroke":
+  //         object?.set("stroke", values[key]);
+  //         editor?.fireCustomModifiedEvent();
+  //         break;
+  //       case "strokeWidth":
+  //         object?.setStrokeWidth(values[key]);
+  //         break;
+  //       case "round":
+  //         object?.set("strokeLineCap", values[key] ? "round" : "butt");
+  //         editor?.fireCustomModifiedEvent();
+  //         break;
+  //       case "type":
+  //         object?.set(
+  //           "strokeDashArray",
+  //           getStrokeDashArray({
+  //             type: values[key],
+  //             strokeWidth: object.strokeWidth,
+  //           })
+  //         );
+  //         editor?.fireCustomModifiedEvent();
+  //         break;
+  //       default:
+  //         break;
+  //     }
+  //   }
+
+  //   object?.setCoords();
+
+  //   editor?.canvas?.requestRenderAll();
+  // };
 
   return (
-    <Form form={form} onValuesChange={handleValuesChange} colon={false}>
-      <FormItem name="stroke" label="color">
-        <ColorSetter />
-      </FormItem>
-      {/* <FormItem name="type" label="style" labelCol={{ span: 24 }}>
-        <Radio.Group>
-          {LINE_BORDER_TYPES.map((item) => (
-            <Radio.Button key={item.key} value={item.key}>
-              <span
-                dangerouslySetInnerHTML={{ __html: item.svg }}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  marginTop: 6,
-                }}
-              />
-            </Radio.Button>
-          ))}
-        </Radio.Group>
-      </FormItem> */}
-      <FormItem name="strokeWidth" label="Thickness">
-        {/* <SliderInputNumber
+    <form>
+      <ColorSetter onChange={handleChangeStrokeColor} value={fields.stroke} />
+
+      {/* <SliderInputNumber
           min={1}
           max={50}
           onChangeComplete={() => {
             editor?.fireCustomModifiedEvent();
           }}
         /> */}
-      </FormItem>
-      <FormItem name="round" label="Rounded corner" valuePropName="checked">
-        <Switch />
-      </FormItem>
-    </Form>
+      <SliderInput min={1} max={100} onChange={handleChangeStrokeWidth} value={fields?.strokeWidth} />
+
+      {/* <Switch /> */}
+    </form>
   );
 }

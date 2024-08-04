@@ -1,45 +1,11 @@
-//@ts-nocheck
-
 "use client";
 
 import { fabric } from "fabric";
-// import {
-//   ROTATE_SVG,
-//   ROTATE_SVG_ACTIVE,
-//   ROTATE_CURSOR,
-//   COPY_SVG,
-//   DEL_SVG,
-//   COPY_SVG_ACTIVE,
-//   DEL_SVG_ACTIVE,
-// } from "@/public/icons";
-import { copyObject, pasteObject, removeObject } from "@/utils/helper";
 import { initRectControl } from "./rect";
 import { initLineControl } from "./fline";
 import { initFTextControl } from "./ftext";
 
-// const ROTATE_IMG = document.createElement("img");
-// ROTATE_IMG.src = ROTATE_SVG;
-// // const ROTATE_IMG_ACTIVE = document.createElement("img");
-// // ROTATE_IMG_ACTIVE.src = ROTATE_SVG_ACTIVE;
-
-// const COPY_IMG = document.createElement("img");
-// COPY_IMG.src = COPY_SVG;
-// // const COPY_IMG_ACTIVE = document.createElement("img");
-// // COPY_IMG_ACTIVE.src = COPY_SVG_ACTIVE;
-
-// const DEL_IMG = document.createElement("img");
-// DEL_IMG.src = DEL_SVG;
-// const DEL_IMG_ACTIVE = document.createElement("img");
-// DEL_IMG_ACTIVE.src = DEL_SVG_ACTIVE;
-
-const renderSizeIcon = (
-  ctx,
-  left,
-  top,
-  styleOverride,
-  fabricObject,
-  TBorLR
-) => {
+const renderSizeIcon = (ctx: any, left: number, top: number, styleOverride: any, fabricObject: any, TBorLR: string) => {
   const xSize = TBorLR === "TB" ? 20 : 6;
   const ySize = TBorLR === "TB" ? 6 : 20;
   ctx.save();
@@ -57,21 +23,15 @@ const renderSizeIcon = (
   ctx.restore();
 };
 
-const renderLRIcon = (ctx, left, top, styleOverride, fabricObject) => {
+const renderLRIcon = (ctx: any, left: number, top: number, styleOverride: any, fabricObject: any) => {
   renderSizeIcon(ctx, left, top, styleOverride, fabricObject, "LR");
 };
 
-const renderTBIcon = (ctx, left, top, styleOverride, fabricObject) => {
+const renderTBIcon = (ctx: any, left: number, top: number, styleOverride: any, fabricObject: any) => {
   renderSizeIcon(ctx, left, top, styleOverride, fabricObject, "TB");
 };
 
-export const renderVertexIcon = (
-  ctx,
-  left,
-  top,
-  styleOverride,
-  fabricObject
-) => {
+export const renderVertexIcon = (ctx: any, left: number, top: number, styleOverride: any, fabricObject: any) => {
   const size = 10;
   ctx.save();
   ctx.fillStyle = "#ffffff";
@@ -86,153 +46,59 @@ export const renderVertexIcon = (
   ctx.restore();
 };
 
-const handleCopyObject = (eventData, transform) => {
-  const target = transform.target;
-  const canvas = target.canvas;
-  copyObject(canvas, target);
-  pasteObject(canvas);
-  return true;
-};
-
-const handleDelObject = (eventData, transform) => {
-  const target = transform.target;
-  const canvas = target.canvas;
-  removeObject(target, canvas);
-  return true;
-};
-
 export const renderController = () => {
   // middle top
-  const mtConfig = {
-    x: 0,
-    y: -0.5,
-    offsetY: -1,
-    render: renderTBIcon,
-  };
-  Object.keys(mtConfig).forEach((key) => {
-    fabric.Object.prototype.controls.mt[key] = mtConfig[key];
-  });
+  const mtConfig = { x: 0, y: -0.5, offsetY: -1, render: renderTBIcon };
+  fabric.Object.prototype.controls.mt.x = mtConfig.x;
+  fabric.Object.prototype.controls.mt.y = mtConfig.y;
+  fabric.Object.prototype.controls.mt.offsetY = mtConfig.offsetY;
+  fabric.Object.prototype.controls.mt.render = mtConfig.render;
 
   // middle bottom
-  const mbConfig = {
-    x: 0,
-    y: 0.5,
-    offsetY: 1,
-    render: renderTBIcon,
-  };
-  Object.keys(mbConfig).forEach((key) => {
-    fabric.Object.prototype.controls.mb[key] = mbConfig[key];
-  });
+  const mbConfig = { x: 0, y: 0.5, offsetY: 1, render: renderTBIcon };
+  fabric.Object.prototype.controls.mb.x = mbConfig.x;
+  fabric.Object.prototype.controls.mb.y = mbConfig.y;
+  fabric.Object.prototype.controls.mb.offsetY = mbConfig.offsetY;
+  fabric.Object.prototype.controls.mb.render = mbConfig.render;
 
   // middle left
-  const mlConfig = {
-    x: -0.5,
-    y: 0,
-    offsetX: -1,
-    render: renderLRIcon,
-  };
-  Object.keys(mlConfig).forEach((key) => {
-    fabric.Object.prototype.controls.ml[key] = mlConfig[key];
-  });
+  const mlConfig = { x: -0.5, y: 0, offsetX: -1, render: renderLRIcon };
+  fabric.Object.prototype.controls.ml.x = mlConfig.x;
+  fabric.Object.prototype.controls.ml.y = mlConfig.y;
+  fabric.Object.prototype.controls.ml.offsetX = mlConfig.offsetX;
+  fabric.Object.prototype.controls.ml.render = mlConfig.render;
 
   // middle right
-  const mrConfig = {
-    x: 0.5,
-    y: 0,
-    offsetX: 1,
-    render: renderLRIcon,
-  };
-  Object.keys(mrConfig).forEach((key) => {
-    fabric.Object.prototype.controls.mr[key] = mrConfig[key];
-  });
+  const mrConfig = { x: 0.5, y: 0, offsetX: 1, render: renderLRIcon };
+  fabric.Object.prototype.controls.mr.x = mrConfig.x;
+  fabric.Object.prototype.controls.mr.y = mrConfig.y;
+  fabric.Object.prototype.controls.mr.offsetX = mrConfig.offsetX;
+  fabric.Object.prototype.controls.mr.render = mrConfig.render;
 
   // top left
-  const tlConfig = {
-    x: -0.5,
-    y: -0.5,
-    render: renderVertexIcon,
-  };
-  Object.keys(tlConfig).forEach((key) => {
-    fabric.Object.prototype.controls.tl[key] = tlConfig[key];
-  });
+  const tlConfig = { x: -0.5, y: -0.5, render: renderVertexIcon };
+  fabric.Object.prototype.controls.tl.x = tlConfig.x;
+  fabric.Object.prototype.controls.tl.y = tlConfig.y;
+  fabric.Object.prototype.controls.tl.render = tlConfig.render;
 
   // top right
-  const trConfig = {
-    x: 0.5,
-    y: -0.5,
-    render: renderVertexIcon,
-  };
-  Object.keys(trConfig).forEach((key) => {
-    fabric.Object.prototype.controls.tr[key] = trConfig[key];
-  });
+  const trConfig = { x: 0.5, y: -0.5, render: renderVertexIcon };
+  fabric.Object.prototype.controls.tr.x = trConfig.x;
+  fabric.Object.prototype.controls.tr.y = trConfig.y;
+  fabric.Object.prototype.controls.tr.render = trConfig.render;
 
   // bottom left
-  const blConfig = {
-    x: -0.5,
-    y: 0.5,
-    render: renderVertexIcon,
-  };
-  Object.keys(blConfig).forEach((key) => {
-    fabric.Object.prototype.controls.bl[key] = blConfig[key];
-  });
+  const blConfig = { x: -0.5, y: 0.5, render: renderVertexIcon };
+  fabric.Object.prototype.controls.bl.x = blConfig.x;
+  fabric.Object.prototype.controls.bl.y = blConfig.y;
+  fabric.Object.prototype.controls.bl.render = blConfig.render;
 
-  // top right
-  const brConfig = {
-    x: 0.5,
-    y: 0.5,
-    render: renderVertexIcon,
-  };
-  Object.keys(brConfig).forEach((key) => {
-    fabric.Object.prototype.controls.br[key] = brConfig[key];
-  });
-
-  // fabric.Object.prototype.controls.mtr = new fabric.Control({
-  //   x: 0,
-  //   y: 0.5,
-  //   cursorStyleHandler: fabric.controlsUtils.rotationStyleHandler,
-  //   actionHandler: fabric.controlsUtils.rotationWithSnapping,
-  //   offsetY: 20,
-  //   withConnecton: false,
-  //   actionName: "rotate",
-  //   render: renderIconRotate,
-  // });
+  // bottom right
+  const brConfig = { x: 0.5, y: 0.5, render: renderVertexIcon };
+  fabric.Object.prototype.controls.br.x = brConfig.x;
+  fabric.Object.prototype.controls.br.y = brConfig.y;
+  fabric.Object.prototype.controls.br.render = brConfig.render;
 };
-
-// function renderIconRotate(ctx, left, top, styleOverride, fabricObject) {
-//   const wsize = 20;
-//   const hsize = 20;
-//   ctx.save();
-//   ctx.translate(left, top);
-//   ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
-//   ctx.drawImage(ROTATE_IMG, -wsize / 2, -hsize / 2, wsize, hsize);
-//   ctx.restore();
-// }
-
-// export const handleMouseOverCorner = (corner: string, target) => {
-//   if (corner === "mtr") {
-//     target.controls[corner].render = renderSvgIcon(ROTATE_IMG_ACTIVE);
-//   }
-//   if (corner === "copy") {
-//     target.controls[corner].render = renderSvgIcon(COPY_IMG_ACTIVE);
-//   }
-//   if (corner === "del") {
-//     target.controls[corner].render = renderSvgIcon(DEL_IMG_ACTIVE);
-//   }
-//   target.canvas.requestRenderAll();
-// };
-
-// export const handleMouseOutCorner = (target) => {
-//   if (!target) return;
-//   if (target.controls?.mtr) {
-//     target.controls.mtr.render = renderSvgIcon(ROTATE_IMG);
-//   }
-//   if (target.controls?.copy) {
-//     target.controls.copy.render = renderSvgIcon(COPY_IMG);
-//   }
-//   if (target.controls?.del) {
-//     target.controls.del.render = renderSvgIcon(DEL_IMG);
-//   }
-// };
 
 export default function initControl() {
   renderController();

@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { downloadFile, base64ToBlob } from "@/utils";
+import { downloadFile, base64ToBlob } from "@/lib/utils";
 import { useContext, useRef } from "react";
-import { GloablStateContext } from "@/context/global-context";
+import { GlobalStateContext } from "@/context/global-context";
 import { Export as ExportIcon } from "solar-icon-set";
 import { toast } from "sonner";
 import { defaultCanvasName } from "@/constants/canvas";
@@ -32,7 +32,7 @@ const items: { key: string; label: string }[] = [
 ];
 
 export default function Export() {
-  const { editor, setReady, setActiveObject } = useContext(GloablStateContext);
+  const { editor, setReady, setActiveObject } = useContext(GlobalStateContext);
   const localFileSelectorRef = useRef<any>();
 
   const selectJsonFile = () => {

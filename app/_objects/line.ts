@@ -1,5 +1,5 @@
 import { fabric } from "fabric";
-import { uuid } from "@/utils";
+import { uuid } from "@/lib/utils";
 
 export const drawLine = (options: any) => {
   const { points, canvas, ...rest } = options;

@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from "react";
-import { GloablStateContext } from "@/context/global-context";
+import { GlobalStateContext } from "@/context/global-context";
 import { UndoLeftRound as UndoIcon, UndoRightRound as RedoIcon, Cursor as CursorIcon, Broom as ClearIcon } from "solar-icon-set";
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 export default function Toolbar() {
-  const { setActiveObject, editor } = useContext(GloablStateContext);
+  const { setActiveObject, editor } = useContext(GlobalStateContext);
   const [panEnable, setPanEnable] = useState(false);
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);

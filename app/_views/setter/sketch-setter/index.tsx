@@ -1,13 +1,13 @@
 import { useContext, useEffect } from "react";
 import ColorSetter from "../color-setter";
-import { GloablStateContext } from "@/context/global-context";
+import { GlobalStateContext } from "@/context/global-context";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { SketchStyles } from "@/types/sketch";
 
 export default function SketchSetter() {
   const { watch, setValue } = useForm<SketchStyles>();
-  const { editor } = useContext(GloablStateContext);
+  const { editor } = useContext(GlobalStateContext);
 
   const fields = watch();
 
@@ -20,16 +20,10 @@ export default function SketchSetter() {
 
   const onChangeSize = (val: string, type: string) => {
     if (type === "width") {
-      editor?.setSketchSize({
-        width: +val,
-        height: editor.sketch?.height,
-      });
+      editor?.setSketchSize({ width: +val, height: editor.sketch?.height });
       setValue("size", [+val, editor?.sketch?.height || 0]);
     } else {
-      editor?.setSketchSize({
-        width: editor.sketch?.width,
-        height: +val,
-      });
+      editor?.setSketchSize({ width: editor.sketch?.width, height: +val });
       setValue("size", [editor?.sketch?.width || 0, +val]);
     }
     editor?.canvas?.requestRenderAll();
@@ -45,36 +39,19 @@ export default function SketchSetter() {
   return (
     <form>
       <div className="mb-5">
-        <label
-          htmlFor="font-size"
-          className=" text-gray-300 font-light text-sm"
-        >
+        <label htmlFor="font-size" className=" text-gray-300 font-light text-sm">
           Size
         </label>
         <div className="flex gap-3 items-center mt-2">
-          <Input
-            placeholder="Width"
-            value={fields.size?.at(0)}
-            onChange={(e) => onChangeSize(e.target.value, "width")}
-          />
-          <Input
-            placeholder="Height"
-            value={fields.size?.at(1)}
-            onChange={(e) => onChangeSize(e.target.value, "height")}
-          />
+          <Input placeholder="Width" value={fields.size?.at(0)} onChange={(e) => onChangeSize(e.target.value, "width")} />
+          <Input placeholder="Height" value={fields.size?.at(1)} onChange={(e) => onChangeSize(e.target.value, "height")} />
         </div>
       </div>
       <div className="mb-5">
-        <label
-          htmlFor="font-size"
-          className=" text-gray-300 font-light text-sm"
-        >
+        <label htmlFor="font-size" className=" text-gray-300 font-light text-sm">
           Color
         </label>
-        <ColorSetter
-          value={fields.fill}
-          onChange={(val) => onChangeColor(val)}
-        />
+        <ColorSetter value={fields.fill} onChange={(val) => onChangeColor(val)} />
       </div>
     </form>
   );

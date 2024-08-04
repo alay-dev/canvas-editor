@@ -1,5 +1,5 @@
 import { fabric } from "fabric";
-import { changeHeight } from "@/utils/helper";
+import { changeHeight } from "@/lib/helper";
 
 // @ts-ignore fabric controlsUtils
 const controlsUtils = fabric.controlsUtils;

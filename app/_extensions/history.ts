@@ -1,18 +1,13 @@
 import Editor from "@/app/init";
 import { MAX_HISTORY_LENGTH } from "@/config";
 
-// https://github.com/alimozdemir/fabric-history/blob/master/src/index.js
-
-// @TODO
-// For the configuration of the Slider class, you can onChangend trigger the historical record, otherwise it will be too frequent
-
 export default class FabricHistory {
   private historyUndo: string[];
   private historyRedo: string[];
   private saving: boolean; // if saving 2 history
   private doing: boolean; // if doing undo or redo
   private currentState: string;
-  private canvas: any;
+  private canvas: fabric.Canvas | null;
   private editor: Editor;
 
   constructor(editor: Editor) {
@@ -56,22 +51,20 @@ export default class FabricHistory {
     return JSON.stringify(this.editor.canvas2Json());
   }
 
-  private _historyEvents() {
-    return {
-      "object:added": this._historySaveAction.bind(this),
-      "object:removed": this._historySaveAction.bind(this),
-      "object:modified": this._historySaveAction.bind(this),
-      "object:skewing": this._historySaveAction.bind(this),
-      "fabritor:object:modified": this._historySaveAction.bind(this),
-    };
-  }
-
   private init() {
-    this.canvas.on(this._historyEvents());
+    this.canvas?.on("object:added", this._historySaveAction.bind(this));
+    this.canvas?.on("object:removed", this._historySaveAction.bind(this));
+    this.canvas?.on("object:modified", this._historySaveAction.bind(this));
+    this.canvas?.on("object:skewing", this._historySaveAction.bind(this));
+    this.canvas?.on("fabritor:object:modified", this._historySaveAction.bind(this));
   }
 
   public dispose() {
-    this.canvas.off(this._historyEvents());
+    this.canvas?.off("object:added", this._historySaveAction.bind(this));
+    this.canvas?.off("object:removed", this._historySaveAction.bind(this));
+    this.canvas?.off("object:modified", this._historySaveAction.bind(this));
+    this.canvas?.off("object:skewing", this._historySaveAction.bind(this));
+    this.canvas?.off("fabritor:object:modified", this._historySaveAction.bind(this));
   }
 
   public async undo() {
@@ -85,7 +78,7 @@ export default class FabricHistory {
       await this.editor.loadFromJSON(_history);
 
       this.doing = false;
-      this.canvas.fire("fabritor:history:undo");
+      this.canvas?.fire("fabritor:history:undo");
     }
   }
 
@@ -100,7 +93,7 @@ export default class FabricHistory {
       await this.editor.loadFromJSON(_history);
 
       this.doing = false;
-      this.canvas.fire("fabritor:history:redo");
+      this.canvas?.fire("fabritor:history:redo");
     }
   }
 

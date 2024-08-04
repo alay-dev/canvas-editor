@@ -1,12 +1,12 @@
 import { useContext } from "react";
 import ReplaceSetter from "./replace-setter";
 import CommonBorderSetter from "../border-setter";
-import CommonSetter from "../CommonSetter/common-setter";
+import CommonSetter from "../common-setter/common-setter";
 import { FormProvider, useForm } from "react-hook-form";
-import { GloablStateContext } from "@/context/global-context";
+import { GlobalStateContext } from "@/context/global-context";
 
 export default function ImageSetter() {
-  const { object } = useContext(GloablStateContext);
+  const { object } = useContext(GlobalStateContext);
   const methods = useForm({
     values: { isLocked: object?.lockMovementX, opacity: object?.opacity },
   });

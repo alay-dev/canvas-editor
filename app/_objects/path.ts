@@ -1,5 +1,5 @@
 import { fabric } from "fabric";
-import { uuid } from "@/utils";
+import { uuid } from "@/lib/utils";
 
 export const loadSvgFromString = async (string: string) => {
   return new Promise((resolve) => {
@@ -21,13 +21,8 @@ export const loadSvgFromUrl = async (url: string) => {
 
 export const createPathFromSvg = async (options: any) => {
   const { svgString, canvas, ...rest } = options || {};
-
   const svg = (await loadSvgFromString(svgString)) as fabric.Path;
-
-  svg.set({
-    ...rest,
-    id: uuid(),
-  });
+  svg.set({ ...rest, id: uuid() });
 
   canvas.viewportCenterObject(svg);
   canvas.add(svg);

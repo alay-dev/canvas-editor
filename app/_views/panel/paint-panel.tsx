@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { fabric } from "fabric";
 import { DRAW_MODE_CURSOR, DRAG_ICON } from "@/public/icons";
-import { GloablStateContext } from "@/context/global-context";
+import { GlobalStateContext } from "@/context/global-context";
 import PathSetterForm from "@/app/_views/setter/PathSetter/PathSetterForm";
 import { FormProvider, useForm } from "react-hook-form";
 
@@ -41,7 +41,7 @@ export type PaintInputs = {
 
 export default function PaintPanel() {
   const [isDrawingMode, setIsDrawingMode] = useState(true);
-  const { editor } = useContext(GloablStateContext);
+  const { editor } = useContext(GlobalStateContext);
 
   const methods = useForm<PaintInputs>();
 
@@ -83,9 +83,7 @@ export default function PaintPanel() {
     if (!editor?.canvas) return;
     if (editor) {
       editor.canvas.isDrawingMode = true;
-      editor.canvas.freeDrawingCursor = `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(
-        DRAW_MODE_CURSOR
-      )}") 4 12, crosshair`;
+      editor.canvas.freeDrawingCursor = `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(DRAW_MODE_CURSOR)}") 4 12, crosshair`;
       const freeDrawingBrush = new fabric.PencilBrush(editor.canvas);
       editor.canvas.freeDrawingBrush = freeDrawingBrush;
       const { color, width } = brushList[0].options;

@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { GloablStateContext } from "@/context/global-context";
+import { GlobalStateContext } from "@/context/global-context";
 import { Input } from "@/components/ui/input";
 import { Pen } from "solar-icon-set";
 import { defaultCanvasName } from "@/constants/canvas";
@@ -7,7 +7,7 @@ import { defaultCanvasName } from "@/constants/canvas";
 export default function CanvasInfo() {
   const [canvasName, setCanvasName] = useState(defaultCanvasName);
   const [isEditing, setEditing] = useState(false);
-  const { editor } = useContext(GloablStateContext);
+  const { editor } = useContext(GlobalStateContext);
 
   const handleChange = (name: string) => {
     setCanvasName(name);
