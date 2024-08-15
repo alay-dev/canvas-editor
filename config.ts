@@ -1,5 +1,5 @@
 // LOCAL
-export const LOAD_FROM_LOCAL_WHEN_INIT = true;
+export const LOAD_FROM_LOCAL_WHEN_INIT = false;
 export const AUTO_SAVE_WHEN_CHANGE = true;
 
 // UI enhance
@@ -22,5 +22,4 @@ export const CAPTURE_SUBTARGET_WHEN_DBLCLICK = false;
 export const LOAD_JSON_IGNORE_LOAD_FONT = false;
 
 export const defaultFontSize = 20;
-export const PEXEL_API_KEY =
-  "QRJDqcrdO1Rq1ZJwuJAL2P68yM5yS9bB1wO7PqkOZCK5DjFmZdIHhLuA";
+export const PEXEL_API_KEY = "QRJDqcrdO1Rq1ZJwuJAL2P68yM5yS9bB1wO7PqkOZCK5DjFmZdIHhLuA";

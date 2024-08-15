@@ -31,7 +31,42 @@ export const TEXTBOX_DEFAULT_CONFIG = {
   width: 500,
 };
 
-export const FONT_PRESET_FAMILY_LIST = ["Roboto", "Sedan SC", "Ubuntu Sans", "Noto Serif", "Sevillana"];
+export const FONT_PRESET_FAMILY_LIST = [
+  "Open sans",
+  "Roboto",
+  "Sedan SC",
+  "Ubuntu Sans",
+  "Noto Serif",
+  "Sevillana",
+  "Anton",
+  "Bitter",
+  "Sedan",
+  "Barlow Condensed",
+  "EB Garamond",
+  "Abel",
+  "Outfit",
+  "Cabin",
+  "Dancing Script",
+  "Bodoni Moda SC",
+  "Jost",
+  "Space Grotesk",
+  "Inconsolata",
+  "Barlow",
+  "Montserrat",
+  "Inter",
+  "Rubik",
+  "Quicksand",
+  "Edu VIC WA NT Beginner",
+  "Mukta",
+  "New Amsterdam",
+  "Matemasie",
+  "Permannent Marker",
+  "Teko",
+  "Signika Negative",
+  "Kalam",
+  "Jersey 10",
+  "Chakra petch",
+];
 
 export const SKETCH_ID = "sketch-canvas";
 
