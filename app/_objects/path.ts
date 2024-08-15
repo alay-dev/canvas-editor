@@ -22,7 +22,7 @@ export const loadSvgFromUrl = async (url: string) => {
 export const createPathFromSvg = async (options: any) => {
   const { svgString, canvas, ...rest } = options || {};
   const svg = (await loadSvgFromString(svgString)) as fabric.Path;
-  svg.set({ ...rest, id: uuid() });
+  svg.set({ ...rest, id: uuid(), type: "polygon" });
 
   canvas.viewportCenterObject(svg);
   canvas.add(svg);

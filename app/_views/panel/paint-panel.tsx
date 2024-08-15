@@ -4,6 +4,7 @@ import { DRAW_MODE_CURSOR, DRAG_ICON } from "@/public/icons";
 import { GlobalStateContext } from "@/context/global-context";
 import PathSetterForm from "@/app/_views/setter/PathSetter/PathSetterForm";
 import { FormProvider, useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
 
 const brushList = [
   {
@@ -117,10 +118,29 @@ export default function PaintPanel() {
     return initBrush();
   }, []);
 
+  const handleAddFrame = () => {
+    var clipPath = new fabric.Circle({ radius: 100, top: 0, left: 0 });
+    var group = new fabric.Group([
+      new fabric.Rect({ width: 100, height: 100, fill: "red" }),
+      new fabric.Rect({ width: 100, height: 100, fill: "yellow", left: 100 }),
+      new fabric.Rect({ width: 100, height: 100, fill: "blue", top: 100 }),
+      new fabric.Rect({ width: 100, height: 100, fill: "green", left: 100, top: 100 }),
+    ]);
+
+    // editor.canvas.clipPath = clipPath;
+    // editor?.canvas?.add(group);
+
+    group.clipPath = clipPath;
+
+    editor?.canvas?.add(group);
+    editor?.canvas?.requestRenderAll();
+  };
+
   return (
     <div className="p-4 w-full">
       <FormProvider {...methods}>
         <PathSetterForm mode="paint" />
+        <Button onClick={handleAddFrame}>Add frame</Button>
       </FormProvider>
     </div>
   );

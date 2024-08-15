@@ -44,6 +44,7 @@ const CommonSetter = () => {
   const deleteActiveObject = () => {
     if (!object) return;
     editor?.canvas?.remove(object);
+    editor?.canvas?.requestRenderAll();
   };
 
   const alignObject = (alignType: string) => {
