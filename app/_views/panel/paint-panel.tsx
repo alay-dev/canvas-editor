@@ -140,7 +140,7 @@ export default function PaintPanel() {
     <div className="p-4 w-full">
       <FormProvider {...methods}>
         <PathSetterForm mode="paint" />
-        <Button onClick={handleAddFrame}>Add frame</Button>
+        {/* <Button onClick={handleAddFrame}>Add frame</Button> */}
       </FormProvider>
     </div>
   );

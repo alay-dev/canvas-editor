@@ -13,6 +13,8 @@ export default function ImagePanel() {
   const { editor } = useContext(GlobalStateContext);
   const [searchTerm, setSeachTerm] = useState("Background");
   const [images, setImages] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
 
   const addImage = async (url: string) => {
     if (!editor?.canvas) return;
@@ -22,17 +24,31 @@ export default function ImagePanel() {
 
   useEffect(() => {
     fetchImages("Background");
-  }, []);
+  }, [page]);
+
+  const onSearchTermChange = (val: string) => {
+    // setImages([]);
+    setSeachTerm(val);
+    // setPage(1);
+  };
 
   const fetchImages = async (term: string) => {
+    setLoading(true);
     setSeachTerm(term);
-    const data = await fetch(`https://api.pexels.com/v1/search?query=${term}`, {
+    const _images = [...images];
+    const data = await fetch(`https://api.pexels.com/v1/search?query=${term}&page=${page}&per_page=30`, {
       headers: {
         Authorization: PEXEL_API_KEY,
       },
     }).then((res) => res.json());
 
-    setImages(data.photos);
+    // for (const img of data.photos) {
+    //   if (images.find((item) => item.id === img.id)) continue;
+    //   _images.push(img);
+    // }
+
+    setImages([...data.photos]);
+    setLoading(false);
   };
 
   return (
@@ -44,7 +60,7 @@ export default function ImagePanel() {
         <div className="bg-gray-500 h-px flex-1" />
       </div>
       <div className="flex gap-1 items-center border-gray-500 border rounded-lg px-2">
-        <Input placeholder="Search by tags or names" className="border-none focus-visible:ring-0 focus-visible:ring-offset-0" onChange={(e) => fetchImages(e.target.value)} value={searchTerm} />
+        <Input placeholder="Search by tags or names" className="border-none focus-visible:ring-0 focus-visible:ring-offset-0" onChange={(e) => onSearchTermChange(e.target.value)} value={searchTerm} />
         <SearchIcon color="#BDBDBD" />
       </div>
       <ScrollArea>
@@ -60,11 +76,14 @@ export default function ImagePanel() {
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
       <ScrollArea className="h-[28rem] mt-4">
-        <div className="grid gap-3 grid-cols-2  w-full">
+        <div className="grid gap-3 grid-cols-2  w-full mb-3">
           {images?.map((item) => {
             return <img key={item?.id} src={item.src.small} alt="" className="w-full aspect-video object-cover rounded-md object-center" onClick={() => addImage(item.src.large2x)} />;
           })}
         </div>
+        {/* <p className="text-gray-400 text-sm text-center underline cursor-pointer" onClick={() => setPage((page) => page + 1)}>
+          Load more
+        </p> */}
       </ScrollArea>
     </div>
   );
