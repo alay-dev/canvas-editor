@@ -119,21 +119,19 @@ export default function PaintPanel() {
   }, []);
 
   const handleAddFrame = () => {
-    var clipPath = new fabric.Circle({ radius: 100, top: 0, left: 0 });
-    var group = new fabric.Group([
-      new fabric.Rect({ width: 100, height: 100, fill: "red" }),
-      new fabric.Rect({ width: 100, height: 100, fill: "yellow", left: 100 }),
-      new fabric.Rect({ width: 100, height: 100, fill: "blue", top: 100 }),
-      new fabric.Rect({ width: 100, height: 100, fill: "green", left: 100, top: 100 }),
-    ]);
+    var circle = new fabric.Circle({ radius: 100, top: 0, left: 0 });
 
-    // editor.canvas.clipPath = clipPath;
-    // editor?.canvas?.add(group);
+    fabric.util.loadImage("https://images.pexels.com/photos/259915/pexels-photo-259915.jpeg?auto=compress&cs=tinysrgb&h=130", (img) => {
+      circle.set(
+        "fill",
+        new fabric.Pattern({
+          source: img,
+        })
+      );
+      editor?.canvas?.requestRenderAll();
+    });
 
-    group.clipPath = clipPath;
-
-    editor?.canvas?.add(group);
-    editor?.canvas?.requestRenderAll();
+    editor?.canvas?.add(circle);
   };
 
   return (

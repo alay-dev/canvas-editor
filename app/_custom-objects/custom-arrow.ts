@@ -6,7 +6,7 @@ export const createFArrowClass = () => {
   (fabric as any).FArrow = fabric.util.createClass(fabric.Line, {
     type: "f-arrow",
 
-    borderColor: "#00000000",
+    borderColor: "#000",
 
     _render: function (ctx: any) {
       this.callSuper("_render", ctx);

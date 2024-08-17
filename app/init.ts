@@ -130,16 +130,7 @@ export default class Editor {
   private _adjustSketch2Canvas() {
     if (!this.canvas) throw new Error("Canvas is not initialized");
 
-    const zoomLevel = calcCanvasZoomLevel(
-      {
-        width: this.canvas?.width || 0,
-        height: this.canvas?.height || 0,
-      },
-      {
-        width: this.sketch?.width || 0,
-        height: this.sketch?.height || 0,
-      }
-    );
+    const zoomLevel = calcCanvasZoomLevel({ width: this.canvas?.width, height: this.canvas?.height }, { width: this.sketch?.width, height: this.sketch?.height });
 
     const center = this.canvas?.getCenter();
     this.canvas?.zoomToPoint(new fabric.Point(center?.left || 0, center?.top || 0), zoomLevel - 0.04);

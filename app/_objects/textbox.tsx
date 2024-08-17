@@ -31,7 +31,6 @@ export const drawTextPath = (textbox: fabric.FText, offset: number) => {
   textbox?.canvas?.requestRenderAll();
 };
 
-// Remove the PATH attribute position error and drag it to update.
 export const removeTextPath = (textbox: any) => {
   textbox.set({
     path: null,

@@ -98,7 +98,7 @@ export default function Panel() {
       {!isPanelHidden ? (
         <div style={{ width: PANEL_WIDTH }} className="w-full bg-background relative">
           <div className="absolute -right-4 top-1/2 z-40 -translate-y-1/2  cursor-pointer">
-            <img src="/icons/panel-collapse.svg" alt="" className="w-5" />
+            {/* <img src="/icons/panel-collapse.svg" alt="" className="w-5" /> */}
             <LeftIcon className="absolute  top-1/2 -translate-y-1/2" color="#fff" />
           </div>
 

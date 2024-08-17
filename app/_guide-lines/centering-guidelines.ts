@@ -75,7 +75,6 @@ export default function initCenteringGuidelines(canvas) {
   });
 
   canvas.on("mouse:up", function () {
-    // clear these values, to stop drawing guidelines once mouse is up
     isInVerticalCenter = isInHorizontalCenter = null;
     canvas.renderAll();
   });

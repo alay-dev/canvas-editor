@@ -15,11 +15,9 @@ const changeLineStart = (eventData: any, transform: any, x: number, y: number) =
 const linePositionHandler = (x: string, y: string) => {
   return (dim: any, finalMatrix: any, fabricObject: any) => {
     if (fabricObject?.canvas) {
-      // a strange bug when delete multi f-line objects...
       const points = fabricObject.calcLinePoints();
       const localPoint = new fabric.Point(points[x], points[y]);
 
-      // move will not change x1 y1 x2 y2
       const point = fabric.util.transformPoint(localPoint, fabric.util.multiplyTransformMatrices(fabricObject.canvas.viewportTransform, fabricObject.calcTransformMatrix()));
       return point;
     } else {

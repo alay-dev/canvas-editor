@@ -61,9 +61,6 @@ export default function initAligningGuidelines(canvas) {
 
     if (!transform) return;
 
-    // It should be trivial to DRY this up by encapsulating (repeating) creation of x1, x2, y1, and y2 into functions,
-    // but we're not doing it here for perf. reasons -- as this a function that's invoked on every mouse move
-
     for (var i = canvasObjects.length; i--; ) {
       if (canvasObjects[i] === activeObject) continue;
 

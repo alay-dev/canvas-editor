@@ -103,7 +103,6 @@ export const createFImageClass = () => {
       return this.imageBorder;
     },
 
-    // http://fabricjs.com/fabric-filters
     applyFilter(filter: any) {
       try {
         this.img.filters = filter ? [filter] : [];
