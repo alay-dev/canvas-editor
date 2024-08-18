@@ -125,7 +125,7 @@ export default function PaintPanel() {
     const rect = new fabric.Rect({ width: 40, height: 40 });
 
     fabric.util.loadImage(src, (img) => {
-      rect?.set("stroke", new fabric.Pattern({ source: img }));
+      // rect?.set("stroke", new fabric.Pattern({ source: img }));
       editor?.canvas?.requestRenderAll();
     });
 
@@ -139,7 +139,7 @@ export default function PaintPanel() {
     <div className="p-4 w-full">
       <FormProvider {...methods}>
         <PathSetterForm mode="paint" />
-        <Button onClick={handleAddFrame}>Add frame</Button>
+        {/* <Button onClick={handleAddFrame}>Add frame</Button> */}
       </FormProvider>
     </div>
   );

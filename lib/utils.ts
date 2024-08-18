@@ -3,8 +3,8 @@ import { twMerge } from "tailwind-merge";
 import FontFaceObserver from "fontfaceobserver";
 import { v4 as uuidv4 } from "uuid";
 import { FONT_PRESET_FAMILY_LIST } from "../constants/canvas";
-import { Fill } from "@/app/_views/setter/shape-setter/shape";
 import { fabric } from "fabric";
+import { Fill } from "@/app/_components/fill";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

@@ -1,4 +1,4 @@
-import { Fill } from "@/app/_views/setter/shape-setter/shape";
+import { Fill } from "@/app/_components/fill";
 
 export type SketchStyles = {
   size: number[];

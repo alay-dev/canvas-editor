@@ -1,4 +1,4 @@
-import { FillType } from "@/app/_views/setter/shape-setter/shape";
+import { FillType } from "@/app/_components/fill";
 
 export type TextStyle = {
   fontFamily: string;
