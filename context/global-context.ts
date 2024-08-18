@@ -7,10 +7,14 @@ export interface IGlobalStateContext {
   isReady?: boolean;
   setReady?: (o: boolean) => void;
   editor?: Editor;
+  isPanel: boolean;
+  setPanel: (data: boolean) => void;
 }
 
 export const GlobalStateContext = createContext<IGlobalStateContext>({
   editor: undefined,
   isReady: false,
   object: undefined,
+  isPanel: true,
+  setPanel: () => null,
 });

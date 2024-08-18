@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { GlobalStateContext } from "@/context/global-context";
-import ColorSetter from "../color-setter";
+import ColorPicker from "@/app/_components/color-picker";
 import { BORDER_TYPES, getObjectBorderType } from "../border-setter";
 import { Form, useForm } from "react-hook-form";
 import SliderInput from "@/app/_components/slider-input";
@@ -14,7 +14,7 @@ type LineInput = {
 
 export default function Line() {
   const { object, editor } = useContext(GlobalStateContext);
-  // const [form] = Form.useForm({});
+
   const { setValue, watch } = useForm<LineInput>({
     values: {
       stroke: object?.stroke || "#000",
@@ -78,7 +78,7 @@ export default function Line() {
 
   return (
     <form>
-      <ColorSetter onChange={handleChangeStrokeColor} value={fields.stroke} />
+      <ColorPicker onChange={handleChangeStrokeColor} value={fields.stroke} />
 
       {/* <SliderInputNumber
           min={1}

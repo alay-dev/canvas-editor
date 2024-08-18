@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import ColorSetter from "../color-setter";
+import ColorSetter from "@/app/_components/color-picker";
 import { GlobalStateContext } from "@/context/global-context";
 import { FormProvider, useForm } from "react-hook-form";
 import { cn } from "@/lib/utils";

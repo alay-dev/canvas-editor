@@ -16,9 +16,10 @@ export default function Setter() {
   const { object, isReady } = useContext(GlobalStateContext);
   const objectType = object?.get?.("type") || "";
 
-  const getRenderSetter = () => {
+  const renderSetter = () => {
     if (!isReady) return null;
     if (!object || object.id === SKETCH_ID) return <SketchSetter />;
+
     switch (objectType) {
       case "f-text":
         return <TextSetter />;
@@ -47,14 +48,6 @@ export default function Setter() {
     }
   };
 
-  const renderSetter = () => {
-    const Setter = getRenderSetter();
-    if (Setter) {
-      return Setter;
-    }
-    return null;
-  };
-
   const getSetterTitle = () => {
     if (!isReady) return null;
     if (!object || object.id === SKETCH_ID) return "Canvas";
@@ -72,7 +65,7 @@ export default function Setter() {
       case "f-line":
       case "f-arrow":
       case "f-tri-arrow":
-        return "line";
+        return "Line";
       case "f-image":
         return "Picture";
       case "image":
@@ -80,9 +73,9 @@ export default function Setter() {
       case "path":
         return "Brush";
       case "group":
-        return "combination";
+        return "Combination";
       case "activeSelection":
-        return "combination";
+        return "Combination";
       default:
         return "Canvas";
     }

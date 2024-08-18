@@ -3,6 +3,8 @@ import { twMerge } from "tailwind-merge";
 import FontFaceObserver from "fontfaceobserver";
 import { v4 as uuidv4 } from "uuid";
 import { FONT_PRESET_FAMILY_LIST } from "../constants/canvas";
+import { Fill } from "@/app/_views/setter/shape-setter/shape";
+import { fabric } from "fabric";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -66,8 +68,12 @@ const transformAngle2Coords = (angle: number) => {
 //   return 90;
 // };
 
-export const transformFill2Colors = (v: any) => {
+export const transformFill2Colors = (v: any): Fill => {
   // if (!v || typeof v === "string" || v instanceof fabric.Pattern) {
+
+  if (v instanceof fabric.Pattern && typeof v.source !== "string") {
+    return { type: "image", image: v.source.currentSrc };
+  }
   return { type: "solid", color: v || "#555" };
   // }
   // return {

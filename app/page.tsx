@@ -13,6 +13,7 @@ export default function CanvasEditor() {
   const [editor, setEditor] = useState<Editor | undefined>(undefined);
   const [activeObject, setActiveObject] = useState<fabric.Object | null>(null);
   const [isReady, setReady] = useState(false);
+  const [isPanel, setPanel] = useState(true);
 
   const clickHandler = (opt: any) => {
     // const { target } = opt;
@@ -27,6 +28,7 @@ export default function CanvasEditor() {
       setActiveObject(selection);
     } else {
       setActiveObject(editor?.sketch);
+      editor?._adjustSketch2Canvas();
     }
   };
 
@@ -84,9 +86,9 @@ export default function CanvasEditor() {
 
   return (
     <main>
-      <GlobalStateContext.Provider value={{ object: activeObject, setActiveObject, isReady, setReady, editor }}>
+      <GlobalStateContext.Provider value={{ object: activeObject, setActiveObject, isReady, setReady, editor, isPanel, setPanel }}>
         <Main isReady={isReady}>
-          <div id="canvas-editor" ref={workspaceEl} className="flex-1 h-full relative">
+          <div id="canvas-editor" ref={workspaceEl} className="w-full h-full relative">
             <canvas ref={canvasEl} />
           </div>
         </Main>

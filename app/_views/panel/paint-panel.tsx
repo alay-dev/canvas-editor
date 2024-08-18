@@ -5,6 +5,7 @@ import { GlobalStateContext } from "@/context/global-context";
 import PathSetterForm from "@/app/_views/setter/PathSetter/PathSetterForm";
 import { FormProvider, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { loadImage } from "@/app/_objects/image";
 
 const brushList = [
   {
@@ -118,27 +119,27 @@ export default function PaintPanel() {
     return initBrush();
   }, []);
 
-  const handleAddFrame = () => {
-    var circle = new fabric.Circle({ radius: 100, top: 0, left: 0 });
+  const src = "https://images.pexels.com/photos/259915/pexels-photo-259915.jpeg?auto=compress&cs=tinysrgb&h=130";
 
-    fabric.util.loadImage("https://images.pexels.com/photos/259915/pexels-photo-259915.jpeg?auto=compress&cs=tinysrgb&h=130", (img) => {
-      circle.set(
-        "fill",
-        new fabric.Pattern({
-          source: img,
-        })
-      );
+  const handleAddFrame = async () => {
+    const rect = new fabric.Rect({ width: 40, height: 40 });
+
+    fabric.util.loadImage(src, (img) => {
+      rect?.set("stroke", new fabric.Pattern({ source: img }));
       editor?.canvas?.requestRenderAll();
     });
 
-    editor?.canvas?.add(circle);
+    // const img = await loadImage(src);
+    // circle.set("fill", new fabric.Pattern({ source: src }));
+    editor?.canvas?.add(rect);
+    editor?.canvas?.requestRenderAll();
   };
 
   return (
     <div className="p-4 w-full">
       <FormProvider {...methods}>
         <PathSetterForm mode="paint" />
-        {/* <Button onClick={handleAddFrame}>Add frame</Button> */}
+        <Button onClick={handleAddFrame}>Add frame</Button>
       </FormProvider>
     </div>
   );

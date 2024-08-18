@@ -1,21 +1,34 @@
 import { useContext, useEffect } from "react";
-import ColorSetter from "../color-setter";
+import FillSetter, { FillType } from "@/app/_components/fill";
 import { GlobalStateContext } from "@/context/global-context";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { SketchStyles } from "@/types/sketch";
+import { fabric } from "fabric";
+import { transformFill2Colors } from "@/lib/utils";
 
 export default function SketchSetter() {
-  const { watch, setValue } = useForm<SketchStyles>();
   const { editor } = useContext(GlobalStateContext);
+  const { watch, setValue } = useForm<SketchStyles>({
+    values: {
+      size: [editor?.sketch?.width || 0, editor?.sketch?.height || 0],
+      fill: transformFill2Colors(editor?.sketch?.fill),
+    },
+  });
 
   const fields = watch();
 
-  const onChangeColor = (val: string) => {
-    setValue("fill", val);
-    editor?.sketch?.set("fill", val);
+  const onChangeFill = (type: FillType, val: string) => {
+    if (type == "solid") {
+      setValue("fill", { type: "solid", color: val });
+      editor?.sketch?.set("fill", val);
+    } else if (type === "image") {
+      setValue("fill", { type: "image", image: val });
+      editor?.sketch?.set("fill", new fabric.Pattern({ source: val }));
+    }
+
+    // editor?.fireCustomModifiedEvent();
     editor?.canvas?.requestRenderAll();
-    editor?.fireCustomModifiedEvent();
   };
 
   const onChangeSize = (val: string, type: string) => {
@@ -29,12 +42,7 @@ export default function SketchSetter() {
     editor?.canvas?.requestRenderAll();
   };
 
-  useEffect(() => {
-    if (!editor) return;
-    const { sketch } = editor;
-    setValue("size", [sketch?.width || 0, sketch?.height || 0]);
-    setValue("fill", (sketch?.fill as string) || "#fff");
-  }, [editor]);
+  console.log(editor?.sketch?.fill);
 
   return (
     <form>
@@ -49,9 +57,9 @@ export default function SketchSetter() {
       </div>
       <div className="mb-5">
         <label htmlFor="font-size" className=" text-gray-300 font-light text-sm">
-          Color
+          Fill
         </label>
-        <ColorSetter value={fields.fill} onChange={(val) => onChangeColor(val)} />
+        <FillSetter fill={fields.fill} onChange={onChangeFill} />
       </div>
     </form>
   );

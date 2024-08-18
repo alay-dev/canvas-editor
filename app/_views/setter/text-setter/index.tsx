@@ -3,7 +3,7 @@ import { fabric } from "fabric";
 import { GlobalStateContext } from "@/context/global-context";
 import FontStyleSetter from "./font-style";
 import AlignSetter from "./alignment";
-import { transformFill2Colors } from "@/lib/utils";
+import { transformFill2Colors, uuid } from "@/lib/utils";
 import { FormProvider, useForm } from "react-hook-form";
 import { FontStyle, TextStyle } from "@/types/custom-text";
 import { defaultFontSize } from "@/config";
@@ -11,12 +11,28 @@ import SliderInput from "@/app/_components/slider-input";
 import { FONT_PRESET_FAMILY_LIST, TEXTBOX_DEFAULT_CONFIG } from "@/constants/canvas";
 import { SelectContent, SelectItem, SelectTrigger, SelectValue, Select } from "@/components/ui/select";
 import CommonSetter from "../common-setter/common-setter";
-import SolidColorSetter from "../color-setter";
+import FillSetter from "@/app/_components/fill";
+import { FillType } from "@/app/_components/fill";
 
 export default function TextSetter() {
   const { object, editor } = useContext(GlobalStateContext);
   const customTextObject = object as fabric.FText;
-  const methods = useForm<TextStyle>();
+  const methods = useForm<TextStyle>({
+    values: {
+      charSpacing: customTextObject.charSpacing || 0,
+      fontFamily: customTextObject.fontFamily || TEXTBOX_DEFAULT_CONFIG.fontFamily,
+      fontSize: customTextObject.fontSize || defaultFontSize,
+      fill: transformFill2Colors(customTextObject.fill),
+      textAlign: customTextObject.textAlign || "",
+      lineHeight: customTextObject.lineHeight || 1,
+      fontStyles: {
+        bold: customTextObject.fontWeight === "bold",
+        italic: customTextObject.fontStyle === "italic",
+        underline: customTextObject.underline || false,
+        linethrough: customTextObject.linethrough || false,
+      },
+    },
+  });
   const fields = methods.watch();
 
   const setFontStyles = (styles: FontStyle) => {
@@ -41,9 +57,14 @@ export default function TextSetter() {
     editor?.fireCustomModifiedEvent();
   };
 
-  const onFontColorChange = (val: string) => {
-    methods.setValue("fill.color", val);
-    customTextObject.set("fill", val);
+  const onFillChange = (type: FillType, val: string) => {
+    if (type === "solid") {
+      methods.setValue("fill.color", val);
+      customTextObject.set("fill", val);
+    } else {
+      methods.setValue("fill", { type: "image", image: val });
+      customTextObject?.set("fill", new fabric.Pattern({ source: val }));
+    }
 
     editor?.canvas?.requestRenderAll();
     editor?.fireCustomModifiedEvent();
@@ -80,7 +101,8 @@ export default function TextSetter() {
       default:
         null;
     }
-    setFontStyles(fields.fontStyles);
+
+    if (fields?.fontStyles) setFontStyles(fields?.fontStyles);
     editor?.canvas?.requestRenderAll();
   };
 
@@ -90,23 +112,8 @@ export default function TextSetter() {
     editor?.canvas?.requestRenderAll();
   };
 
-  useEffect(() => {
-    if (!customTextObject) return;
-
-    methods.setValue("charSpacing", customTextObject.charSpacing || 0);
-    methods.setValue("fontFamily", customTextObject.fontFamily || TEXTBOX_DEFAULT_CONFIG.fontFamily);
-    methods.setValue("fontSize", customTextObject.fontSize || defaultFontSize);
-    methods.setValue("fill", transformFill2Colors(customTextObject.fill) as any);
-    methods.setValue("textAlign", customTextObject.textAlign || "");
-    methods.setValue("lineHeight", customTextObject.lineHeight || 1);
-    methods.setValue("fontStyles", {
-      bold: customTextObject.fontWeight === "bold",
-      italic: customTextObject.fontStyle === "italic",
-      underline: customTextObject.underline || false,
-      linethrough: customTextObject.linethrough || false,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customTextObject]);
+  console.log(customTextObject.fill, "FILL");
+  console.log("render");
 
   return (
     <FormProvider {...methods}>
@@ -137,7 +144,7 @@ export default function TextSetter() {
         <label htmlFor="font-size" className=" text-gray-400 font-light text-sm">
           Color
         </label>
-        <SolidColorSetter value={fields.fill?.color} onChange={onFontColorChange} />
+        <FillSetter fill={fields.fill} onChange={onFillChange} />
       </div>
 
       <div className="mb-5">
@@ -151,14 +158,14 @@ export default function TextSetter() {
         <label htmlFor="font-size" className=" text-gray-400 font-light text-sm">
           Alignment
         </label>
-        <AlignSetter onChangeAlignment={onChangeAlignment} style={fields.textAlign} />
+        <AlignSetter onChangeAlignment={onChangeAlignment} style={fields?.textAlign} />
       </div>
 
       <div className="mb-5">
         <label htmlFor="font-size" className=" text-gray-400 font-light text-sm">
           Style
         </label>
-        <FontStyleSetter onChangeFontStyle={onChangeFontStyle} styles={fields.fontStyles} />
+        <FontStyleSetter onChangeFontStyle={onChangeFontStyle} styles={fields?.fontStyles} />
       </div>
       <div className="mb-5">
         <label htmlFor="font-size" className=" text-gray-400 font-light text-sm">

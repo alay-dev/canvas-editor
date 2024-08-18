@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import SolidColorSetter from "../color-setter";
+import ColorPicker from "@/app/_components/color-picker";
 
 import { useContext, useEffect } from "react";
 import { GlobalStateContext } from "@/context/global-context";
@@ -99,7 +99,7 @@ export default function PathSetterForm({ mode }: Props) {
     <div className="w-full text-gray-300">
       <div className="mb-4">
         <label className="  font-light text-sm">Color</label>
-        <SolidColorSetter value={fields?.color} onChange={(color) => handleValueChange("color", color)} />
+        <ColorPicker value={fields?.color} onChange={(color) => handleValueChange("color", color)} />
       </div>
       <div className="mb-4 ">
         <label className=" font-light text-sm">Width</label>
@@ -107,12 +107,12 @@ export default function PathSetterForm({ mode }: Props) {
       </div>
       {/* {showFillConfig ? (
         <FormItem label="filling" name="fill">
-          <SolidColorSetter onChange={fireEvent} />
+          <ColorPicker onChange={fireEvent} />
         </FormItem>
       ) : null} */}
       <div className="mb-4 ">
         <label className=" font-light text-sm">Shadow color</label>
-        <SolidColorSetter value={fields.shadow?.color} onChange={(color) => handleValueChange("shadow.color", color)} />
+        <ColorPicker value={fields.shadow?.color} onChange={(color) => handleValueChange("shadow.color", color)} />
       </div>
       <div className="mb-4 ">
         <label className=" font-light text-sm">Shadow width</label>

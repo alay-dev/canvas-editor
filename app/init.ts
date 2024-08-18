@@ -127,7 +127,7 @@ export default class Editor {
     this._resizeObserver.observe(workspaceEl);
   }
 
-  private _adjustSketch2Canvas() {
+  public _adjustSketch2Canvas() {
     if (!this.canvas) throw new Error("Canvas is not initialized");
 
     const zoomLevel = calcCanvasZoomLevel({ width: this.canvas?.width, height: this.canvas?.height }, { width: this.sketch?.width, height: this.sketch?.height });
