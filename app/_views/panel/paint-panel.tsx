@@ -120,24 +120,34 @@ export default function PaintPanel() {
     return initBrush();
   }, []);
 
-  const src =
-    "https://text.media.giphy.com/v1/media/giphy.webp?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiJwcm9kLTIwMjAtMDQtMjIiLCJzdHlsZSI6InRveXRhbGVzIiwidGV4dCI6Ik9NRyEiLCJpYXQiOjE3MjM5NjA1MzR9.UUrQRDczDw9PSAD2YXpx_zJ3VqvUAckui20D7mInP-c";
+  const src = "https://images.pexels.com/photos/255379/pexels-photo-255379.jpeg?auto=compress&cs=tinysrgb&h=130";
 
   const handleAddFrame = async () => {
     const img = await loadImage(src);
     const cimg = new fabric.FImage({ image: img, id: uuid() }, false);
 
+    var filter = new fabric.Image.filters.Contrast({
+      contrast: 0.5,
+    });
+
+    // cimg?.filters?.push(filter);
+    cimg.applyFilter(filter);
+
+    // box.filters.push(filter);
+    // box.applyFilters();
+
     // const img = await loadImage(src);
     // circle.set("fill", new fabric.Pattern({ source: src }));
     editor?.canvas?.add(cimg);
     editor?.canvas?.requestRenderAll();
+    img.applyFilters();
   };
 
   return (
     <div className="p-4 w-full">
       <FormProvider {...methods}>
         <PathSetterForm mode="paint" />
-        <Button onClick={handleAddFrame}>Add frame</Button>
+        {/* <Button onClick={handleAddFrame}>Add frame</Button>  */}
       </FormProvider>
     </div>
   );

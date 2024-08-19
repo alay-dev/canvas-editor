@@ -1,4 +1,4 @@
-import * as fabric from "fabric";
+// import * as fabric from "fabric";
 import { Border } from "./types/c-image";
 
 declare module "fabric" {
@@ -10,7 +10,7 @@ declare module "fabric" {
       getSrc(): string;
       setBorder(b: Border): void;
       getBorder(): Border;
-      applyFilter(): void;
+      applyFilter(filter: fabric.IBaseFilter): void;
       applyFilterValue(): void;
       getFilter(): any;
     }

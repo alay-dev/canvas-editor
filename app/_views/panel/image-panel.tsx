@@ -29,6 +29,7 @@ export default function ImagePanel() {
   const onSearchTermChange = (val: string) => {
     // setImages([]);
     setSeachTerm(val);
+    fetchImages(val);
     // setPage(1);
   };
 

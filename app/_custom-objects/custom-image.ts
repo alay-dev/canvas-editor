@@ -8,7 +8,7 @@ export type CustomImage = fabric.Object & {
   getSrc(): string;
   setBorder(): void;
   getBorder(): any;
-  applyFilter(): void;
+  applyFilter(filter?: fabric.IBaseFilter | fabric.IGrayscaleFilter | null): void;
   applyFilterValue(): void;
   getFilter(): any;
 };
@@ -105,7 +105,7 @@ export const createFImageClass = () => {
 
     applyFilter(filter: any) {
       try {
-        this.img.filters = filter ? [filter] : [];
+        this.img.filters = filter ? [filter] : null;
         this.img.applyFilters();
       } catch (e) {
         console.log(e);
@@ -126,7 +126,7 @@ export const createFImageClass = () => {
     },
 
     toObject() {
-      return fabric.util.object.extend(this.callSuper("toObject"), {
+      return fabric.util.object.extend(this?.callSuper("toObject"), {
         _createBorderRect: this.get("_createBorderRect"),
         _createClipPath: this.get("_createClipPath"),
         setSrc: this.get("setSrc"),

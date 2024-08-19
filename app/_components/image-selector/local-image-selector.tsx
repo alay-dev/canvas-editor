@@ -26,7 +26,7 @@ export default function LocalImageSelector({ onChange }: Props) {
     <div className="border-dashed border-gray-500 border w-full h-max p-8 px-4 gap-3 rounded-xl flex flex-col items-center justify-center">
       <ImageIcon iconStyle="BoldDuotone" size={40} color="#BDBDBD" />
       <p className="text-center text-gray-400 font-light text-sm cursor-pointer">
-        Drag & drop or
+        Drag & drop or{" "}
         <label htmlFor="upload-image">
           <span className="text-white underline">upload</span>
         </label>{" "}
