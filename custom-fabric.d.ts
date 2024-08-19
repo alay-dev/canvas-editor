@@ -1,4 +1,4 @@
-import { fabric } from "fabric";
+import * as fabric from "fabric";
 import { Border } from "./types/c-image";
 
 declare module "fabric" {
