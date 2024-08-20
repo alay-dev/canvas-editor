@@ -51,7 +51,7 @@ const IconPanel = () => {
             const url = `https://api.iconify.design/${lib}/${iconName}.svg?width=25&color=%23fff`;
             const addIconUrl = `https://api.iconify.design/${lib}/${iconName}.svg?width=100&color=%23000`;
             return (
-              <div key={item} onClick={() => addIcon(addIconUrl)} className="bg-gray-700 rounded-md flex items-center justify-center aspect-square">
+              <div key={item} onClick={() => addIcon(addIconUrl)} className="bg-gray-700 rounded-md flex items-center justify-center aspect-square hover:border transition border-gray-400 overflow-hidden relative cursor-pointer">
                 <img src={url} alt={item} />
               </div>
             );

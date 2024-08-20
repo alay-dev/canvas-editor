@@ -673,7 +673,7 @@ export default function ShapePanel() {
               onClick={() => {
                 addShape(item);
               }}
-              className="bg-gray-700 rounded-md w-full aspect-square flex items-center justify-center"
+              className="bg-gray-700 rounded-md w-full aspect-square flex items-center justify-center hover:border transition border-gray-400 overflow-hidden relative cursor-pointer"
             >
               <img src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(item.elem)}`} className="w-12 h-12" alt="" />
             </div>
@@ -688,7 +688,7 @@ export default function ShapePanel() {
               onClick={() => {
                 addShape(item);
               }}
-              className="bg-gray-700 rounded-md w-full aspect-square flex items-center justify-center p-4"
+              className="bg-gray-700 rounded-md w-full aspect-square flex items-center justify-center p-4 hover:border transition border-gray-400 overflow-hidden relative cursor-pointer"
             >
               <img src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(item.elem)}`} className="w-12 h-12" alt="" />
             </div>
@@ -703,7 +703,7 @@ export default function ShapePanel() {
               onClick={() => {
                 addShape(item);
               }}
-              className="bg-gray-700 rounded-md w-full aspect-square flex items-center justify-center p-4"
+              className="bg-gray-700 rounded-md w-full aspect-square flex items-center justify-center p-4 hover:border transition border-gray-400 overflow-hidden relative cursor-pointer"
             >
               <img src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(item.elem)}`} className="w-12 h-12" alt="" />
             </div>
@@ -718,7 +718,7 @@ export default function ShapePanel() {
               onClick={() => {
                 addShape(item);
               }}
-              className="bg-gray-700 rounded-md w-full aspect-square flex items-center justify-center p-4"
+              className="bg-gray-700 rounded-md w-full aspect-square flex items-center justify-center p-4 hover:border transition border-gray-400 overflow-hidden relative cursor-pointer"
             >
               <img src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(item.elem)}`} className="w-12 h-12" alt="" />
             </div>

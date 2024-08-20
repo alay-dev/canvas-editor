@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Magnifer as SearchIcon } from "solar-icon-set";
 import { PEXEL_API_KEY } from "@/config";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Spinner } from "@/components/ui/spinner";
 
 const imageSearchTags = ["Background", "Sky", "Food", "Paper", "Money", "Beach", "Water", "White background", "Black background", "Coffee", "Nature", "Car", "Business", "Laptop", "Office"];
 
@@ -13,13 +14,14 @@ export default function ImagePanel() {
   const { editor } = useContext(GlobalStateContext);
   const [searchTerm, setSeachTerm] = useState("Background");
   const [images, setImages] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<string | null>(null);
   const [page, setPage] = useState(1);
 
   const addImage = async (url: string) => {
     if (!editor?.canvas) return;
-
+    setLoading(url);
     await createFImage({ src: url, canvas: editor?.canvas });
+    setLoading(null);
   };
 
   useEffect(() => {
@@ -34,7 +36,6 @@ export default function ImagePanel() {
   };
 
   const fetchImages = async (term: string) => {
-    setLoading(true);
     setSeachTerm(term);
     const _images = [...images];
     const data = await fetch(`https://api.pexels.com/v1/search?query=${term}&page=${page}&per_page=30`, {
@@ -49,7 +50,6 @@ export default function ImagePanel() {
     // }
 
     setImages([...data.photos]);
-    setLoading(false);
   };
 
   return (
@@ -79,7 +79,16 @@ export default function ImagePanel() {
       <ScrollArea className="h-[28rem] mt-4">
         <div className="grid gap-3 grid-cols-2  w-full mb-3">
           {images?.map((item) => {
-            return <img key={item?.id} src={item.src.small} alt="" className="w-full aspect-video object-cover rounded-md object-center" onClick={() => addImage(item.src.large2x)} />;
+            return (
+              <div key={item?.id} className="group rounded-md cursor-pointer w-full hover:border transition border-gray-400 overflow-hidden relative">
+                {loading === item.src.large2x ? (
+                  <div className="absolute top-0 left-0 flex items-center justify-center  backdrop-brightness-50 w-full h-full">
+                    <Spinner />
+                  </div>
+                ) : null}
+                <img src={item.src.small} alt="" className="group-hover:scale-110 transition w-full aspect-video object-cover rounded-md  object-center" onClick={() => addImage(item.src.large2x)} />
+              </div>
+            );
           })}
         </div>
         {/* <p className="text-gray-400 text-sm text-center underline cursor-pointer" onClick={() => setPage((page) => page + 1)}>

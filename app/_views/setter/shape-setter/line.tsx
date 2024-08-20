@@ -2,8 +2,9 @@ import { useContext, useEffect } from "react";
 import { GlobalStateContext } from "@/context/global-context";
 import ColorPicker from "@/app/_components/color-picker";
 import { BORDER_TYPES, getObjectBorderType } from "../border-setter";
-import { Form, useForm } from "react-hook-form";
+import { Form, useForm, FormProvider } from "react-hook-form";
 import SliderInput from "@/app/_components/slider-input";
+import CommonSetter from "../common-setter/common-setter";
 
 type LineInput = {
   stroke: string;
@@ -15,7 +16,7 @@ type LineInput = {
 export default function Line() {
   const { object, editor } = useContext(GlobalStateContext);
 
-  const { setValue, watch } = useForm<LineInput>({
+  const methods = useForm<LineInput>({
     values: {
       stroke: object?.stroke || "#000",
       type: getObjectBorderType({ stroke: object?.stroke || "#000", strokeDashArray: object?.strokeDashArray || [], strokeWidth: object?.strokeWidth || 1 }),
@@ -24,17 +25,17 @@ export default function Line() {
     },
   });
 
-  const fields = watch();
+  const fields = methods?.watch();
 
   const handleChangeStrokeColor = (val: string) => {
-    setValue("stroke", val);
+    methods?.setValue("stroke", val);
     object?.set("stroke", val);
     editor?.canvas?.requestRenderAll();
     editor?.fireCustomModifiedEvent();
   };
 
   const handleChangeStrokeWidth = (val: number) => {
-    setValue("strokeWidth", val);
+    methods?.setValue("strokeWidth", val);
     object?.set("strokeWidth", val);
     editor?.canvas?.requestRenderAll();
     editor?.fireCustomModifiedEvent();
@@ -77,7 +78,8 @@ export default function Line() {
   // };
 
   return (
-    <form>
+    <FormProvider {...methods}>
+      <CommonSetter />
       <ColorPicker onChange={handleChangeStrokeColor} value={fields.stroke} />
 
       {/* <SliderInputNumber
@@ -90,6 +92,6 @@ export default function Line() {
       <SliderInput min={1} max={100} onChange={handleChangeStrokeWidth} value={fields?.strokeWidth} />
 
       {/* <Switch /> */}
-    </form>
+    </FormProvider>
   );
 }
