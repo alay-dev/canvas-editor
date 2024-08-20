@@ -12,6 +12,8 @@ import { fabric } from "fabric";
 import { CustomImage } from "@/app/_custom-objects/custom-image";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
+const nonValueFilters = ["Grayscale", "Convolute", "Gamma", "Invert", "Black and white", "Sepia", "Vintage", "Kodachrome"];
+
 const filterTypes = [
   { name: "None", img: "/images/filters/none.png" },
   { name: "Black and white", img: "/images/filters/black-and-white.png" },
@@ -39,7 +41,6 @@ export default function ImageSetter() {
   });
 
   const fields = methods.watch();
-
   const customImage = object as CustomImage;
 
   const onChangeFilter = (filterType: string, value?: number) => {
@@ -139,8 +140,7 @@ export default function ImageSetter() {
               </ScrollArea>
             </PopoverContent>
           </Popover>
-
-          <SliderInput value={20} onChange={() => null} />
+          {nonValueFilters?.includes(fields.filter.type) ? null : <SliderInput value={20} onChange={() => null} />}
         </div>
       </div>
     </FormProvider>

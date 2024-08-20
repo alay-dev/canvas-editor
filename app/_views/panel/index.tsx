@@ -6,8 +6,9 @@ import DesignPanel from "./design-panel";
 import ShapePanel from "./shape-panel";
 import { GlobalStateContext } from "@/context/global-context";
 import { MENUITEM_WIDTH, PANEL_WIDTH } from "@/config";
-import { Layers as LayerIcon, TextSquare as TextIcon, Gallery as PictureIcon, FullScreen as ShapeIcon, Pen as BrushIcon, CodeScan as ApplicationIcon, AltArrowLeft as LeftIcon } from "solar-icon-set";
+import { Layers as LayerIcon, TextSquare as TextIcon, Gallery as PictureIcon, FullScreen as ShapeIcon, Pen as BrushIcon, CodeScan as ApplicationIcon, AltArrowLeft as LeftIcon, FullScreenSquare } from "solar-icon-set";
 import { cn } from "@/lib/utils";
+import IconPanel from "./icon-panel";
 
 const OBJECT_TYPES: { label: string; value: string; icon: ReactElement }[] = [
   {
@@ -26,6 +27,11 @@ const OBJECT_TYPES: { label: string; value: string; icon: ReactElement }[] = [
     icon: <PictureIcon size={22} iconStyle="BoldDuotone" color="#fff" />,
   },
   {
+    label: "Icons",
+    value: "icons",
+    icon: <FullScreenSquare size={24} iconStyle="BoldDuotone" color="#fff" />,
+  },
+  {
     label: "Shape",
     value: "shape",
     icon: <ShapeIcon size={22} iconStyle="BoldDuotone" color="#fff" />,
@@ -42,22 +48,22 @@ export default function Panel() {
   const [selected, setSelected] = useState("text");
 
   const renderPanel = (value: string) => {
-    if (value === "design") {
-      return <DesignPanel />;
+    switch (value) {
+      case "design":
+        return <DesignPanel />;
+      case "text":
+        return <TextPanel />;
+      case "image":
+        return <ImagePanel />;
+      case "shape":
+        return <ShapePanel />;
+      case "paint":
+        return <PaintPanel />;
+      case "icons":
+        return <IconPanel />;
+      default:
+        null;
     }
-    if (value === "text") {
-      return <TextPanel />;
-    }
-    if (value === "image") {
-      return <ImagePanel />;
-    }
-    if (value === "shape") {
-      return <ShapePanel />;
-    }
-    if (value === "paint") {
-      return <PaintPanel />;
-    }
-    return null;
   };
 
   const renderLabel = (item: any) => {

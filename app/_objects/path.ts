@@ -10,7 +10,7 @@ export const loadSvgFromString = async (string: string) => {
   });
 };
 
-export const loadSvgFromUrl = async (url: string) => {
+export const loadSvgFromUrl = async (url: string): Promise<fabric.Object | fabric.Group> => {
   return new Promise((resolve) => {
     fabric.loadSVGFromURL(url, (objects, options) => {
       const svg = fabric.util.groupSVGElements(objects, options);

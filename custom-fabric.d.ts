@@ -25,6 +25,10 @@ declare module "fabric" {
       id?: string;
     }
 
+    interface Path extends fabric.Path {
+      id?: string;
+    }
+
     interface FText extends fabric.Textbox {}
     interface FLine extends fabric.Line {}
     interface FArrow extends fabric.Line {}

@@ -29,11 +29,9 @@ export const createFImageClass = () => {
 
     initialize(options: Options, alreayGrouped: boolean = false) {
       const { image, imageBorder = {}, ...rest } = options;
-      image.set({
-        originX: "center",
-        originY: "center",
-      });
+      image.set({ originX: "center", originY: "center" });
       this.img = image;
+
       this.borderRect = this._createBorderRect(imageBorder);
       this.img.clipPath = this._createClipPath();
       this.callSuper("initialize", [this.img, this.borderRect], { borderDashArray: null, padding: 0, subTargetCheck: false, imageBorder, ...rest }, alreayGrouped);
@@ -42,6 +40,7 @@ export const createFImageClass = () => {
     _createBorderRect({ stroke, strokeWidth, borderRadius }: ImageBorder) {
       const width = this.img.getScaledWidth();
       const height = this.img.getScaledHeight();
+
       const options = { width, height, rx: borderRadius || 0, ry: borderRadius || 0, originX: "center", originY: "center", fill: "#00000000", paintFirst: "fill", stroke: "", strokeWidth: 0 };
       if (stroke) options.stroke = stroke;
       if (strokeWidth) options.strokeWidth = strokeWidth;

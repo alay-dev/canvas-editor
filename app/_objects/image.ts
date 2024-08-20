@@ -74,9 +74,7 @@ export const createFImage = async (options: { src: string; canvas: fabric.Canvas
   }
 
   if (!img) return;
-
   const cimg = new fabric.FImage({ image: img, id: uuid() }, false);
-
   canvas?.viewportCenterObject(cimg);
   canvas?.add(cimg);
   canvas?.setActiveObject(cimg);
