@@ -17,10 +17,11 @@ export type Fill = {
 
 type Props = {
   fill: Fill;
+  side?: "left" | "right" | "bottom" | "top";
   onChange: (type: FillType, data: string) => void;
 };
 
-export default function Fill({ fill, onChange }: Props) {
+export default function Fill({ fill, onChange, side = "left" }: Props) {
   const onUploadPattern = (e: ChangeEvent<HTMLInputElement>) => {
     let files = e.target.files;
     if (!files) return;
@@ -42,9 +43,9 @@ export default function Fill({ fill, onChange }: Props) {
             <p className="font-light text-xs">{fill?.type}</p>
           </div>
         </PopoverTrigger>
-        <PopoverContent side="left" className="z-50 w-[20rem] p-4 border-0 rounded-xl bg-background mr-5 " align="start">
+        <PopoverContent side={side} className="z-50 w-[20rem] p-4 rounded-xl bg-background mr-5 border border-gray-500" align="start">
           <div className="flex items-center gap-2  relative">
-            <Tabs defaultValue="solid" className="w-full">
+            <Tabs defaultValue={fill?.type} className="w-full">
               <TabsList className="bg-gray-700 w-full">
                 <TabsTrigger value="solid" className="flex-1">
                   <FullScreenSquare color="#fff" />
@@ -69,15 +70,30 @@ export default function Fill({ fill, onChange }: Props) {
                 />
               </TabsContent>
               <TabsContent value="image">
-                <div className="flex justify-center items-center w-full h-56 border-2 border-dashed  rounded-lg border-gray-500">
-                  <label htmlFor="pattern-input" className="cursor-pointer">
-                    <div className="flex flex-col items-center gap-3">
-                      <GalleryAdd color="#fff" size={30} iconStyle="BoldDuotone" />
-                      <p className="text-gray-400 text-sm">Upload image</p>
+                {fill?.type === "image" ? (
+                  <div className="flex justify-center items-center w-full h-56 rounded-lg overflow-hidden border border-gray-500 relative">
+                    <img alt="" src={fill.image} className="w-full h-full object-cover" />
+                    <div className="absolute w-full h-full backdrop-brightness-50 flex items-center justify-center">
+                      <label htmlFor="pattern-input" className="cursor-pointer">
+                        <div className="flex flex-col items-center gap-3">
+                          <GalleryAdd color="#fff" size={30} iconStyle="BoldDuotone" />
+                          <p className="text-gray-300 text-sm">Swap image</p>
+                        </div>
+                      </label>
+                      <input onChange={onUploadPattern} id="pattern-input" className="hidden" type="file" accept="image/*" />
                     </div>
-                  </label>
-                  <input onChange={onUploadPattern} id="pattern-input" className="hidden" type="file" accept="image/*" />
-                </div>
+                  </div>
+                ) : (
+                  <div className="flex justify-center items-center w-full h-56 border-2 border-dashed  rounded-lg border-gray-500">
+                    <label htmlFor="pattern-input" className="cursor-pointer">
+                      <div className="flex flex-col items-center gap-3">
+                        <GalleryAdd color="#fff" size={30} iconStyle="BoldDuotone" />
+                        <p className="text-gray-400 text-sm">Upload image</p>
+                      </div>
+                    </label>
+                    <input onChange={onUploadPattern} id="pattern-input" className="hidden" type="file" accept="image/*" />
+                  </div>
+                )}
               </TabsContent>
             </Tabs>
             {/* <Button variant="ghost" className="p-1 h-max hover:bg-gray-700">

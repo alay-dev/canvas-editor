@@ -15,6 +15,10 @@ declare module "fabric" {
       getFilter(): any;
     }
 
+    interface PatternBrush extends fabric.PatternBrush {
+      source: HTMLImageElement;
+    }
+
     // interface Object extends fabric.Object {
     //   id?: string;
     //   __cover?: string;

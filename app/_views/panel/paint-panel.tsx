@@ -7,6 +7,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { loadImage } from "@/app/_objects/image";
 import { uuid } from "@/lib/utils";
+import { Fill } from "@/app/_components/fill";
 
 const brushList = [
   {
@@ -32,7 +33,7 @@ const brushList = [
 ];
 
 export type PaintInputs = {
-  color: string;
+  stroke: Fill;
   width: number;
   isLocked?: boolean;
   shadow: {
@@ -92,21 +93,11 @@ export default function PaintPanel() {
       const { color, width } = brushList[0].options;
       freeDrawingBrush.color = color;
       freeDrawingBrush.width = width;
-      freeDrawingBrush.shadow = new fabric.Shadow({
-        blur: 0,
-        offsetX: 0,
-        offsetY: 0,
-        affectStroke: true,
-        color: "#000000",
-      });
+      freeDrawingBrush.shadow = new fabric.Shadow({ blur: 0, offsetX: 0, offsetY: 0, affectStroke: true, color: "#000000" });
 
-      methods.setValue("color", color);
+      methods.setValue("stroke", { type: "solid", color: color });
       methods.setValue("width", width);
-      methods.setValue("shadow", {
-        color: "#000000",
-        width: 0,
-        offset: 0,
-      });
+      methods.setValue("shadow", { color: "#000000", width: 0, offset: 0 });
     }
 
     return () => {
@@ -122,32 +113,20 @@ export default function PaintPanel() {
 
   const src = "https://images.pexels.com/photos/255379/pexels-photo-255379.jpeg?auto=compress&cs=tinysrgb&h=130";
 
-  const handleAddFrame = async () => {
-    const img = await loadImage(src);
-    const cimg = new fabric.FImage({ image: img, id: uuid() }, false);
-
-    var filter = new fabric.Image.filters.Contrast({
-      contrast: 0.5,
-    });
-
-    // cimg?.filters?.push(filter);
-    cimg.applyFilter(filter);
-
-    // box.filters.push(filter);
-    // box.applyFilters();
-
-    // const img = await loadImage(src);
-    // circle.set("fill", new fabric.Pattern({ source: src }));
-    editor?.canvas?.add(cimg);
-    editor?.canvas?.requestRenderAll();
-    img.applyFilters();
-  };
+  // const handleAddFrame = async () => {
+  //   const img = new Image();
+  //   img.src = src;
+  //   const freeDrawingBrush = new fabric.PatternBrush(editor?.canvas);
+  //   freeDrawingBrush.source = img;
+  //   freeDrawingBrush;
+  //   editor.canvas.freeDrawingBrush = freeDrawingBrush;
+  // };
 
   return (
     <div className="p-4 w-full">
       <FormProvider {...methods}>
         <PathSetterForm mode="paint" />
-        {/* <Button onClick={handleAddFrame}>Add frame</Button>  */}
+        {/* <Button onClick={handleAddFrame}>Add frame</Button> */}
       </FormProvider>
     </div>
   );
