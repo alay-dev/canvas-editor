@@ -10,7 +10,10 @@ export default function PathSetter() {
   const { object, editor } = useContext(GlobalStateContext);
   const methods = useForm<PaintInputs>({
     values: {
-      color: object?.stroke || "#000",
+      stroke: {
+        type: "solid",
+        color: object?.stroke || "#000",
+      },
       width: object?.strokeWidth || 0,
       isLocked: object?.lockMovementX,
       // fill: transformFill2Colors(object?.fill || "#ffffff"),
