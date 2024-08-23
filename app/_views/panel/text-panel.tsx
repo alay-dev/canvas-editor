@@ -13,7 +13,7 @@ const PRESET_FONT_LIST = [
     key: "title",
     config: {
       fontFamily: "Roboto",
-      fontWeight: "bold",
+      fontWeight: "600",
       fontSize: 120,
       text: "Add title",
       top: 100,
@@ -24,7 +24,7 @@ const PRESET_FONT_LIST = [
     key: "sub-title",
     config: {
       fontFamily: "Roboto",
-      fontWeight: "bold",
+      fontWeight: "500",
       fontSize: 100,
       text: "Add a subtitle",
       top: 400,
@@ -37,6 +37,7 @@ const PRESET_FONT_LIST = [
       fontFamily: "Roboto",
       fontSize: 80,
       text: "Add a text",
+      fontWeight: "400",
     },
   },
   {

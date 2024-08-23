@@ -7,11 +7,11 @@ type Props = {
   onChange: (data: string) => void;
 };
 
-export default function Color({ value, onChange }: Props) {
+export default function ColorPicker({ value, onChange }: Props) {
   return (
     <div className="w-max text-white cursor-pointer">
       <Popover>
-        <PopoverTrigger asChild>
+        <PopoverTrigger asChild className="p-0 h-max m-0">
           <div className="flex  w-full py-2  rounded-xl items-center gap-2">
             <div className={cn(" w-6 h-6 rounded-sm")} style={{ backgroundColor: value }} />
             <p className="font-light text-xs uppercase">{value}</p>

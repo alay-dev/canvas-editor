@@ -3,20 +3,20 @@ import { TextItalic, TextUnderline, TextBold, TextCross } from "solar-icon-set";
 import { FontStyle as FontStyleType } from "@/types/custom-text";
 
 const FONT_STYLES: { icon: JSX.Element; value: keyof FontStyleType }[] = [
+  // {
+  //   icon: <TextBold />,
+  //   value: "bold",
+  // },
   {
-    icon: <TextBold />,
-    value: "bold",
-  },
-  {
-    icon: <TextItalic />,
+    icon: <TextItalic size={13} />,
     value: "italic",
   },
   {
-    icon: <TextUnderline />,
+    icon: <TextUnderline size={13} />,
     value: "underline",
   },
   {
-    icon: <TextCross />,
+    icon: <TextCross size={13} />,
     value: "linethrough",
   },
 ];
@@ -33,21 +33,11 @@ export default function FontStyle({ onChangeFontStyle, styles }: Props) {
   };
 
   return (
-    <div
-      id="font-style"
-      className="flex border border-gray-500 rounded-lg overflow-hidden mt-2 [&>*:not(:last-child)]:border-r [&>*:not(:last-child)]:border-gray-500 "
-    >
+    <div className="flex border border-gray-500 rounded-lg overflow-hidden [&>*:not(:last-child)]:border-r [&>*:not(:last-child)]:border-gray-500 flex-1 h-10">
       {FONT_STYLES.map((item) => {
         const isEnabled = styles?.[item.value];
         return (
-          <div
-            onClick={() => onChange(item.value)}
-            key={item.value}
-            className={cn(
-              " flex-1 items-center justify-center flex py-2 cursor-pointer px-4 text-white",
-              isEnabled && "bg-gray-200 text-black"
-            )}
-          >
+          <div onClick={() => onChange(item.value)} key={item.value} className={cn("flex-1 items-center justify-center flex  cursor-pointer h-full text-white", isEnabled && "bg-gray-200 text-black")}>
             {item.icon}
           </div>
         );

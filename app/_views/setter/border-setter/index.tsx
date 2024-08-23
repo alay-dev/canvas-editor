@@ -95,9 +95,7 @@ export default function BorderSetter() {
 
   const methods = useForm<BorderInputs>({
     defaultValues: {
-      border: {
-        type: "none",
-      },
+      border: { type: "none" },
     },
   });
 

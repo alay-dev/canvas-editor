@@ -39,11 +39,11 @@ export default function Fill({ fill, onChange, side = "left" }: Props) {
       <Popover>
         <PopoverTrigger asChild>
           <div className="flex  w-full py-2  rounded-xl items-center gap-2">
-            {fill?.type === "solid" ? <div className={cn(" w-6 h-6 rounded-sm")} style={{ backgroundColor: fill?.color }} /> : <img src={fill?.image} alt="" className="w-6 h-6 rounded-sm" />}
-            <p className="font-light text-xs">{fill?.type}</p>
+            {fill?.type === "solid" ? <div className={cn(" w-9 h-9 rounded-sm")} style={{ backgroundColor: fill?.color }} /> : <img src={fill?.image} alt="" className="w-9 h-9 rounded-md" />}
+            {/* <p className="font-light text-xs">{fill?.type}</p> */}
           </div>
         </PopoverTrigger>
-        <PopoverContent side={side} className="z-50 w-[20rem] p-4 rounded-xl bg-background mr-5 border border-gray-500" align="start">
+        <PopoverContent side={side} className="z-50 w-[20rem] p-4 rounded-xl mr-5" align="start">
           <div className="flex items-center gap-2  relative">
             <Tabs defaultValue={fill?.type} className="w-full">
               <TabsList className="bg-gray-700 w-full">

@@ -10,9 +10,7 @@ const additionalProps = (
 export const createFTextClass = () => {
   (fabric as any).FText = fabric.util.createClass(fabric.Textbox, {
     type: "f-text",
-
     padding: 0,
-
     paintFirst: "stroke",
 
     initDimensions: function () {

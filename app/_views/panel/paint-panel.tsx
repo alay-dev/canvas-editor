@@ -113,20 +113,26 @@ export default function PaintPanel() {
 
   const src = "https://images.pexels.com/photos/255379/pexels-photo-255379.jpeg?auto=compress&cs=tinysrgb&h=130";
 
-  // const handleAddFrame = async () => {
-  //   const img = new Image();
-  //   img.src = src;
-  //   const freeDrawingBrush = new fabric.PatternBrush(editor?.canvas);
-  //   freeDrawingBrush.source = img;
-  //   freeDrawingBrush;
-  //   editor.canvas.freeDrawingBrush = freeDrawingBrush;
-  // };
+  const handleAddFrame = async () => {
+    const img = new Image();
+    img.src = src;
+
+    const rect = new fabric.Image(img);
+    const filter = new fabric.Image.filters.BlendColor({
+      color: "#33af0e",
+      mode: "multiply",
+    });
+
+    rect?.filters?.push(filter);
+    editor?.canvas?.add(rect);
+    editor?.canvas?.requestRenderAll();
+  };
 
   return (
     <div className="p-4 w-full">
       <FormProvider {...methods}>
         <PathSetterForm mode="paint" />
-        {/* <Button onClick={handleAddFrame}>Add frame</Button> */}
+        <Button onClick={handleAddFrame}>Add frame</Button>
       </FormProvider>
     </div>
   );

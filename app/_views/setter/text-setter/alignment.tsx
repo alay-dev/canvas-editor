@@ -2,9 +2,9 @@ import { cn } from "@/lib/utils";
 import { AlignCenter, AlignLeft, AlignRight } from "lucide-react";
 
 const TEXT_ALIGNMENTS = [
-  { icon: <AlignLeft size={17} />, value: "left" },
-  { icon: <AlignCenter size={17} />, value: "center" },
-  { icon: <AlignRight size={17} />, value: "right" },
+  { icon: <AlignLeft size={13} />, value: "left" },
+  { icon: <AlignCenter size={13} />, value: "center" },
+  { icon: <AlignRight size={13} />, value: "right" },
 ];
 
 type Props = {
@@ -18,7 +18,7 @@ export default function Alignment({ onChangeAlignment, style }: Props) {
   };
 
   return (
-    <div id="font-style" className="flex border border-gray-500 rounded-lg overflow-hidden mt-2 [&>*:not(:last-child)]:border-r [&>*:not(:last-child)]:border-gray-500 ">
+    <div className="flex border border-gray-500 rounded-lg overflow-hidden [&>*:not(:last-child)]:border-r [&>*:not(:last-child)]:border-gray-500 h-10">
       {TEXT_ALIGNMENTS.map((item) => {
         return (
           <div onClick={() => onChange(item.value)} key={item.value} className={cn("flex-1 items-center justify-center flex py-2 cursor-pointer px-4 text-white", style === item.value && "bg-gray-200 text-black")}>

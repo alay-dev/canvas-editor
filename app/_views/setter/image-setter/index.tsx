@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { fabric } from "fabric";
 import { CustomImage } from "@/app/_custom-objects/custom-image";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import ShadowSetter, { Shadow } from "@/app/_components/shadow";
 
 const nonValueFilters = ["Grayscale", "Convolute", "Gamma", "Invert", "Black and white", "Sepia", "Vintage", "Kodachrome"];
 
@@ -30,13 +31,24 @@ const filterTypes = [
   { name: "Grayscale", img: "/images/filters/grayscale.png" },
 ];
 
+type ImageInputs = {
+  isLocked: boolean;
+  opacity: number;
+  filter: { type: string; value: number };
+  shadow: Shadow;
+};
+
 export default function ImageSetter() {
   const { object, editor } = useContext(GlobalStateContext);
-  const methods = useForm({
+  const methods = useForm<ImageInputs>({
     values: {
-      isLocked: object?.lockMovementX,
-      opacity: object?.opacity,
+      isLocked: object?.lockMovementX || false,
+      opacity: object?.opacity || 1,
       filter: { type: "None", value: 0 },
+      shadow:
+        object?.shadow instanceof fabric.Shadow
+          ? { offsetX: object?.shadow?.offsetX, offsetY: object?.shadow?.offsetY, blur: object?.shadow?.blur, color: object?.shadow?.color, affectStroke: object?.shadow?.affectStroke }
+          : { offsetX: 0, offsetY: 0, blur: 0, color: object?.shadow || "#000", affectStroke: false },
     },
   });
 
@@ -110,6 +122,13 @@ export default function ImageSetter() {
     editor?.canvas?.requestRenderAll();
   };
 
+  const handleChangeShadow = (val: Shadow) => {
+    const shadow = new fabric.Shadow({ blur: val.blur, color: val.color, offsetX: val.offsetX, offsetY: val.offsetY, affectStroke: val.affectStroke });
+    methods.setValue("shadow", val);
+    object?.set("shadow", shadow);
+    editor?.canvas?.requestRenderAll();
+  };
+
   return (
     <FormProvider {...methods}>
       <div className="mb-4">
@@ -118,7 +137,7 @@ export default function ImageSetter() {
 
       <ReplaceSetter />
       <CommonBorderSetter />
-      <div className="mt-5">
+      <div className="mt-4">
         <p className=" text-gray-300 font-light text-sm">Special effects</p>
         <div className="flex flex-col  border border-gray-600 p-2 rounded-lg mt-1">
           <Popover>
@@ -142,6 +161,10 @@ export default function ImageSetter() {
           </Popover>
           {nonValueFilters?.includes(fields.filter.type) ? null : <SliderInput value={20} onChange={() => null} />}
         </div>
+      </div>
+      <div className="mt-4 flex flex-col items-start">
+        <label className=" text-gray-300 font-light text-sm">Shadow</label>
+        <ShadowSetter onChange={handleChangeShadow} shadow={fields.shadow} />
       </div>
     </FormProvider>
   );

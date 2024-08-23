@@ -1,4 +1,5 @@
 import { FillType } from "@/app/_components/fill";
+import { Shadow } from "@/app/_components/shadow";
 
 export type TextStyle = {
   fontFamily: string;
@@ -16,6 +17,8 @@ export type TextStyle = {
   lineHeight: number;
   charSpacing: number;
   fontStyles: FontStyle;
+  fontWeight?: string;
+  shadow: Shadow;
 };
 
 export type FontStyle = {
