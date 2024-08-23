@@ -27,6 +27,18 @@ declare module "fabric" {
 
     interface IRectOptions extends fabric.IRectOptions {
       id?: string;
+      stroke?: string | HTMLImageElement;
+    }
+
+    interface IObjectOptions extends fabric.IObjectOptions {
+      stroke:
+        | string
+        | {
+            id: number;
+            offsetX: number;
+            offsetY: number;
+            source: HTMLImageElement;
+          };
     }
 
     interface Path extends fabric.Path {

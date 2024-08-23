@@ -61,7 +61,7 @@ export const createFTextClass = () => {
     delete objectCopy.path;
 
     return fabric.Object._fromObject(
-      "f-text",
+      "FText",
       objectCopy,
       function (textInstance: any) {
         textInstance.styles = (fabric.util as any).stylesFromArray(object.styles, object.text);

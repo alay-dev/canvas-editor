@@ -6,6 +6,7 @@ import { useContext } from "react";
 import { GlobalStateContext } from "@/context/global-context";
 import { useForm, useFormContext } from "react-hook-form";
 import { AlignHorizontalSpaceAroundIcon, AlignVerticalSpaceAroundIcon, ArrowDownFromLineIcon, ArrowLeftFromLineIcon, ArrowRightFromLineIcon, ArrowUpFromLineIcon } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 type CommonSetterInputs = {
   isLocked: boolean;
@@ -104,29 +105,66 @@ const CommonSetter = () => {
         </Button>
       </div>
       <div className="border-t border-gray-500  py-2 flex items-center justify-between ">
-        <Button size="icon" variant="ghost" className="rounded-full hover:bg-gray-600 hover:text-white" onClick={handleLockObject}>
-          <LockIcon size={16} iconStyle={fields.isLocked ? "Bold" : "Linear"} color="#BDBDBD" />
-        </Button>
-        <Button size="icon" variant="ghost" className="rounded-full hover:bg-gray-600 hover:text-white" onClick={() => object?.bringForward()}>
-          <LayerUpIcon size={16} color="#BDBDBD" />
-        </Button>
-        <Button size="icon" variant="ghost" className="rounded-full hover:bg-gray-600 hover:text-white" onClick={() => object?.sendBackwards()}>
-          <LayerDownicon size={16} color="#BDBDBD" />
-        </Button>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button size="icon" variant="ghost" className="rounded-full hover:bg-gray-600 hover:text-white">
-              <OpacityIcon size={16} color="#BDBDBD" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="bg-background border-gray-500">
-            <SliderInput min={0} max={1} step={0.01} onChange={(val) => handleChangeOpacity(val)} value={fields.opactiy} />
-          </PopoverContent>
-        </Popover>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button size="icon" variant="ghost" className="rounded-full hover:bg-gray-600 hover:text-white" onClick={handleLockObject}>
+                <LockIcon size={16} iconStyle={fields.isLocked ? "Bold" : "Linear"} color="#BDBDBD" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">Lock item</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
 
-        <Button size="icon" variant="ghost" className="rounded-full hover:bg-gray-600 hover:text-white" onClick={deleteActiveObject}>
-          <DeleteIcon size={16} color="#BDBDBD" />
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button size="icon" variant="ghost" className="rounded-full hover:bg-gray-600 hover:text-white" onClick={() => object?.bringForward()}>
+                <LayerUpIcon size={16} color="#BDBDBD" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">Bring up</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button size="icon" variant="ghost" className="rounded-full hover:bg-gray-600 hover:text-white" onClick={() => object?.sendBackwards()}>
+                <LayerDownicon size={16} color="#BDBDBD" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">Send back</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button size="icon" variant="ghost" className="rounded-full hover:bg-gray-600 hover:text-white">
+                    <OpacityIcon size={16} color="#BDBDBD" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="bg-background border-gray-500">
+                  <SliderInput min={0} max={1} step={0.01} onChange={(val) => handleChangeOpacity(val)} value={fields.opactiy} />
+                </PopoverContent>
+              </Popover>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">Opacity</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button size="icon" variant="ghost" className="rounded-full hover:bg-gray-600 hover:text-white" onClick={deleteActiveObject}>
+                <DeleteIcon size={16} color="#BDBDBD" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">Delete</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     </>
   );
