@@ -18,8 +18,8 @@ export default function Line() {
 
   const methods = useForm<LineInput>({
     values: {
-      stroke: object?.stroke || "#000",
-      type: getObjectBorderType({ stroke: object?.stroke || "#000", strokeDashArray: object?.strokeDashArray || [], strokeWidth: object?.strokeWidth || 1 }),
+      stroke: typeof object?.stroke === "string" ? object.stroke : "#000",
+      type: getObjectBorderType({ stroke: typeof object?.stroke === "string" ? object.stroke : "#000", strokeDashArray: object?.strokeDashArray || [], strokeWidth: object?.strokeWidth || 1 }),
       strokeWidth: object?.strokeWidth || 1,
       round: object?.strokeLineCap === "round",
     },

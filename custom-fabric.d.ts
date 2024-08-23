@@ -1,4 +1,3 @@
-// import * as fabric from "fabric";
 import { Border } from "./types/c-image";
 
 declare module "fabric" {
@@ -15,22 +14,9 @@ declare module "fabric" {
       getFilter(): any;
     }
 
-    interface PatternBrush extends fabric.PatternBrush {
-      source: HTMLImageElement;
-    }
-
-    // interface Object extends fabric.Object {
-    //   id?: string;
-    //   __cover?: string;
-    //   __corner?: string;
-    // }
-
-    interface IRectOptions extends fabric.IRectOptions {
-      id?: string;
-      stroke?: string | HTMLImageElement;
-    }
-
-    interface IObjectOptions extends fabric.IObjectOptions {
+    interface Object extends fabric.Object {
+      id?: string | number;
+      __cover?: string;
       stroke:
         | string
         | {
@@ -39,6 +25,15 @@ declare module "fabric" {
             offsetY: number;
             source: HTMLImageElement;
           };
+    }
+
+    interface PatternBrush extends fabric.PatternBrush {
+      source: HTMLImageElement;
+    }
+
+    interface IRectOptions extends fabric.IRectOptions {
+      id?: string;
+      stroke?: string | HTMLImageElement;
     }
 
     interface Path extends fabric.Path {
@@ -66,6 +61,6 @@ declare module "fabric" {
       new (text: string, options: any): FText;
     };
 
-    const Object: {};
+    // const Object: {};
   }
 }

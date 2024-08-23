@@ -1,5 +1,3 @@
-//@ts-nocheck
-
 import { useEffect, useContext, useState } from "react";
 import { GlobalStateContext } from "@/context/global-context";
 import { SKETCH_ID } from "@/constants/canvas";
