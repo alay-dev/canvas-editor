@@ -113,20 +113,32 @@ export default function PaintPanel() {
 
   const src = "https://images.pexels.com/photos/255379/pexels-photo-255379.jpeg?auto=compress&cs=tinysrgb&h=130";
 
-  const handleAddFrame = async () => {
-    const img = new Image();
-    img.src = src;
+  // const handleAddFrame = async () => {
+  //   // const img = new Image();
+  //   // img.src = src;
 
-    const rect = new fabric.Image(img);
-    const filter = new fabric.Image.filters.BlendColor({
-      color: "#33af0e",
-      mode: "multiply",
-    });
+  //   // const rect = new fabric.Image(img);
+  //   // const filter = new fabric.Image.filters.BlendColor({
+  //   //   color: "#33af0e",
+  //   //   mode: "multiply",
+  //   // });
 
-    rect?.filters?.push(filter);
-    editor?.canvas?.add(rect);
-    editor?.canvas?.requestRenderAll();
-  };
+  //   // rect?.filters?.push(filter);
+
+  //   const text = new fabric.Text("Hello", {
+  //     fontWeight: 600,
+  //     fontSize: 100,
+  //   });
+
+  //   fabric.Image.fromURL(src, (img) => {
+  //     const pattern = new fabric.Pattern({ source: img.getElement() });
+  //     text.set("fill", pattern);
+  //     editor?.canvas?.requestRenderAll();
+  //   });
+
+  //   editor?.canvas?.add(text);
+  //   editor?.canvas?.requestRenderAll();
+  // };
 
   return (
     <div className="p-4 w-full">

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { GlobalStateContext } from "@/context/global-context";
-import BorderSetter, { getObjectBorderType } from "../border-setter";
+import BorderSetter from "../border-setter";
 import FillSetter from "@/app/_components/fill";
 import { FormProvider, useForm } from "react-hook-form";
 import { transformFill2Colors, transfromObjectStrokeToStroke } from "@/lib/utils";
@@ -24,10 +24,8 @@ export default function Shape() {
   const { object, editor } = useContext(GlobalStateContext);
   if (!object) throw new Error("Object is not initialized");
 
-  console.log(object.stroke, "STROKE");
-
   const methods = useForm<ShapeInputs>({
-    values: {
+    defaultValues: {
       fill: transformFill2Colors(object?.fill),
       isLocked: object?.lockMovementX || false,
       opacity: object?.opacity || 1,

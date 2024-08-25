@@ -1,8 +1,6 @@
-//@ts-nocheck
-
 import ColorPicker from "@/app/_components/color-picker";
 import StrokePicker from "@/app/_components/fill";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { GlobalStateContext } from "@/context/global-context";
 import { useFormContext } from "react-hook-form";
 import { PaintInputs } from "../../panel/paint-panel";
@@ -33,6 +31,7 @@ export default function PathSetterForm({ mode }: Props) {
         case "shadow.color":
         case "shadow.width":
           const shadow = editor.canvas.freeDrawingBrush.shadow;
+          //@ts-ignore
           const originalShadowObject = shadow ? shadow.toObject() : {};
           const newShadowObject = {
             blur: fields.shadow.width || originalShadowObject.blur,
@@ -59,6 +58,7 @@ export default function PathSetterForm({ mode }: Props) {
         case "shadow.color":
         case "shadow.width":
           const shadow = object.shadow;
+          //@ts-ignore
           const originalShadowObject = shadow ? shadow.toObject() : {};
           const newShadowObject = {
             blur: fields.shadow.width || originalShadowObject.blur,
@@ -80,6 +80,7 @@ export default function PathSetterForm({ mode }: Props) {
   const handleValuesChange = (type: any, val: string) => {
     if (!editor?.canvas) return;
     const shadow = editor.canvas.freeDrawingBrush.shadow;
+    //@ts-ignore
     const originalShadowObject = shadow ? shadow.toObject() : {};
     const newShadowObject = {
       blur: fields.shadow.width || originalShadowObject.blur,

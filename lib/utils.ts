@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { FONT_PRESET_FAMILY_LIST } from "../constants/canvas";
 import { fabric } from "fabric";
 import { Fill } from "@/app/_components/fill";
+import { Border } from "@/types/custom-image";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -172,4 +173,28 @@ export const base64ToBlob = async (base64Data: string) => {
   return fetch(base64Data).then((res) => {
     return res.blob();
   });
+};
+
+export const getObjectBorderType = ({ stroke, strokeWidth, strokeDashArray }: Pick<Border, "stroke" | "strokeWidth" | "strokeDashArray">) => {
+  if (!stroke) {
+    return "none";
+  }
+  if (strokeDashArray?.length) {
+    let [d1, d2] = strokeDashArray;
+    d1 = d1 / (strokeWidth / 2 > 1 ? strokeWidth / 2 : strokeWidth);
+    d2 = d2 / (strokeWidth / 4 > 1 ? strokeWidth / 4 : strokeWidth);
+    return [d1, d2].join(",");
+  }
+  return "line";
+};
+
+export const getStrokeDashArray = ({ type, strokeWidth }: Pick<Border, "type" | "strokeWidth">) => {
+  if (!type) return null;
+  if (type !== "line") {
+    const dashArray: number[] = type.split(",").map((item) => +item);
+    dashArray[0] = dashArray[0] * (strokeWidth / 2 > 1 ? strokeWidth / 2 : strokeWidth);
+    dashArray[1] = dashArray[1] * (strokeWidth / 4 > 1 ? strokeWidth / 4 : strokeWidth);
+    return dashArray;
+  }
+  return null;
 };

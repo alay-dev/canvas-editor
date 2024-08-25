@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { fabric } from "fabric";
 import { GlobalStateContext } from "@/context/global-context";
 import FontStyleSetter from "./font-style";
@@ -21,8 +21,9 @@ const fontSizes = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "12", "14", "16
 export default function TextSetter() {
   const { object, editor } = useContext(GlobalStateContext);
   const customTextObject = object as fabric.FText;
+
   const methods = useForm<TextStyle>({
-    values: {
+    defaultValues: {
       charSpacing: customTextObject.charSpacing || 0,
       fontFamily: customTextObject.fontFamily || TEXTBOX_DEFAULT_CONFIG.fontFamily,
       fontSize: customTextObject.fontSize || defaultFontSize,
@@ -67,12 +68,19 @@ export default function TextSetter() {
   };
 
   const onFillChange = (type: FillType, val: string) => {
+    console.log("FILL CHANGE CALLEd");
     if (type === "solid") {
       methods.setValue("fill.color", val);
       customTextObject.set("fill", val);
     } else {
       methods.setValue("fill", { type: "image", image: val });
-      customTextObject?.set("fill", new fabric.Pattern({ source: val }));
+
+      fabric.Image.fromURL(val, (img) => {
+        const pattern = new fabric.Pattern({ crossOrigin: "anonymous", source: img.getElement() as HTMLImageElement });
+        customTextObject?.set("fill", pattern);
+        editor?.canvas?.requestRenderAll();
+        editor?.fireCustomModifiedEvent();
+      });
     }
 
     editor?.canvas?.requestRenderAll();

@@ -1,7 +1,7 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { GlobalStateContext } from "@/context/global-context";
 import ColorPicker from "@/app/_components/color-picker";
-import { getObjectBorderType } from "../border-setter";
+import { getObjectBorderType } from "@/lib/utils";
 import { Form, useForm, FormProvider } from "react-hook-form";
 import SliderInput from "@/app/_components/slider-input";
 import CommonSetter from "../common-setter/common-setter";

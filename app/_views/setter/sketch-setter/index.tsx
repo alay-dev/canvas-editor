@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import FillSetter, { FillType } from "@/app/_components/fill";
 import { GlobalStateContext } from "@/context/global-context";
 import { useForm } from "react-hook-form";
@@ -24,10 +24,16 @@ export default function SketchSetter() {
       editor?.sketch?.set("fill", val);
     } else if (type === "image") {
       setValue("fill", { type: "image", image: val });
-      editor?.sketch?.set("fill", new fabric.Pattern({ source: val }));
+
+      fabric.Image.fromURL(val, (img) => {
+        const pattern = new fabric.Pattern({ crossOrigin: "anonymous", source: img.getElement() as HTMLImageElement });
+        editor?.sketch?.set("fill", pattern);
+        editor?.canvas?.requestRenderAll();
+        editor?.fireCustomModifiedEvent();
+      });
     }
 
-    // editor?.fireCustomModifiedEvent();
+    editor?.fireCustomModifiedEvent();
     editor?.canvas?.requestRenderAll();
   };
 

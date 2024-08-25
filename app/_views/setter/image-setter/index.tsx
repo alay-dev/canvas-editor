@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import ReplaceSetter from "./replace-setter";
-import CommonBorderSetter, { getObjectBorderType } from "../border-setter";
+import CommonBorderSetter from "../border-setter";
 import CommonSetter from "../common-setter/common-setter";
 import { FormProvider, useForm } from "react-hook-form";
 import { GlobalStateContext } from "@/context/global-context";
@@ -13,7 +13,7 @@ import { CustomImage } from "@/app/_custom-objects/custom-image";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ShadowSetter, { Shadow } from "@/app/_components/shadow";
 import { Border } from "@/types/custom-image";
-import { transfromObjectStrokeToStroke } from "@/lib/utils";
+import { getObjectBorderType, transfromObjectStrokeToStroke } from "@/lib/utils";
 
 const nonValueFilters = ["Grayscale", "Convolute", "Gamma", "Invert", "Black and white", "Sepia", "Vintage", "Kodachrome"];
 
@@ -45,8 +45,6 @@ export default function ImageSetter() {
   const { object, editor } = useContext(GlobalStateContext);
   const customImage = object as CustomImage;
   const border = customImage?.getBorder();
-
-  console.log(customImage?.getBorder()?.stroke, "STROKE");
 
   const methods = useForm<ImageInputs>({
     values: {

@@ -6,6 +6,7 @@ import { Pattern } from "fabric/fabric-impl";
 import { ChangeEvent } from "react";
 import { SketchPicker, BlockPicker, HuePicker } from "react-color";
 import { Box, CloseCircle, FullScreenSquare, Gallery, GalleryAdd } from "solar-icon-set";
+import { fabric } from "fabric";
 
 export type FillType = "solid" | "image";
 
@@ -22,13 +23,14 @@ type Props = {
 };
 
 export default function Fill({ fill, onChange, side = "left" }: Props) {
-  const onUploadPattern = (e: ChangeEvent<HTMLInputElement>) => {
+  const onUploadPattern = async (e: ChangeEvent<HTMLInputElement>) => {
     let files = e.target.files;
     if (!files) return;
 
     const reader = new FileReader();
     reader.onload = (evt) => {
       if (!evt.target?.result) return;
+      console.log(evt, "IMG");
       onChange("image", evt?.target?.result as string);
     };
     reader.readAsDataURL(files[0]);

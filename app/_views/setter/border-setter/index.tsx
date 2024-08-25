@@ -1,35 +1,12 @@
-import { useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import ColorSetter from "@/app/_components/color-picker";
 import { GlobalStateContext } from "@/context/global-context";
-import { FormProvider, useForm, useFormContext } from "react-hook-form";
-import { cn, transfromObjectStrokeToStroke } from "@/lib/utils";
+import { Controller, FormProvider, useForm, useFormContext } from "react-hook-form";
+import { cn, getStrokeDashArray } from "@/lib/utils";
 import { Border } from "@/types/custom-image";
 import SliderInput from "@/app/_components/slider-input";
 import { FImage } from "fabric/fabric-impl";
-
-export const getObjectBorderType = ({ stroke, strokeWidth, strokeDashArray }: Pick<Border, "stroke" | "strokeWidth" | "strokeDashArray">) => {
-  if (!stroke) {
-    return "none";
-  }
-  if (strokeDashArray?.length) {
-    let [d1, d2] = strokeDashArray;
-    d1 = d1 / (strokeWidth / 2 > 1 ? strokeWidth / 2 : strokeWidth);
-    d2 = d2 / (strokeWidth / 4 > 1 ? strokeWidth / 4 : strokeWidth);
-    return [d1, d2].join(",");
-  }
-  return "line";
-};
-
-export const getStrokeDashArray = ({ type, strokeWidth }: Pick<Border, "type" | "strokeWidth">) => {
-  if (!type) return null;
-  if (type !== "line") {
-    const dashArray: number[] = type.split(",").map((item) => +item);
-    dashArray[0] = dashArray[0] * (strokeWidth / 2 > 1 ? strokeWidth / 2 : strokeWidth);
-    dashArray[1] = dashArray[1] * (strokeWidth / 4 > 1 ? strokeWidth / 4 : strokeWidth);
-    return dashArray;
-  }
-  return null;
-};
+import { debounce } from "lodash";
 
 export const BORDERS = [
   {
@@ -97,33 +74,35 @@ export default function BorderSetter() {
   if (!shapeObject || !object?.height || !object?.width) throw new Error("Object is not initialized");
   const maxBorderRadius = Math.ceil(Math.min(object?.height, object?.width) / 2);
   const methods = useFormContext<BorderInputs>();
-  const fields = methods.watch();
 
-  const onChangeBorderColor = (val: string) => {
-    const { type, strokeWidth, borderRadius } = fields.border || {};
+  const onChangeBorderColor = useCallback(
+    debounce((val: string) => {
+      const { type, strokeWidth, borderRadius } = methods.getValues("border");
 
-    if (object.type === "f-image") {
-      if (type === "none") {
-        imageObject?.setBorder({ stroke: val, borderRadius, strokeDashArray: [], strokeWidth: 0, type: "line" });
+      if (object.type === "f-image") {
+        if (type === "none") {
+          imageObject?.setBorder({ stroke: val, borderRadius, strokeDashArray: [], strokeWidth: 0, type: "line" });
+        } else {
+          imageObject?.setBorder({ stroke: val, strokeWidth, borderRadius, strokeDashArray: getStrokeDashArray({ type, strokeWidth }) || [], type: type });
+        }
       } else {
-        imageObject?.setBorder({ stroke: val, strokeWidth, borderRadius, strokeDashArray: getStrokeDashArray({ type, strokeWidth }) || [], type: type });
+        if (type === "none") {
+          shapeObject?.set({ stroke: val, rx: borderRadius, ry: borderRadius, strokeDashArray: [], strokeWidth: 0 });
+        } else {
+          shapeObject?.set({ stroke: val, rx: borderRadius, ry: borderRadius, strokeDashArray: getStrokeDashArray({ type, strokeWidth }) || [], strokeWidth: strokeWidth });
+        }
       }
-    } else {
-      if (type === "none") {
-        shapeObject?.set({ stroke: val, rx: borderRadius, ry: borderRadius, strokeDashArray: [], strokeWidth: 0 });
-      } else {
-        shapeObject?.set({ stroke: val, rx: borderRadius, ry: borderRadius, strokeDashArray: getStrokeDashArray({ type, strokeWidth }) || [], strokeWidth: strokeWidth });
-      }
-    }
 
-    methods.setValue("border.stroke.color", val);
-    methods.setValue("border.type", type === "none" ? "line" : type);
-
-    editor?.canvas?.requestRenderAll();
-  };
+      methods.setValue("border.stroke.color", val);
+      methods.setValue("border.type", type === "none" ? "line" : type);
+      editor?.fireCustomModifiedEvent();
+      editor?.canvas?.requestRenderAll();
+    }, 300),
+    []
+  );
 
   const onChangeBorderType = (val: string) => {
-    const { stroke, strokeWidth, borderRadius } = fields.border || {};
+    const { stroke, strokeWidth, borderRadius } = methods.getValues("border");
 
     if (object.type === "f-image") {
       if (val === "none") {
@@ -139,39 +118,47 @@ export default function BorderSetter() {
       }
     }
     methods.setValue("border.type", val);
+    editor?.fireCustomModifiedEvent();
     editor?.canvas?.requestRenderAll();
   };
 
-  const onChangeBorderWidth = (val: number) => {
-    const { type, stroke, borderRadius } = fields.border || {};
-    if (object.type === "f-image") {
-      if (type === "none") {
-        imageObject?.setBorder({ stroke: "", borderRadius, strokeDashArray: [], strokeWidth: 0, type: type });
+  const onChangeBorderWidth = useCallback(
+    debounce((val: number) => {
+      const { type, stroke, borderRadius } = methods.getValues("border") || {};
+      if (object.type === "f-image") {
+        if (type === "none") {
+          imageObject?.setBorder({ stroke: "", borderRadius, strokeDashArray: [], strokeWidth: 0, type: type });
+        } else {
+          imageObject?.setBorder({ stroke: stroke.color, strokeWidth: val, borderRadius, strokeDashArray: getStrokeDashArray({ type: type, strokeWidth: val }) || [], type: type });
+        }
       } else {
-        imageObject?.setBorder({ stroke: stroke.color, strokeWidth: val, borderRadius, strokeDashArray: getStrokeDashArray({ type: type, strokeWidth: val }) || [], type: type });
+        if (type === "none") {
+          shapeObject?.set({ stroke: "#000", rx: borderRadius, ry: borderRadius, strokeDashArray: [], strokeWidth: val });
+        } else {
+          shapeObject?.set({ rx: borderRadius, ry: borderRadius, strokeDashArray: getStrokeDashArray({ type: type, strokeWidth: val }) || [], strokeWidth: val });
+        }
       }
-    } else {
-      if (type === "none") {
-        shapeObject?.set({ stroke: "#000", rx: borderRadius, ry: borderRadius, strokeDashArray: [], strokeWidth: val });
-      } else {
-        shapeObject?.set({ rx: borderRadius, ry: borderRadius, strokeDashArray: getStrokeDashArray({ type: type, strokeWidth: val }) || [], strokeWidth: val });
-      }
-    }
-    methods.setValue("border.strokeWidth", val);
-    methods.setValue("border.type", type === "none" ? "line" : type);
-    editor?.canvas?.requestRenderAll();
-  };
+      methods.setValue("border.type", type === "none" ? "line" : type);
 
-  const onChangeBorderRadius = (val: number) => {
-    const { type, stroke, strokeWidth } = fields.border || {};
-    if (object.type === "f-image") {
-      imageObject?.setBorder({ stroke: stroke.color, strokeWidth, borderRadius: val, strokeDashArray: getStrokeDashArray({ type: type, strokeWidth }) || [], type: type });
-    } else {
-      shapeObject?.set({ rx: val, ry: val, strokeDashArray: getStrokeDashArray({ type: type, strokeWidth }) || [], strokeWidth: strokeWidth });
-    }
-    methods.setValue("border.borderRadius", val);
-    editor?.canvas?.requestRenderAll();
-  };
+      editor?.fireCustomModifiedEvent();
+      editor?.canvas?.requestRenderAll();
+    }, 300),
+    []
+  );
+
+  const onChangeBorderRadius = useCallback(
+    debounce((val: number) => {
+      const { type, stroke, strokeWidth } = methods.getValues("border");
+      if (object.type === "f-image") {
+        imageObject?.setBorder({ stroke: stroke.color, strokeWidth, borderRadius: val, strokeDashArray: getStrokeDashArray({ type: type, strokeWidth }) || [], type: type });
+      } else {
+        shapeObject?.set({ rx: val, ry: val, strokeDashArray: getStrokeDashArray({ type: type, strokeWidth }) || [], strokeWidth: strokeWidth });
+      }
+      editor?.fireCustomModifiedEvent();
+      editor?.canvas?.requestRenderAll();
+    }, 300),
+    []
+  );
 
   const borderTypes = object.type === "f-image" ? BORDERS : BORDERS?.filter((item) => !item.imageOnly);
 
@@ -180,11 +167,25 @@ export default function BorderSetter() {
       <form>
         <label className="text-gray-400 font-light text-sm">Border</label>
         <div className="flex items-center gap-3 mt-4">
-          <ColorSetter onChange={onChangeBorderColor} value={fields.border?.stroke?.color || "#000"} />
+          <Controller
+            control={methods.control}
+            name="border.stroke.color"
+            render={({ field: { onChange, value } }) => (
+              <ColorSetter
+                onChange={(val) => {
+                  onChange(val);
+                  onChangeBorderColor(val);
+                }}
+                value={value || "#000"}
+              />
+            )}
+          />
+
           <div className="flex flex-1 border border-gray-500 rounded-lg overflow-hidden  [&>*:not(:last-child)]:border-r [&>*:not(:last-child)]:border-gray-500  ">
             {borderTypes?.map((item) => {
+              const bordertype = methods.getValues("border.type");
               return (
-                <div onClick={() => onChangeBorderType(item.key)} key={item.key} className={cn(" flex-1 items-center justify-center flex py-2 cursor-pointer", fields.border?.type === item.key && "bg-gray-200 text-black")}>
+                <div onClick={() => onChangeBorderType(item.key)} key={item.key} className={cn(" flex-1 items-center justify-center flex py-2 cursor-pointer", bordertype === item.key && "bg-gray-200 text-black")}>
                   {item.svg}
                 </div>
               );
@@ -194,11 +195,41 @@ export default function BorderSetter() {
 
         <div className=" flex items-center mt-5">
           <label className="text-primary font-light text-sm w-28 flex-shrink-0">Border width</label>
-          <SliderInput min={0} max={100} value={fields.border?.strokeWidth} onChange={onChangeBorderWidth} />
+          <Controller
+            control={methods.control}
+            name="border.strokeWidth"
+            render={({ field: { onChange, value } }) => {
+              return (
+                <SliderInput
+                  min={0}
+                  max={100}
+                  value={value}
+                  onChange={(val) => {
+                    onChange(val);
+                    onChangeBorderWidth(val);
+                  }}
+                />
+              );
+            }}
+          />
         </div>
         <div className="flex items-center mt-5">
           <label className="text-primary font-light text-sm w-28 flex-shrink-0">Border radius</label>
-          <SliderInput min={0} max={maxBorderRadius} value={fields.border?.borderRadius} onChange={onChangeBorderRadius} />
+          <Controller
+            name="border.borderRadius"
+            control={methods.control}
+            render={({ field: { onChange, value } }) => (
+              <SliderInput
+                min={0}
+                max={maxBorderRadius}
+                value={value}
+                onChange={(val) => {
+                  onChange(val);
+                  onChangeBorderRadius(val);
+                }}
+              />
+            )}
+          />
         </div>
       </form>
     </FormProvider>
