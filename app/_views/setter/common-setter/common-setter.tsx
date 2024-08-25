@@ -10,15 +10,15 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 
 type CommonSetterInputs = {
   isLocked: boolean;
-  opactiy: number;
+  opacity: number;
 };
 
 const CommonSetter = () => {
   const { object, editor } = useContext(GlobalStateContext);
   const { setValue, getValues, watch } = useForm<CommonSetterInputs>({
-    defaultValues: {
-      isLocked: object?.lockMovementX || object?.lockMovementY,
-      opactiy: object?.opacity,
+    values: {
+      isLocked: object?.lockMovementX || object?.lockMovementY || false,
+      opacity: object?.opacity || 1,
     },
   });
 
@@ -39,7 +39,7 @@ const CommonSetter = () => {
     object?.set("opacity", val);
     editor?.canvas?.requestRenderAll();
     editor?.fireCustomModifiedEvent();
-    setValue("opactiy", val);
+    setValue("opacity", val);
   };
 
   const deleteActiveObject = () => {
@@ -83,8 +83,8 @@ const CommonSetter = () => {
   };
 
   return (
-    <>
-      <div className="py-2 pt-0 flex items-center justify-between ">
+    <div className="bg-gray-800 p-2 rounded-lg border  border-gray-700">
+      <div className="pb-1 flex items-center justify-between ">
         <Button size="icon" variant="ghost" className="rounded-full hover:bg-gray-600 hover:text-white" onClick={() => alignObject("left")}>
           <ArrowLeftFromLineIcon size={16} color="#BDBDBD" />
         </Button>
@@ -104,7 +104,7 @@ const CommonSetter = () => {
           <ArrowUpFromLineIcon size={16} color="#BDBDBD" />
         </Button>
       </div>
-      <div className="border-t border-gray-500  py-2 flex items-center justify-between ">
+      <div className="border-t pt-1 border-gray-500  flex items-center justify-between ">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
@@ -147,7 +147,7 @@ const CommonSetter = () => {
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="bg-background border-gray-500">
-                  <SliderInput min={0} max={1} step={0.01} onChange={(val) => handleChangeOpacity(val)} value={fields.opactiy} />
+                  <SliderInput min={0} max={1} step={0.01} onChange={(val) => handleChangeOpacity(val)} value={fields.opacity} />
                 </PopoverContent>
               </Popover>
             </TooltipTrigger>
@@ -166,7 +166,7 @@ const CommonSetter = () => {
           </Tooltip>
         </TooltipProvider>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -24,7 +24,7 @@ export default function ReplaceSetter() {
             Replace the picture
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="bg-background border-non outline-none">
+        <PopoverContent className="">
           <ImageSelector onChange={handleImageReplace} />
         </PopoverContent>
       </Popover>

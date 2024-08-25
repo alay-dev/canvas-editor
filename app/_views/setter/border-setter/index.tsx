@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react";
 import ColorSetter from "@/app/_components/color-picker";
 import { GlobalStateContext } from "@/context/global-context";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
-import { cn } from "@/lib/utils";
+import { cn, transfromObjectStrokeToStroke } from "@/lib/utils";
 import { Border } from "@/types/custom-image";
 import SliderInput from "@/app/_components/slider-input";
 import { FImage } from "fabric/fabric-impl";
@@ -31,9 +31,10 @@ export const getStrokeDashArray = ({ type, strokeWidth }: Pick<Border, "type" | 
   return null;
 };
 
-export const BORDER_TYPES = [
+export const BORDERS = [
   {
     key: "none",
+    imageOnly: false,
     svg: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
@@ -47,6 +48,7 @@ export const BORDER_TYPES = [
   },
   {
     key: "line",
+    imageOnly: false,
     svg: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <line x2="24" y1="50%" y2="50%" stroke="currentColor" stroke-width="2" shape-rendering="crispEdges"></line>
@@ -55,6 +57,7 @@ export const BORDER_TYPES = [
   },
   {
     key: "12,2",
+    imageOnly: true,
     svg: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <line x1="-1" x2="25" y1="50%" y2="50%" stroke="currentColor" stroke-dasharray="12 2" stroke-width="2" shape-rendering="crispEdges"></line>
@@ -63,6 +66,7 @@ export const BORDER_TYPES = [
   },
   {
     key: "6,2",
+    imageOnly: true,
     svg: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <line x1="1" x2="23" y1="50%" y2="50%" stroke="currentColor" stroke-dasharray="6 2" stroke-width="2" shape-rendering="crispEdges"></line>
@@ -71,6 +75,7 @@ export const BORDER_TYPES = [
   },
   {
     key: "2,2",
+    imageOnly: true,
     svg: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <line x1="1" x2="23" y1="50%" y2="50%" stroke="currentColor" stroke-dasharray="2 2" stroke-width="2" shape-rendering="crispEdges"></line>
@@ -94,77 +99,6 @@ export default function BorderSetter() {
   const methods = useFormContext<BorderInputs>();
   const fields = methods.watch();
 
-  console.log(fields);
-
-  // useEffect(() => {
-  //   if (object?.type !== "f-image") {
-  //     methods.setValue("border", {
-  //       type: getObjectBorderType(shapeObject),
-  //       stroke: shapeObject.stroke || "#000",
-  //       borderRadius: shapeObject.rx || shapeObject.ry || (shapeObject.strokeLineJoin === "round" ? 100 : 0),
-  //       strokeDashArray: [],
-  //       strokeWidth: shapeObject.strokeWidth,
-  //     });
-  //   } else {
-  //     const border = imageObject?.getBorder();
-
-  //     methods.setValue("border", {
-  //       ...border,
-  //       type: getObjectBorderType(border),
-  //       stroke: imageObject.stroke || "#000",
-  //       strokeWidth: border.strokeWidth || 0,
-  //       borderRadius: border.borderRadius || 0,
-  //     });
-  //   }
-  // }, [imageObject, shapeObject]);
-
-  // useEffect(() => {
-  //   const { type, stroke, strokeWidth, borderRadius } = fields.border || {};
-
-  //   switch (object?.type) {
-  //     case "f-image":
-  //       if (type === "none") {
-  //         imageObject?.setBorder({
-  //           stroke: "",
-  //           borderRadius,
-  //           strokeDashArray: [],
-  //           strokeWidth: 0,
-  //           type: type,
-  //         });
-  //       } else {
-  //         imageObject?.setBorder({
-  //           stroke,
-  //           strokeWidth,
-  //           borderRadius,
-  //           strokeDashArray: getStrokeDashArray({ type, strokeWidth }) || [],
-  //           type: type,
-  //         });
-  //       }
-  //       break;
-  //     default:
-  //       if (type === "none") {
-  //         shapeObject?.set({
-  //           stroke: "#000",
-  //           rx: borderRadius,
-  //           ry: borderRadius,
-  //           strokeDashArray: [],
-  //           strokeWidth: 0,
-  //         });
-  //       } else {
-  //         shapeObject?.set({
-  //           stroke: stroke,
-  //           rx: borderRadius,
-  //           ry: borderRadius,
-  //           strokeDashArray: getStrokeDashArray({ type, strokeWidth }) || [],
-  //           strokeWidth: strokeWidth,
-  //         });
-  //       }
-  //   }
-
-  //   editor?.canvas?.requestRenderAll();
-  //   editor?.fireCustomModifiedEvent();
-  // }, [fields]);
-
   const onChangeBorderColor = (val: string) => {
     const { type, strokeWidth, borderRadius } = fields.border || {};
 
@@ -176,18 +110,21 @@ export default function BorderSetter() {
       }
     } else {
       if (type === "none") {
-        shapeObject?.set({ stroke: val, rx: borderRadius, ry: borderRadius, strokeDashArray: [], strokeWidth: 0, type: "line" });
+        shapeObject?.set({ stroke: val, rx: borderRadius, ry: borderRadius, strokeDashArray: [], strokeWidth: 0 });
       } else {
         shapeObject?.set({ stroke: val, rx: borderRadius, ry: borderRadius, strokeDashArray: getStrokeDashArray({ type, strokeWidth }) || [], strokeWidth: strokeWidth });
       }
     }
 
     methods.setValue("border.stroke.color", val);
+    methods.setValue("border.type", type === "none" ? "line" : type);
+
     editor?.canvas?.requestRenderAll();
   };
 
   const onChangeBorderType = (val: string) => {
     const { stroke, strokeWidth, borderRadius } = fields.border || {};
+
     if (object.type === "f-image") {
       if (val === "none") {
         imageObject?.setBorder({ stroke: "", borderRadius, strokeDashArray: [], strokeWidth: 0, type: val });
@@ -196,9 +133,9 @@ export default function BorderSetter() {
       }
     } else {
       if (val === "none") {
-        shapeObject?.set({ stroke: "", rx: borderRadius, ry: borderRadius, strokeDashArray: [], strokeWidth: 0 });
+        shapeObject?.set({ stroke: "", rx: 0, ry: 0, strokeDashArray: [], strokeWidth: 0 });
       } else {
-        shapeObject?.set({ rx: borderRadius, ry: borderRadius, strokeDashArray: getStrokeDashArray({ type: val, strokeWidth }) || [], strokeWidth: strokeWidth });
+        shapeObject?.set({ stroke: stroke.color, rx: borderRadius, ry: borderRadius, strokeDashArray: [], strokeWidth: strokeWidth });
       }
     }
     methods.setValue("border.type", val);
@@ -215,12 +152,13 @@ export default function BorderSetter() {
       }
     } else {
       if (type === "none") {
-        shapeObject?.set({ stroke: "", rx: borderRadius, ry: borderRadius, strokeDashArray: [], strokeWidth: 0 });
+        shapeObject?.set({ stroke: "#000", rx: borderRadius, ry: borderRadius, strokeDashArray: [], strokeWidth: val });
       } else {
         shapeObject?.set({ rx: borderRadius, ry: borderRadius, strokeDashArray: getStrokeDashArray({ type: type, strokeWidth: val }) || [], strokeWidth: val });
       }
     }
     methods.setValue("border.strokeWidth", val);
+    methods.setValue("border.type", type === "none" ? "line" : type);
     editor?.canvas?.requestRenderAll();
   };
 
@@ -235,16 +173,16 @@ export default function BorderSetter() {
     editor?.canvas?.requestRenderAll();
   };
 
+  const borderTypes = object.type === "f-image" ? BORDERS : BORDERS?.filter((item) => !item.imageOnly);
+
   return (
     <FormProvider {...methods}>
       <form>
-        <label htmlFor="border-type" className="text-gray-400 font-light text-sm">
-          Border
-        </label>
+        <label className="text-gray-400 font-light text-sm">Border</label>
         <div className="flex items-center gap-3 mt-4">
           <ColorSetter onChange={onChangeBorderColor} value={fields.border?.stroke?.color || "#000"} />
           <div className="flex flex-1 border border-gray-500 rounded-lg overflow-hidden  [&>*:not(:last-child)]:border-r [&>*:not(:last-child)]:border-gray-500  ">
-            {BORDER_TYPES?.map((item) => {
+            {borderTypes?.map((item) => {
               return (
                 <div onClick={() => onChangeBorderType(item.key)} key={item.key} className={cn(" flex-1 items-center justify-center flex py-2 cursor-pointer", fields.border?.type === item.key && "bg-gray-200 text-black")}>
                   {item.svg}

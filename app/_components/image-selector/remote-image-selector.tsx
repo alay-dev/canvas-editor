@@ -21,9 +21,9 @@ export default function RemoteImageSelector({ onChange }: Props) {
           Add remote picture
         </Button>
       </PopoverTrigger>
-      <PopoverContent side="right" className="w-max bg-background flex gap-3">
+      <PopoverContent side="right" className="w-max flex gap-3">
         <Input className="w-[20rem]" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="Enter the image URL" />
-        <Button disabled={!url} onClick={handleClick}>
+        <Button disabled={!url} onClick={handleClick} className="border border-gray-500">
           Add image
         </Button>
       </PopoverContent>

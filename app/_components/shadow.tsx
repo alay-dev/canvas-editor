@@ -14,7 +14,7 @@ const ShadowSetter = ({ shadow, onChange }: { shadow: Shadow; onChange: (val: Sh
           <p className="font-light text-xs uppercase">{shadow.color}</p>
         </div>
       </PopoverTrigger>
-      <PopoverContent side="right" className="w-[20rem] p-4 rounded-xl mr-5" align="start">
+      <PopoverContent side="bottom" className="w-[20rem] p-4 rounded-xl mr-5" align="start">
         <div>
           <div className="mb-4 flex gap-4 items-center w-full">
             <label className=" text-gray-300 font-light text-sm w-12">X</label>

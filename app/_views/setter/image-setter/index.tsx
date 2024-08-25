@@ -13,7 +13,7 @@ import { CustomImage } from "@/app/_custom-objects/custom-image";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ShadowSetter, { Shadow } from "@/app/_components/shadow";
 import { Border } from "@/types/custom-image";
-import { transfromObjectStrokeToStoke } from "@/lib/utils";
+import { transfromObjectStrokeToStroke } from "@/lib/utils";
 
 const nonValueFilters = ["Grayscale", "Convolute", "Gamma", "Invert", "Black and white", "Sepia", "Vintage", "Kodachrome"];
 
@@ -59,7 +59,7 @@ export default function ImageSetter() {
           : { offsetX: 0, offsetY: 0, blur: 0, color: object?.shadow || "#000", affectStroke: false },
       border: {
         type: getObjectBorderType(border),
-        stroke: transfromObjectStrokeToStoke(border?.stroke),
+        stroke: transfromObjectStrokeToStroke(border?.stroke),
         borderRadius: border.borderRadius || 0,
         strokeWidth: border.strokeWidth || 0,
         strokeDashArray: border.strokeDashArray,
@@ -160,19 +160,20 @@ export default function ImageSetter() {
       </div>
       <Separator />
       <div className="mt-10">
-        <p className=" text-gray-300 font-light text-sm">Special effects</p>
-        <div className="flex flex-col  border border-gray-600 p-2 rounded-lg mt-1">
+        <p className="text-gray-400 font-light text-sm">Filter</p>
+        <div className="mt-2">
           <Popover>
-            <PopoverTrigger className="w-max">
-              <p className="font-light">{fields.filter.type}</p>
+            <PopoverTrigger className="flex items-center justify-between w-full mb-2">
+              <p className="font-light w-28 flex-shrink-0 text-start text-primary text-sm">{fields.filter.type}</p>
+              <span className="text-sm text-gray-500 hover:text-white hover:underline">Change</span>
             </PopoverTrigger>
-            <PopoverContent side="left" className="z-50 w-[25rem] p-4 px-0 rounded-xl mr-7">
+            <PopoverContent side="left" className="z-50 w-[25rem] p-4 px-0 rounded-xl mr-5">
               <p className="text-gray-300 ml-2 font-normal px-4">Filters</p>
               <Separator />
               <ScrollArea className="px-4">
                 <div className="grid grid-cols-2 gap-4 mt-4 max-h-[40vh]">
                   {filterTypes?.map((item) => (
-                    <div onClick={() => onChangeFilter(item.name)} key={item.name} className="rounded-lg  text-gray-400">
+                    <div onClick={() => onChangeFilter(item.name)} key={item.name} className="rounded-lg text-gray-400">
                       <img src={item.img} alt={item.name} className="rounded-md" />
                       <p className="text-sm text-center text-primary font-light">{item.name}</p>
                     </div>

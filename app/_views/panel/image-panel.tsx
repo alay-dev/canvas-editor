@@ -76,8 +76,8 @@ export default function ImagePanel() {
         </div>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
-      <ScrollArea className="h-[28rem] mt-4">
-        <div className="grid gap-3 grid-cols-2  w-full mb-3">
+      <ScrollArea className="h-[50vh] mt-4">
+        <div className="grid gap-3 grid-cols-2 w-full mb-3">
           {images?.map((item) => {
             return (
               <div key={item?.id} className="group rounded-md cursor-pointer w-full hover:border transition border-gray-400 overflow-hidden relative">

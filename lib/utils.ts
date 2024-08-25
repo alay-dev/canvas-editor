@@ -68,7 +68,7 @@ const transformAngle2Coords = (angle: number) => {
 //   return 90;
 // };
 
-export const transfromObjectStrokeToStoke = (v: any): Fill => {
+export const transfromObjectStrokeToStroke = (v: any): Fill => {
   if (v instanceof fabric.Pattern && typeof v.source !== "string") {
     return { type: "image", image: v.source.currentSrc };
   }
