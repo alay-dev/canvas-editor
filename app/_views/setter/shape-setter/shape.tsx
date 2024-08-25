@@ -51,7 +51,13 @@ export default function Shape() {
       object?.set("fill", val);
     } else if (type === "image") {
       methods.setValue("fill", { type: "image", image: val });
-      object?.set("fill", new fabric.Pattern({ source: val }));
+
+      fabric.Image.fromURL(val, (img) => {
+        const pattern = new fabric.Pattern({ source: img.getElement() as HTMLImageElement });
+        object?.set("fill", pattern);
+        editor?.canvas?.requestRenderAll();
+        editor?.fireCustomModifiedEvent();
+      });
     }
 
     editor?.canvas?.requestRenderAll();

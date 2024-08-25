@@ -76,7 +76,7 @@ export default function TextSetter() {
       methods.setValue("fill", { type: "image", image: val });
 
       fabric.Image.fromURL(val, (img) => {
-        const pattern = new fabric.Pattern({ crossOrigin: "anonymous", source: img.getElement() as HTMLImageElement });
+        const pattern = new fabric.Pattern({ source: img.getElement() as HTMLImageElement });
         customTextObject?.set("fill", pattern);
         editor?.canvas?.requestRenderAll();
         editor?.fireCustomModifiedEvent();
