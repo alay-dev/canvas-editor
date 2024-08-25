@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import ReplaceSetter from "./replace-setter";
-import CommonBorderSetter from "../border-setter";
+import CommonBorderSetter, { getObjectBorderType } from "../border-setter";
 import CommonSetter from "../common-setter/common-setter";
 import { FormProvider, useForm } from "react-hook-form";
 import { GlobalStateContext } from "@/context/global-context";
@@ -12,6 +12,8 @@ import { fabric } from "fabric";
 import { CustomImage } from "@/app/_custom-objects/custom-image";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ShadowSetter, { Shadow } from "@/app/_components/shadow";
+import { Border } from "@/types/custom-image";
+import { transfromObjectStrokeToStoke } from "@/lib/utils";
 
 const nonValueFilters = ["Grayscale", "Convolute", "Gamma", "Invert", "Black and white", "Sepia", "Vintage", "Kodachrome"];
 
@@ -36,10 +38,16 @@ type ImageInputs = {
   opacity: number;
   filter: { type: string; value: number };
   shadow: Shadow;
+  border: Border;
 };
 
 export default function ImageSetter() {
   const { object, editor } = useContext(GlobalStateContext);
+  const customImage = object as CustomImage;
+  const border = customImage?.getBorder();
+
+  console.log(customImage?.getBorder()?.stroke, "STROKE");
+
   const methods = useForm<ImageInputs>({
     values: {
       isLocked: object?.lockMovementX || false,
@@ -49,11 +57,17 @@ export default function ImageSetter() {
         object?.shadow instanceof fabric.Shadow
           ? { offsetX: object?.shadow?.offsetX, offsetY: object?.shadow?.offsetY, blur: object?.shadow?.blur, color: object?.shadow?.color, affectStroke: object?.shadow?.affectStroke }
           : { offsetX: 0, offsetY: 0, blur: 0, color: object?.shadow || "#000", affectStroke: false },
+      border: {
+        type: getObjectBorderType(border),
+        stroke: transfromObjectStrokeToStoke(border?.stroke),
+        borderRadius: border.borderRadius || 0,
+        strokeWidth: border.strokeWidth || 0,
+        strokeDashArray: border.strokeDashArray,
+      },
     },
   });
 
   const fields = methods.watch();
-  const customImage = object as CustomImage;
 
   const onChangeFilter = (filterType: string, value?: number) => {
     let filter;
@@ -131,28 +145,36 @@ export default function ImageSetter() {
 
   return (
     <FormProvider {...methods}>
-      <div className="mb-4">
+      <div className="mb-6">
         <CommonSetter />
       </div>
-
       <ReplaceSetter />
-      <CommonBorderSetter />
-      <div className="mt-4">
+      <div className="mt-8">
+        <CommonBorderSetter />
+      </div>
+
+      <Separator className="mt-10" />
+      <div className="my-4 flex items-center">
+        <label className="text-primary font-light text-sm w-28 flex-shrink-0">Shadow</label>
+        <ShadowSetter onChange={handleChangeShadow} shadow={fields.shadow} />
+      </div>
+      <Separator />
+      <div className="mt-10">
         <p className=" text-gray-300 font-light text-sm">Special effects</p>
         <div className="flex flex-col  border border-gray-600 p-2 rounded-lg mt-1">
           <Popover>
             <PopoverTrigger className="w-max">
               <p className="font-light">{fields.filter.type}</p>
             </PopoverTrigger>
-            <PopoverContent side="left" className="z-50 w-[25rem] p-4  rounded-xl bg-background mr-7 border  ">
-              <p className="text-gray-300 ml-2 font-normal">Filters</p>
+            <PopoverContent side="left" className="z-50 w-[25rem] p-4 px-0 rounded-xl mr-7">
+              <p className="text-gray-300 ml-2 font-normal px-4">Filters</p>
               <Separator />
-              <ScrollArea className="">
+              <ScrollArea className="px-4">
                 <div className="grid grid-cols-2 gap-4 mt-4 max-h-[40vh]">
                   {filterTypes?.map((item) => (
                     <div onClick={() => onChangeFilter(item.name)} key={item.name} className="rounded-lg  text-gray-400">
                       <img src={item.img} alt={item.name} className="rounded-md" />
-                      <p className="text-sm text-center font-light">{item.name}</p>
+                      <p className="text-sm text-center text-primary font-light">{item.name}</p>
                     </div>
                   ))}
                 </div>
@@ -161,10 +183,6 @@ export default function ImageSetter() {
           </Popover>
           {nonValueFilters?.includes(fields.filter.type) ? null : <SliderInput value={20} onChange={() => null} />}
         </div>
-      </div>
-      <div className="mt-4 flex flex-col items-start">
-        <label className=" text-gray-300 font-light text-sm">Shadow</label>
-        <ShadowSetter onChange={handleChangeShadow} shadow={fields.shadow} />
       </div>
     </FormProvider>
   );

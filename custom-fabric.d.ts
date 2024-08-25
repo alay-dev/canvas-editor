@@ -25,6 +25,8 @@ declare module "fabric" {
             offsetY: number;
             source: HTMLImageElement;
           };
+      rx?: number;
+      ry?: number;
     }
 
     interface PatternBrush extends fabric.PatternBrush {

@@ -1,24 +1,28 @@
 import { useContext } from "react";
 import { GlobalStateContext } from "@/context/global-context";
-import BorderSetter from "../border-setter";
+import BorderSetter, { getObjectBorderType } from "../border-setter";
 import FillSetter from "@/app/_components/fill";
 import { FormProvider, useForm } from "react-hook-form";
-import { transformFill2Colors } from "@/lib/utils";
+import { transformFill2Colors, transfromObjectStrokeToStoke } from "@/lib/utils";
 import CommonSetter from "../common-setter/common-setter";
 import { fabric } from "fabric";
 import { Fill } from "@/app/_components/fill";
 import type { Shadow } from "@/app/_components/shadow";
 import ShadowSetter from "@/app/_components/shadow";
+import { Border } from "@/types/custom-image";
 
 type ShapeInputs = {
   fill: Fill;
   opacity: number;
   isLocked: boolean;
   shadow: Shadow;
+  border: Border;
 };
 
 export default function Shape() {
   const { object, editor } = useContext(GlobalStateContext);
+  if (!object) throw new Error("Object is not initialized");
+
   const methods = useForm<ShapeInputs>({
     values: {
       fill: transformFill2Colors(object?.fill),
@@ -28,6 +32,13 @@ export default function Shape() {
         object?.shadow instanceof fabric.Shadow
           ? { offsetX: object?.shadow?.offsetX, offsetY: object?.shadow?.offsetY, blur: object?.shadow?.blur, color: object?.shadow?.color, affectStroke: object?.shadow?.affectStroke }
           : { offsetX: 0, offsetY: 0, blur: 0, color: object?.shadow || "#000", affectStroke: false },
+      border: {
+        type: "none",
+        stroke: transfromObjectStrokeToStoke(object?.stroke),
+        borderRadius: object.rx || 0,
+        strokeWidth: object.strokeWidth || 0,
+        strokeDashArray: [],
+      },
     },
   });
 

@@ -38,7 +38,7 @@ export default function Fill({ fill, onChange, side = "left" }: Props) {
     <div className="w-max text-white cursor-pointer">
       <Popover>
         <PopoverTrigger asChild>
-          <div className="flex  w-full py-2  rounded-xl items-center gap-2">
+          <div className="flex  w-full py-2 rounded-xl items-center gap-2">
             {fill?.type === "solid" ? <div className={cn(" w-9 h-9 rounded-sm")} style={{ backgroundColor: fill?.color }} /> : <img src={fill?.image} alt="" className="w-9 h-9 rounded-md" />}
             {/* <p className="font-light text-xs">{fill?.type}</p> */}
           </div>

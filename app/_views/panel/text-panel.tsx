@@ -108,11 +108,7 @@ export default function TextPanel() {
     <div className="p-4 flex-1 ">
       <Button
         onClick={() => {
-          handleAddText({
-            fontFamily: "Roboto",
-            fontSize: 40,
-            text: "Add a text",
-          });
+          handleAddText({ fontFamily: "Roboto", fontSize: 40, fontWeight: "400", text: "Add a text" });
         }}
         className="w-full bg-green-700 hover:bg-green-800"
       >

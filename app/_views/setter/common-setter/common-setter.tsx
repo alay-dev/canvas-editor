@@ -84,7 +84,7 @@ const CommonSetter = () => {
 
   return (
     <>
-      <div className="py-2 flex items-center justify-between ">
+      <div className="py-2 pt-0 flex items-center justify-between ">
         <Button size="icon" variant="ghost" className="rounded-full hover:bg-gray-600 hover:text-white" onClick={() => alignObject("left")}>
           <ArrowLeftFromLineIcon size={16} color="#BDBDBD" />
         </Button>

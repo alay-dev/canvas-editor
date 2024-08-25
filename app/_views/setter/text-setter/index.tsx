@@ -202,13 +202,13 @@ export default function TextSetter() {
               </label>
               <SliderInput onChange={onLetterSpacingChange} value={fields.charSpacing} min={1} max={400} />
             </div>
-            <div className="mb-5 flex items-center gap-3">
+            <div className="mb-5 flex items-center">
               <label htmlFor="font-size" className="text-primary font-light text-sm w-28 flex-shrink-0">
                 Line height
               </label>
               <SliderInput onChange={onLineSpacingChange} value={fields.lineHeight} min={0.1} max={10} step={0.1} />
             </div>
-            <div className="mt-4 flex items-center gap-3 w-max ">
+            <div className="mt-4 flex items-center w-max ">
               <label className="text-primary font-light text-sm  w-28 flex-shrink-0">Shadow</label>
               <ShadowSetter onChange={handleChangeShadow} shadow={fields.shadow} />
             </div>

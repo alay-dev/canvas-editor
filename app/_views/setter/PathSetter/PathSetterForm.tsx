@@ -8,6 +8,7 @@ import { useFormContext } from "react-hook-form";
 import { PaintInputs } from "../../panel/paint-panel";
 import { fabric } from "fabric";
 import SliderInput from "@/app/_components/slider-input";
+import { Separator } from "@/components/ui/separator";
 
 type Props = {
   mode: "paint" | "update";
@@ -114,29 +115,26 @@ export default function PathSetterForm({ mode }: Props) {
   return (
     <div className="w-full text-gray-300">
       <div className="mb-4">
-        <label className="  font-light text-sm">Stroke</label>
-        <StrokePicker side="bottom" fill={fields?.stroke} onChange={handleValuesChange} />
+        <label className="font-light text-sm">Stroke</label>
+        <div className="flex items-center gap-4">
+          <StrokePicker side="bottom" fill={fields?.stroke} onChange={handleValuesChange} />
+
+          <SliderInput min={1} max={100} value={+fields?.width} onChange={(val) => handleValueChange("width", val || 0)} />
+        </div>{" "}
       </div>
-      <div className="mb-4 ">
-        <label className=" font-light text-sm">Width</label>
-        <SliderInput min={1} max={100} value={+fields?.width} onChange={(val) => handleValueChange("width", val || 0)} />
-      </div>
-      {/* {showFillConfig ? (
-        <FormItem label="filling" name="fill">
-          <ColorPicker onChange={fireEvent} />
-        </FormItem>
-      ) : null} */}
-      <div className="mb-4 ">
-        <label className=" font-light text-sm">Shadow color</label>
+      <Separator className="my-5" />
+      <label className="font-light text-sm text-gray-400">Shadow</label>
+      <div className="mb-4 flex items-center gap-3 mt-5">
+        <label className="font-light text-sm w-20 flex-shrink-0">Color</label>
         <ColorPicker value={fields.shadow?.color} onChange={(color) => handleValueChange("shadow.color", color)} />
       </div>
-      <div className="mb-4 ">
-        <label className=" font-light text-sm">Shadow width</label>
+      <div className="mb-4 flex items-center gap-3">
+        <label className=" font-light text-sm w-20 flex-shrink-0">Width</label>
         <SliderInput min={0} max={50} value={+fields.shadow?.width} onChange={(val) => handleValueChange("shadow.width", val)} />
       </div>
 
-      <div className="mb-4 ">
-        <label className=" font-light text-sm">Shadow offset</label>
+      <div className="mb-4 flex items-center gap-3">
+        <label className=" font-light text-sm w-20 flex-shrink-0">Offset</label>
         <SliderInput min={0} max={20} value={+fields.shadow?.offset} onChange={(val) => handleValueChange("shadow.offset", val)} />
       </div>
     </div>

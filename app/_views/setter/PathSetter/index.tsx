@@ -20,8 +20,10 @@ export default function PathSetter() {
 
   return (
     <FormProvider {...methods}>
-      <PathSetterForm mode="update" />
       <CommonSetter />
+      <div className="mt-6">
+        <PathSetterForm mode="update" />
+      </div>
     </FormProvider>
   );
 }

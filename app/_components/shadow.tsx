@@ -10,7 +10,7 @@ const ShadowSetter = ({ shadow, onChange }: { shadow: Shadow; onChange: (val: Sh
     <Popover>
       <PopoverTrigger>
         <div className="flex w-max  rounded-xl items-center gap-2">
-          <div className={cn(" w-6 h-6 rounded-sm")} style={{ backgroundColor: shadow.color }} />
+          <div className={cn(" w-6 h-6 rounded-sm border border-gray-500")} style={{ backgroundColor: shadow.color }} />
           <p className="font-light text-xs uppercase">{shadow.color}</p>
         </div>
       </PopoverTrigger>

@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import ColorSetter from "@/app/_components/color-picker";
 import { GlobalStateContext } from "@/context/global-context";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { cn } from "@/lib/utils";
 import { Border } from "@/types/custom-image";
 import SliderInput from "@/app/_components/slider-input";
@@ -87,119 +87,180 @@ export default function BorderSetter() {
   const { editor, object } = useContext(GlobalStateContext);
 
   const imageObject = object as FImage;
-  const shapeObject = object as any;
+  const shapeObject = object;
 
-  if (!object?.height || !object?.width) throw new Error("Object is not initialized");
-
+  if (!shapeObject || !object?.height || !object?.width) throw new Error("Object is not initialized");
   const maxBorderRadius = Math.ceil(Math.min(object?.height, object?.width) / 2);
-
-  const methods = useForm<BorderInputs>({
-    defaultValues: {
-      border: { type: "none" },
-    },
-  });
-
+  const methods = useFormContext<BorderInputs>();
   const fields = methods.watch();
 
-  useEffect(() => {
-    if (object?.type !== "f-image") {
-      methods.setValue("border", {
-        type: getObjectBorderType(shapeObject),
-        stroke: shapeObject.stroke || "#000",
-        borderRadius: shapeObject.rx || shapeObject.ry || (shapeObject.strokeLineJoin === "round" ? 100 : 0),
-        strokeDashArray: [],
-        strokeWidth: shapeObject.strokeWidth,
-      });
+  console.log(fields);
+
+  // useEffect(() => {
+  //   if (object?.type !== "f-image") {
+  //     methods.setValue("border", {
+  //       type: getObjectBorderType(shapeObject),
+  //       stroke: shapeObject.stroke || "#000",
+  //       borderRadius: shapeObject.rx || shapeObject.ry || (shapeObject.strokeLineJoin === "round" ? 100 : 0),
+  //       strokeDashArray: [],
+  //       strokeWidth: shapeObject.strokeWidth,
+  //     });
+  //   } else {
+  //     const border = imageObject?.getBorder();
+
+  //     methods.setValue("border", {
+  //       ...border,
+  //       type: getObjectBorderType(border),
+  //       stroke: imageObject.stroke || "#000",
+  //       strokeWidth: border.strokeWidth || 0,
+  //       borderRadius: border.borderRadius || 0,
+  //     });
+  //   }
+  // }, [imageObject, shapeObject]);
+
+  // useEffect(() => {
+  //   const { type, stroke, strokeWidth, borderRadius } = fields.border || {};
+
+  //   switch (object?.type) {
+  //     case "f-image":
+  //       if (type === "none") {
+  //         imageObject?.setBorder({
+  //           stroke: "",
+  //           borderRadius,
+  //           strokeDashArray: [],
+  //           strokeWidth: 0,
+  //           type: type,
+  //         });
+  //       } else {
+  //         imageObject?.setBorder({
+  //           stroke,
+  //           strokeWidth,
+  //           borderRadius,
+  //           strokeDashArray: getStrokeDashArray({ type, strokeWidth }) || [],
+  //           type: type,
+  //         });
+  //       }
+  //       break;
+  //     default:
+  //       if (type === "none") {
+  //         shapeObject?.set({
+  //           stroke: "#000",
+  //           rx: borderRadius,
+  //           ry: borderRadius,
+  //           strokeDashArray: [],
+  //           strokeWidth: 0,
+  //         });
+  //       } else {
+  //         shapeObject?.set({
+  //           stroke: stroke,
+  //           rx: borderRadius,
+  //           ry: borderRadius,
+  //           strokeDashArray: getStrokeDashArray({ type, strokeWidth }) || [],
+  //           strokeWidth: strokeWidth,
+  //         });
+  //       }
+  //   }
+
+  //   editor?.canvas?.requestRenderAll();
+  //   editor?.fireCustomModifiedEvent();
+  // }, [fields]);
+
+  const onChangeBorderColor = (val: string) => {
+    const { type, strokeWidth, borderRadius } = fields.border || {};
+
+    if (object.type === "f-image") {
+      if (type === "none") {
+        imageObject?.setBorder({ stroke: val, borderRadius, strokeDashArray: [], strokeWidth: 0, type: "line" });
+      } else {
+        imageObject?.setBorder({ stroke: val, strokeWidth, borderRadius, strokeDashArray: getStrokeDashArray({ type, strokeWidth }) || [], type: type });
+      }
     } else {
-      const border = imageObject?.getBorder();
-
-      methods.setValue("border", {
-        ...border,
-        type: getObjectBorderType(border),
-        stroke: imageObject.stroke || "#000",
-        strokeWidth: border.strokeWidth || 0,
-        borderRadius: border.borderRadius || 0,
-      });
-    }
-  }, [imageObject, shapeObject]);
-
-  useEffect(() => {
-    const { type, stroke, strokeWidth, borderRadius } = fields.border || {};
-
-    switch (object?.type) {
-      case "f-image":
-        if (type === "none") {
-          imageObject?.setBorder({
-            stroke: "",
-            borderRadius,
-            strokeDashArray: [],
-            strokeWidth: 0,
-            type: type,
-          });
-        } else {
-          imageObject?.setBorder({
-            stroke,
-            strokeWidth,
-            borderRadius,
-            strokeDashArray: getStrokeDashArray({ type, strokeWidth }) || [],
-            type: type,
-          });
-        }
-        break;
-      default:
-        if (type === "none") {
-          shapeObject?.set({
-            stroke: "#000",
-            rx: borderRadius,
-            ry: borderRadius,
-            strokeDashArray: [],
-            strokeWidth: 0,
-          });
-        } else {
-          shapeObject?.set({
-            stroke: stroke,
-            rx: borderRadius,
-            ry: borderRadius,
-            strokeDashArray: getStrokeDashArray({ type, strokeWidth }) || [],
-            strokeWidth: strokeWidth,
-          });
-        }
+      if (type === "none") {
+        shapeObject?.set({ stroke: val, rx: borderRadius, ry: borderRadius, strokeDashArray: [], strokeWidth: 0, type: "line" });
+      } else {
+        shapeObject?.set({ stroke: val, rx: borderRadius, ry: borderRadius, strokeDashArray: getStrokeDashArray({ type, strokeWidth }) || [], strokeWidth: strokeWidth });
+      }
     }
 
+    methods.setValue("border.stroke.color", val);
     editor?.canvas?.requestRenderAll();
-    editor?.fireCustomModifiedEvent();
-  }, [fields]);
+  };
+
+  const onChangeBorderType = (val: string) => {
+    const { stroke, strokeWidth, borderRadius } = fields.border || {};
+    if (object.type === "f-image") {
+      if (val === "none") {
+        imageObject?.setBorder({ stroke: "", borderRadius, strokeDashArray: [], strokeWidth: 0, type: val });
+      } else {
+        imageObject?.setBorder({ stroke: stroke.color, strokeWidth, borderRadius, strokeDashArray: getStrokeDashArray({ type: val, strokeWidth }) || [], type: val });
+      }
+    } else {
+      if (val === "none") {
+        shapeObject?.set({ stroke: "", rx: borderRadius, ry: borderRadius, strokeDashArray: [], strokeWidth: 0 });
+      } else {
+        shapeObject?.set({ rx: borderRadius, ry: borderRadius, strokeDashArray: getStrokeDashArray({ type: val, strokeWidth }) || [], strokeWidth: strokeWidth });
+      }
+    }
+    methods.setValue("border.type", val);
+    editor?.canvas?.requestRenderAll();
+  };
+
+  const onChangeBorderWidth = (val: number) => {
+    const { type, stroke, borderRadius } = fields.border || {};
+    if (object.type === "f-image") {
+      if (type === "none") {
+        imageObject?.setBorder({ stroke: "", borderRadius, strokeDashArray: [], strokeWidth: 0, type: type });
+      } else {
+        imageObject?.setBorder({ stroke: stroke.color, strokeWidth: val, borderRadius, strokeDashArray: getStrokeDashArray({ type: type, strokeWidth: val }) || [], type: type });
+      }
+    } else {
+      if (type === "none") {
+        shapeObject?.set({ stroke: "", rx: borderRadius, ry: borderRadius, strokeDashArray: [], strokeWidth: 0 });
+      } else {
+        shapeObject?.set({ rx: borderRadius, ry: borderRadius, strokeDashArray: getStrokeDashArray({ type: type, strokeWidth: val }) || [], strokeWidth: val });
+      }
+    }
+    methods.setValue("border.strokeWidth", val);
+    editor?.canvas?.requestRenderAll();
+  };
+
+  const onChangeBorderRadius = (val: number) => {
+    const { type, stroke, strokeWidth } = fields.border || {};
+    if (object.type === "f-image") {
+      imageObject?.setBorder({ stroke: stroke.color, strokeWidth, borderRadius: val, strokeDashArray: getStrokeDashArray({ type: type, strokeWidth }) || [], type: type });
+    } else {
+      shapeObject?.set({ rx: val, ry: val, strokeDashArray: getStrokeDashArray({ type: type, strokeWidth }) || [], strokeWidth: strokeWidth });
+    }
+    methods.setValue("border.borderRadius", val);
+    editor?.canvas?.requestRenderAll();
+  };
 
   return (
     <FormProvider {...methods}>
-      <form className="space-y-6 text-xs">
-        <div>
-          <label htmlFor="border-type" className=" text-gray-300 font-light text-sm">
-            Border type
-          </label>
-          <div className="flex border border-gray-500 rounded-lg overflow-hidden mt-2 [&>*:not(:last-child)]:border-r [&>*:not(:last-child)]:border-gray-500  ">
+      <form>
+        <label htmlFor="border-type" className="text-gray-400 font-light text-sm">
+          Border
+        </label>
+        <div className="flex items-center gap-3 mt-4">
+          <ColorSetter onChange={onChangeBorderColor} value={fields.border?.stroke?.color || "#000"} />
+          <div className="flex flex-1 border border-gray-500 rounded-lg overflow-hidden  [&>*:not(:last-child)]:border-r [&>*:not(:last-child)]:border-gray-500  ">
             {BORDER_TYPES?.map((item) => {
               return (
-                <div onClick={() => methods.setValue("border.type", item.key)} key={item.key} className={cn(" flex-1 items-center justify-center flex py-2 cursor-pointer", fields.border.type === item.key && "bg-gray-200 text-black")}>
+                <div onClick={() => onChangeBorderType(item.key)} key={item.key} className={cn(" flex-1 items-center justify-center flex py-2 cursor-pointer", fields.border?.type === item.key && "bg-gray-200 text-black")}>
                   {item.svg}
                 </div>
               );
             })}
           </div>
         </div>
-        <div className="">
-          <label className=" text-gray-300 font-light text-sm">Border color</label>
-          <ColorSetter onChange={(val: string) => methods.setValue("border.stroke", val)} value={fields.border.stroke} />
+
+        <div className=" flex items-center mt-5">
+          <label className="text-primary font-light text-sm w-28 flex-shrink-0">Border width</label>
+          <SliderInput min={0} max={100} value={fields.border?.strokeWidth} onChange={onChangeBorderWidth} />
         </div>
-        <div>
-          <label className=" text-gray-300 font-light text-sm">Border width</label>
-          <SliderInput min={0} max={100} value={+fields.border.strokeWidth} onChange={(val) => methods.setValue("border.strokeWidth", val || 0)} />
-        </div>
-        <div>
-          <label htmlFor="border-radius" className=" text-gray-300 font-light text-sm">
-            Border radius
-          </label>
-          <SliderInput min={0} max={maxBorderRadius} value={+fields.border.borderRadius} onChange={(val) => methods.setValue("border.borderRadius", val || 0)} />
+        <div className="flex items-center mt-5">
+          <label className="text-primary font-light text-sm w-28 flex-shrink-0">Border radius</label>
+          <SliderInput min={0} max={maxBorderRadius} value={fields.border?.borderRadius} onChange={onChangeBorderRadius} />
         </div>
       </form>
     </FormProvider>

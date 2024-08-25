@@ -94,7 +94,7 @@ export default function Panel() {
 
   return (
     <div className="flex">
-      <aside className="flex bg-background relative">
+      <aside className="flex bg-gray-800 relative">
         <ul style={{ width: MENUITEM_WIDTH }} className="h-full pt-4 border-r border-gray-600 space-y-2 flex-shrink-0">
           {OBJECT_TYPES.map((item) => {
             return (

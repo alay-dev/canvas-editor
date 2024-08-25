@@ -42,8 +42,6 @@ export default function SketchSetter() {
     editor?.canvas?.requestRenderAll();
   };
 
-  console.log(editor?.sketch?.fill);
-
   return (
     <form>
       <div className="mb-5">
