@@ -74,7 +74,7 @@ export default function Shape() {
   return (
     <FormProvider {...methods}>
       <CommonSetter />
-      <div className="mb-4">
+      <div className="mb-4 mt-8">
         <label className=" text-gray-300 font-light text-sm">Fill</label>
         <FillSetter onChange={handleValuesChange} fill={fields?.fill} />
       </div>

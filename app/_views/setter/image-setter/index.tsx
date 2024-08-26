@@ -1,8 +1,8 @@
-import { useContext } from "react";
+import { useCallback, useContext } from "react";
 import ReplaceSetter from "./replace-setter";
 import CommonBorderSetter from "../border-setter";
 import CommonSetter from "../common-setter/common-setter";
-import { FormProvider, useForm } from "react-hook-form";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 import { GlobalStateContext } from "@/context/global-context";
 import { Input } from "@/components/ui/input";
 import SliderInput from "@/app/_components/slider-input";
@@ -14,8 +14,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import ShadowSetter, { Shadow } from "@/app/_components/shadow";
 import { Border } from "@/types/custom-image";
 import { getObjectBorderType, transfromObjectStrokeToStroke } from "@/lib/utils";
+import { debounce } from "lodash";
 
-const nonValueFilters = ["Grayscale", "Convolute", "Gamma", "Invert", "Black and white", "Sepia", "Vintage", "Kodachrome"];
+const nonValueFilters = ["None", "Grayscale", "Convolute", "Gamma", "Invert", "Black and white", "Sepia", "Vintage", "Kodachrome"];
 
 const filterTypes = [
   { name: "None", img: "/images/filters/none.png" },
@@ -41,16 +42,35 @@ type ImageInputs = {
   border: Border;
 };
 
+const defaultFilterValueMap: Record<string, number> = {
+  Grayscale: 0,
+  Convolute: 0,
+  Pixelate: 8,
+  "Hue Rotation": -0.5,
+  Noise: 350,
+  Gamma: 0,
+  Invert: 0,
+  Vibrance: 3,
+  "Black and white": 0,
+  Blur: 0.2,
+  Sepia: 0,
+  Kodachrome: 0,
+  Vintage: 0,
+  None: 0,
+};
+
 export default function ImageSetter() {
   const { object, editor } = useContext(GlobalStateContext);
   const customImage = object as CustomImage;
   const border = customImage?.getBorder();
 
+  // console.log(customImage?.getFilter());
+
   const methods = useForm<ImageInputs>({
     values: {
       isLocked: object?.lockMovementX || false,
       opacity: object?.opacity || 1,
-      filter: { type: "None", value: 0 },
+      filter: customImage?.getFilter(),
       shadow:
         object?.shadow instanceof fabric.Shadow
           ? { offsetX: object?.shadow?.offsetX, offsetY: object?.shadow?.offsetY, blur: object?.shadow?.blur, color: object?.shadow?.color, affectStroke: object?.shadow?.affectStroke }
@@ -67,72 +87,79 @@ export default function ImageSetter() {
 
   const fields = methods.watch();
 
-  const onChangeFilter = (filterType: string, value?: number) => {
-    let filter;
-    switch (filterType) {
-      case "Grayscale":
-        filter = new fabric.Image.filters.Grayscale();
-        methods.setValue("filter", { type: filterType, value: 0 });
-        break;
-      case "Convolute":
-        filter = new fabric.Image.filters.Convolute({ matrix: [0, -3, 0, -3, 5, -3, 0, -3, 0] });
-        methods.setValue("filter", { type: filterType, value: 0 });
-        break;
-      case "Pixelate":
-        filter = new fabric.Image.filters.Pixelate({ blocksize: value || 8 });
-        methods.setValue("filter", { type: filterType, value: value || 8 });
-        break;
-      case "Hue Rotation":
-        filter = new fabric.Image.filters.HueRotation({ rotation: value || -0.5 });
-        methods.setValue("filter", { type: filterType, value: value || -0.5 });
-        break;
-      case "Noise":
-        filter = new fabric.Image.filters.Noise({ noise: value || 350 });
-        methods.setValue("filter", { type: filterType, value: value || 350 });
-        break;
-      case "Gamma":
-        filter = new fabric.Image.filters.Gamma({ gamma: [1, 0.5, 2.1] });
-        methods.setValue("filter", { type: filterType, value: 0 });
-        break;
-      case "Invert":
-        filter = new fabric.Image.filters.Invert();
-        methods.setValue("filter", { type: filterType, value: 0 });
-        break;
-      case "Vibrance":
-        filter = new fabric.Image.filters.Vibrance({ vibrance: value || 3 });
-        methods.setValue("filter", { type: filterType, value: value || 3 });
-        break;
-      case "Black and white":
-        filter = new fabric.Image.filters.ColorMatrix({ matrix: [1.5, 1.5, 1.5, 0, -1, 1.5, 1.5, 1.5, 0, -1, 1.5, 1.5, 1.5, 0, -1, 0, 0, 0, 1, 0] });
-        methods.setValue("filter", { type: filterType, value: 0 });
-        break;
-      case "Blur":
-        filter = new fabric.Image.filters.Blur({ blur: value || 0.2 });
-        methods.setValue("filter", { type: filterType, value: value || 0.2 });
-        break;
-      case "Sepia":
-        filter = new fabric.Image.filters.Sepia();
-        methods.setValue("filter", { type: filterType, value: 0 });
-        break;
-      case "Kodachrome":
-        filter = new fabric.Image.filters.ColorMatrix({ matrix: [1.12855, -0.39673, -0.03992, 0, 0.24991, -0.16404, 1.08352, -0.05498, 0, 0.09698, -0.16786, -0.56034, 1.60148, 0, 0.13972, 0, 0, 0, 1, 0] });
-        methods.setValue("filter", { type: filterType, value: 0 });
-        break;
-      case "Vintage":
-        filter = new fabric.Image.filters.ColorMatrix({ matrix: [0.62793, 0.32021, -0.03965, 0, 0.03784, 0.02578, 0.64411, 0.03259, 0, 0.02926, 0.0466, -0.08512, 0.52416, 0, 0.02023, 0, 0, 0, 1, 0] });
-        methods.setValue("filter", { type: filterType, value: 0 });
-        break;
-      case "None":
-        filter = null;
-        // methods.setValue("filter", { type: filterType, value: 0 });
-        break;
-      default:
-        null;
-    }
+  const onChangeFilter = useCallback(
+    debounce((filterType?: string, value?: number) => {
+      filterType = filterType || fields.filter.type;
+      value = value === undefined ? defaultFilterValueMap[filterType] : value;
 
-    customImage.applyFilter(filter);
-    editor?.canvas?.requestRenderAll();
-  };
+      if ((value === 0 && !nonValueFilters.includes(filterType)) || filterType === "None") {
+        methods.setValue("filter", { type: filterType, value: value });
+        customImage.applyFilter(null, { type: filterType, value });
+        editor?.canvas?.requestRenderAll();
+        return;
+      }
+
+      let filter;
+      switch (filterType) {
+        case "Grayscale":
+          filter = new fabric.Image.filters.Grayscale();
+          break;
+        case "Convolute":
+          filter = new fabric.Image.filters.Convolute({ matrix: [0, -3, 0, -3, 5, -3, 0, -3, 0] });
+          break;
+        case "Pixelate":
+          filter = new fabric.Image.filters.Pixelate({ blocksize: value });
+
+          break;
+        case "Hue Rotation":
+          filter = new fabric.Image.filters.HueRotation({ rotation: value });
+
+          break;
+        case "Noise":
+          filter = new fabric.Image.filters.Noise({ noise: value });
+
+          break;
+        case "Gamma":
+          filter = new fabric.Image.filters.Gamma({ gamma: [1, 0.5, 2.1] });
+          break;
+        case "Invert":
+          filter = new fabric.Image.filters.Invert();
+          break;
+        case "Vibrance":
+          filter = new fabric.Image.filters.Vibrance({ vibrance: value });
+
+          break;
+        case "Black and white":
+          filter = new fabric.Image.filters.ColorMatrix({ matrix: [1.5, 1.5, 1.5, 0, -1, 1.5, 1.5, 1.5, 0, -1, 1.5, 1.5, 1.5, 0, -1, 0, 0, 0, 1, 0] });
+          break;
+        case "Blur":
+          filter = new fabric.Image.filters.Blur({ blur: value });
+
+          break;
+        case "Sepia":
+          filter = new fabric.Image.filters.Sepia();
+          break;
+        case "Kodachrome":
+          filter = new fabric.Image.filters.ColorMatrix({ matrix: [1.12855, -0.39673, -0.03992, 0, 0.24991, -0.16404, 1.08352, -0.05498, 0, 0.09698, -0.16786, -0.56034, 1.60148, 0, 0.13972, 0, 0, 0, 1, 0] });
+          break;
+        case "Vintage":
+          filter = new fabric.Image.filters.ColorMatrix({ matrix: [0.62793, 0.32021, -0.03965, 0, 0.03784, 0.02578, 0.64411, 0.03259, 0, 0.02926, 0.0466, -0.08512, 0.52416, 0, 0.02023, 0, 0, 0, 1, 0] });
+          break;
+        case "None":
+          filter = null;
+          // methods.setValue("filter", { type: filterType, value: 0 });
+          break;
+        default:
+          null;
+      }
+
+      if (!filter) return;
+      methods.setValue("filter", { type: filterType, value: value });
+      customImage.applyFilter(filter, { type: filterType, value });
+      editor?.canvas?.requestRenderAll();
+    }, 300),
+    []
+  );
 
   const handleChangeShadow = (val: Shadow) => {
     const shadow = new fabric.Shadow({ blur: val.blur, color: val.color, offsetX: val.offsetX, offsetY: val.offsetY, affectStroke: val.affectStroke });
@@ -180,7 +207,21 @@ export default function ImageSetter() {
               </ScrollArea>
             </PopoverContent>
           </Popover>
-          {nonValueFilters?.includes(fields.filter.type) ? null : <SliderInput value={20} onChange={() => null} />}
+          {nonValueFilters?.includes(fields.filter.type) ? null : (
+            <Controller
+              control={methods.control}
+              name="filter.value"
+              render={({ field: { onChange, value } }) => (
+                <SliderInput
+                  value={value}
+                  onChange={(val) => {
+                    onChange(val);
+                    onChangeFilter(fields?.filter?.type, val);
+                  }}
+                />
+              )}
+            />
+          )}
         </div>
       </div>
     </FormProvider>

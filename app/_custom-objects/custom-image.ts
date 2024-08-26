@@ -8,7 +8,7 @@ export type CustomImage = fabric.Object & {
   getSrc(): string;
   setBorder(): void;
   getBorder(): any;
-  applyFilter(filter?: fabric.IBaseFilter | fabric.IGrayscaleFilter | null): void;
+  applyFilter(filter: fabric.IBaseFilter | fabric.IGrayscaleFilter | null, _filter: { type: string; value: number }): void;
   applyFilterValue(): void;
   getFilter(): any;
 };
@@ -26,6 +26,7 @@ type Options = {
 export const createFImageClass = () => {
   (fabric as any).FImage = fabric.util.createClass(fabric.Group, {
     type: "f-image",
+    filters: null,
 
     initialize(options: Options, alreayGrouped: boolean = false) {
       const { image, imageBorder = {}, ...rest } = options;
@@ -113,8 +114,9 @@ export const createFImageClass = () => {
       return this.imageBorder;
     },
 
-    applyFilter(filter: any) {
+    applyFilter(filter: any, _filter: any) {
       try {
+        this.filter = _filter;
         this.img.filters = filter ? [filter] : null;
         this.img.applyFilters();
       } catch (e) {
@@ -132,7 +134,7 @@ export const createFImageClass = () => {
     },
 
     getFilter() {
-      return this.img.filters[0];
+      return this.filter ? this.filter : { type: "None", val: 0 };
     },
 
     toObject() {

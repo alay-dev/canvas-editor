@@ -75,6 +75,16 @@ export const createFImage = async (options: { src: string; canvas: fabric.Canvas
 
   if (!img) return;
   const cimg = new fabric.FImage({ image: img, id: uuid() }, false);
+
+  // fabric.Image.fromURL(src, (img) => {
+  //   const filter = new fabric.Image.filters.BlendColor({
+  //     color: "#fff",
+  //     mode: "multiply",
+  //     alpha: 0.4,
+  //   });
+
+  //   cimg?.applyFilter(filter);
+  // });
   canvas?.viewportCenterObject(cimg);
   canvas?.add(cimg);
   canvas?.setActiveObject(cimg);
