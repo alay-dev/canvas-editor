@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { createTextbox } from "@/app/_objects/textbox";
 import { useContext } from "react";
 import { GlobalStateContext } from "@/context/global-context";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const PRESET_FONT_LIST = [
   {
@@ -115,6 +117,27 @@ export default function TextPanel() {
         Add text box
       </Button>
       <PresetFontPanel addTextBox={handleAddText} />
+      <div className="mt-10">
+        <div className="flex items-center justify-between">
+          <p className="text-primary font-normal text-sm">Font combination</p>
+          <p className="text-primary/50 font-normal text-sm">Coming soon...</p>
+        </div>
+
+        <Separator />
+        <ScrollArea className="">
+          <div className="grid grid-cols-2 gap-3 my-4 max-h-[41vh] items-stretch">
+            <div className="bg-gray-700 flex items-center justify-center rounded-md hover:border transition border-gray-400 overflow-hidden relative cursor-pointer">
+              <img src="/images/font-combinations/art-or-not.png" alt="" />
+            </div>
+            <div className="bg-gray-700 flex items-center justify-center rounded-md hover:border transition border-gray-400 overflow-hidden relative cursor-pointer">
+              <img src="/images/font-combinations/new-item.png" alt="" />
+            </div>
+            <div className="bg-gray-700 flex items-center justify-center rounded-md hover:border transition border-gray-400 overflow-hidden relative cursor-pointer">
+              <img src="/images/font-combinations/instant-classic.png" alt="" />
+            </div>
+          </div>
+        </ScrollArea>
+      </div>
     </div>
   );
 }

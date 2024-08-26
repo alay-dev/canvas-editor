@@ -87,6 +87,7 @@ export default function ImageSetter() {
 
   const fields = methods.watch();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onChangeFilter = useCallback(
     debounce((filterType?: string, value?: number) => {
       filterType = filterType || fields.filter.type;
